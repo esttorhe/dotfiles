@@ -96,6 +96,7 @@ brew 'xz'
 brew 'z'
 brew 'zsh'
 
+cask 'appcleaner'
 cask 'atom'
 cask 'cheatsheet'
 cask 'chitchat'
