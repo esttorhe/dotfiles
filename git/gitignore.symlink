@@ -18,3 +18,7 @@ profile
 DerivedData
 .idea/
 *.hmap
+
+### SoundCloud Specific
+ModuleCache/
+info.plist
