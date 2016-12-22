@@ -9,7 +9,7 @@ tap 'px4/px4'
 tap 'sgeb/mutt'
 tap 'thoughtbot/formulae'
 tap 'homebrew/dupes'
-tap 'klaaspieter/formulae'
+tap 'klaaspieter/homebrew-formula'
 
 brew 'appledoc22'
 brew 'autoconf'
