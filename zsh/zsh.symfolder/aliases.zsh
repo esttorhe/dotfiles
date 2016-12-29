@@ -5,6 +5,7 @@ alias buu="brew update && brew upgrade -all && brew cleanup && brew cask cleanup
 alias gu="gem update --no-document && gem cleanup"
 eval "$(hub alias -s)"
 alias la='ls -lan'
+alias xc='open *.xcworkspace'
 
 alias swiftc='xcrun -sdk macosx swiftc'
 

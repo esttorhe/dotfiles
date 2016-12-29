@@ -16,6 +16,7 @@ setopt AUTO_MENU
 
 # History settings
 # Save x items to the given history file
+
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=$HOME/.zsh_history
@@ -56,9 +57,9 @@ bindkey -v
 
 # ctrl-w removed word backwards
 bindkey '^w' backward-kill-word
-
 # ctrl-r starts searching history backward
 bindkey '^r' history-incremental-search-backward
+
 
 function zle-line-init zle-keymap-select {
   VIM_PROMPT="%{$fg_bold[green]%} [% VI MODE]%  %{$reset_color%}"
@@ -71,7 +72,6 @@ zle -N zle-line-init
 zle -N zle-keymap-select
 export KEYTIMEOUT=1
 
-##############################################################################
 #
 # FZF
 #
@@ -99,7 +99,7 @@ __fsel() {
 __fzfcmd() {
   [ ${FZF_TMUX:-1} -eq 1 ] && echo "fzf-tmux -d${FZF_TMUX_HEIGHT:-40%}" || echo "fzf"
 }
-
+##############################################################################
 fzf-file-widget() {
   LBUFFER="${LBUFFER}$(__fsel)"
   local ret=$?
@@ -139,7 +139,7 @@ fzf-history-widget() {
   zle redisplay
   typeset -f zle-line-init >/dev/null && zle zle-line-init
   return $ret
-}
+
 zle     -N   fzf-history-widget
 bindkey '^R' fzf-history-widget
 
@@ -147,6 +147,10 @@ fi
 
 # Use ~~ as the trigger sequence instead of the default **
 export FZF_COMPLETION_TRIGGER='~~'
+function xcode() {
+  _z $1
+  xc
+}
 
 # Options to fzf command
 export FZF_COMPLETION_OPTS='+c -x'
