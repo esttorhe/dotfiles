@@ -26,7 +26,7 @@
 ########################################################################
 
 [core]
-	excludesfile = /Users/creegan/.gitignore_global
+	excludesfile = ~/.gitignore_global
   editor = /usr/bin/vim
   pager = diff-so-fancy | less -r
 [difftool "Kaleidoscope"]
