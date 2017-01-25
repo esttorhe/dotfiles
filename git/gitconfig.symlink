@@ -84,6 +84,7 @@
 
 [rebase]
     autosquash = true
+    autostash = true
 
 [rerere]
     # Remember and re-apply your git conflict resolutions. This is magic: https://www.kernel.org/pub/software/scm/git/docs/git-rerere.html
@@ -154,4 +155,7 @@
 [commit]
 	gpgsign = true
 [gpg]
-	program = gpg2
+  program = gpg2
+
+[url "git@github.com:"]
+  insteadOf = https://github.com/
