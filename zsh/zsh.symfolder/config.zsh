@@ -14,7 +14,7 @@ DEFAULT_USER="`whoami`"
 POWERLINE_RIGHT_A="exit-status-on-fail"
 POWERLINE_HIDE_USER_NAME="true"
 POWERLINE_HIDE_HOST_NAME="true"
-POWERLINE_PATH="short"
+#POWERLINE_PATH="short"
 POWERLINE_DETECT_SSH="true"
 
 ###############################################################################
