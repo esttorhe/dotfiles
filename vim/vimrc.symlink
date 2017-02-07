@@ -21,7 +21,7 @@ let macvim_skip_colorscheme = 1
 let $GIT_SSL_NO_VERIFY = 'true'
 
 let g:lightline = {
-  \ 'colorscheme': 'jellybeans',
+  \ 'colorscheme': 'parsec',
   \ 'mode_map': { 'c': 'NORMAL' },
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ], ['fugitive', 'filename'  ] ]
@@ -122,6 +122,7 @@ Plug 'togglecursor'
 Plug 'keith/swift.vim'
 Plug 'gfontenot/vim-xcode'
 Plug 'chrisbra/Colorizer'
+Plug 'keith/parsec.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
 filetype plugin on
