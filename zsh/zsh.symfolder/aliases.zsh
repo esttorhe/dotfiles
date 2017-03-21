@@ -7,6 +7,10 @@ alias gu="gem update --no-document && gem cleanup"
 eval "$(hub alias -s)"
 alias la='ls -lan'
 alias xc='open *.xcworkspace'
+alias appcode='/Applications/AppCode.app'
+
+# Look up for unreachable commits || Use it with --grep=<something useful>
+alias gitlost="git fsck --unreachable | grep commit | cut -d ' ' -f3 | xargs git log --merges --no-walk --grep="
 
 alias swiftc='xcrun -sdk macosx swiftc'
 
