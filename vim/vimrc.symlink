@@ -3,6 +3,7 @@ filetype off
 set background=dark
 set ttimeoutlen=50
 " set noshowmode
+colorscheme basic-dark "sets the color scheme
 
 " Map F5 for Gundo
 nnoremap <F5> :GundoToggle<CR>
@@ -21,7 +22,7 @@ let macvim_skip_colorscheme = 1
 let $GIT_SSL_NO_VERIFY = 'true'
 
 let g:lightline = {
-  \ 'colorscheme': 'parsec',
+  \ 'colorscheme': 'jellybeans',
   \ 'mode_map': { 'c': 'NORMAL' },
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ], ['fugitive', 'filename'  ] ]
@@ -151,7 +152,7 @@ let g:airline#extensions#tmuxline#enabled=1
 
 call plug#end()            " required 
 
-syntax on
+syntax on                 " syntax highlight on by default
 filetype plugin indent on    " required 
 
 " Auto load NERDTree when VIM opens
