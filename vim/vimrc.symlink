@@ -2,7 +2,7 @@ set nocompatible
 filetype off
 set background=dark
 set ttimeoutlen=50
-" set noshowmode
+set noshowmode
 colorscheme basic-dark "sets the color scheme
 
 " Map F5 for Gundo
@@ -21,6 +21,10 @@ set expandtab
 let macvim_skip_colorscheme = 1
 let $GIT_SSL_NO_VERIFY = 'true'
 
+" Vim gutter
+let g:gitgutter_enabled = 1
+highlight SignColumn ctermbg=NONE
+hi CursorLineNr guifg=#00ff00
 let g:lightline = {
   \ 'colorscheme': 'jellybeans',
   \ 'mode_map': { 'c': 'NORMAL' },
@@ -94,11 +98,13 @@ let g:tmuxline_preset = {
 noremap j gj
 noremap k gk
 
-set number
+set number      " Numbers on the left
 set showcmd
-set title
+set title       " Title on the file menu bar
 set nobackup
 set noswapfile
+set ruler
+set relativenumber  " Numbers on the left relative
 
 " Vim can highlight whitespaces for you in a convenient way:
 set list
@@ -134,6 +140,10 @@ let g:syntastic_auto_jump=1
 let g:syntastic_stl_format = '[%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
 let g:syntastic_check_on_open=1
 let g:syntastic_aggregate_errores=1
+
+" A couple options to make powerline work correctly.
+set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
+set laststatus=2
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
