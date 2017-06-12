@@ -145,6 +145,9 @@ let g:syntastic_aggregate_errores=1
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 set laststatus=2
 
+" Fuzzy Autocomplete
+set rtp+=/usr/local/opt/fzf
+
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
