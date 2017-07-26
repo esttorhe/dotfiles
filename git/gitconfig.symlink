@@ -35,7 +35,7 @@
 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
   trustexitcode = true
 [interactive]
-  diffFilter = "diff-highlight"
+  diffFilter = "diff-so-fancy"
 [diff "plist"]
   textconv = plutil -convert xml1 -o -
 [diff]
@@ -157,7 +157,5 @@
 [gpg]
   program = gpg2
 
-[url "git@github.com:"]
-  insteadOf = https://github.com/
 [log]
 	date = local
