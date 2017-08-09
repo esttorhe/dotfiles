@@ -5,7 +5,8 @@ alias bef="be fastlane"
 alias buu="brew update && brew upgrade -all && brew cleanup && brew cask cleanup"
 alias gu="gem update --no-document && gem cleanup"
 eval "$(hub alias -s)"
-alias la='ls -lan'
+#alias la='ls -lan'
+alias la="exa -bghHliS --git"
 alias xc='open *.xcworkspace'
 alias appcode='/Applications/AppCode.app'
 
