@@ -1,12 +1,13 @@
 # Configure ZSH
 #ZSH_THEME="pygmalion"
-#ZSH_THEME="agnoster"
-ZSH_THEME="powerline"
+ZSH_THEME="agnoster"
+#ZSH_THEME="powerline"
 ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
-plugins=(git colorize brew xcode-completions)
+plugins=(git brew xcode)
 DEFAULT_USER="`whoami`"
+export FPATH=$FPATH:/usr/share/zsh/site-functions:/usr/local/Cellar/zsh/5.4.1/share/zsh/functions/
 
 ###############################################################################
 # powerline theme configuration
