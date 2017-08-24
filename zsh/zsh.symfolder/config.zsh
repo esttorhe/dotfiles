@@ -89,5 +89,7 @@ function xcode() {
 }
 
 source $ZSH/oh-my-zsh.sh
+# Auto suggestions
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # vim: ft=muttrc
