@@ -91,5 +91,7 @@ function xcode() {
 source $ZSH/oh-my-zsh.sh
 # Auto suggestions
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Syntax hightlight
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # vim: ft=muttrc

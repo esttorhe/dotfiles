@@ -2,10 +2,11 @@
 export ZSH=$HOME/.oh-my-zsh
 export GOPATH=/usr/local/opt/go
 export PATH=$PATH:$GOPATH/bin
-export PATH="/usr/local/bin:$PATH"
-export PATH="/usr/bin/gcov:$PATH"
-export PATH="/usr/local/bin/mergepbx:$PATH"
+export PATH=/usr/local/bin:$PATH
+export PATH=/usr/bin/gcov:$PATH
+export PATH=/usr/local/bin/mergepbx:$PATH
 export PATH=$(brew --prefix ruby)/bin:$PATH
+export PATH=$HOME/Documents/Code/SoundCloud/ios/scripts/bin:$PATH
 
 # Ruby exec path
 export PATH=$HOME/.gem/ruby/2.3.0/bin:$PATH
@@ -24,7 +25,7 @@ export COCOAPODS_DISABLE_STATS=1
 # HOMEBREW
 export HOMEBREW_EDITOR="mvim"
 # Specify your defaults in this environment variable
-export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/usr/local/Caskroom"
+#export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/usr/local/Caskroom"
 
 # DOCKER
 export CD_TOOLS_HOME=$HOME/Documents/Tools
