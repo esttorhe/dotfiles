@@ -61,7 +61,7 @@ export NVM_DIR="$HOME/.nvm"
 
 # BREW CASK
 # Specify your defaults in this environment variable
-export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/usr/local/Caskroom"
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 # Vi mode
 # Based off http://dougblack.io/words/zsh-vi-mode.html
