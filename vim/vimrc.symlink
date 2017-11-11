@@ -4,9 +4,14 @@ set background=dark
 set ttimeoutlen=50
 set noshowmode
 colorscheme basic-dark "sets the color scheme
+set updatetime=250 "Updates the gutter every quarter of a second
+set autochdir "automatically set working directory to open file
 
 " Map F5 for Gundo
 nnoremap <F5> :GundoToggle<CR>
+
+" Map File Explorer
+map <F2> :!ls<CR>:e
 
 " Dash mappings
 :nmap <silent> <leader>d <Plug>DashSearch
@@ -17,6 +22,8 @@ set tabstop=2
 set shiftwidth=2
 " always uses spaces instead of tab characters
 set expandtab
+" search case insensitive
+set ignorecase
 
 let macvim_skip_colorscheme = 1
 let $GIT_SSL_NO_VERIFY = 'true'
@@ -34,7 +41,6 @@ let g:lightline = {
   \ 'component_function': {
   \   'modified': 'MyModified',
   \   'readonly': 'MyReadonly',
-  \   'fugitive': 'MyFugitive',
   \   'filename': 'MyFilename',
   \   'fileformat': 'MyFileformat',
   \   'filetype': 'MyFiletype',
@@ -58,15 +64,6 @@ function! MyFilename()
 		\  &ft == 'vimshell' ? vimshell#get_status_string() :
 		\ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
 		\ ('' != MyModified() ? ' ' . MyModified() : '')
-endfunction
-
-function! MyFugitive()
-	if &ft !~? exists("*fugitive#head")
-			let _ = fugitive#head()
-			return strlen(_) ? '⭠ '._ : ''
-	endif
-
-	return ''
 endfunction
 
 function! MyFileformat()
@@ -104,7 +101,6 @@ set title       " Title on the file menu bar
 set nobackup
 set noswapfile
 set ruler
-set relativenumber  " Numbers on the left relative
 
 " Vim can highlight whitespaces for you in a convenient way:
 set list
@@ -114,11 +110,10 @@ set listchars=tab:>_,trail:.,extends:#,nbsp:.
 call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-dispatch'
-Plug 'gmarik/Vundle.vim' 
-Plug 'bling/vim-airline' 
+Plug 'gmarik/Vundle.vim'
+Plug 'bling/vim-airline'
 Plug 'https://github.com/vim-scripts/Gundo.git'
-Plug 'https://github.com/tpope/vim-fugitive.git'
-Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/vimshell.vim'
@@ -130,6 +125,7 @@ Plug 'keith/swift.vim'
 Plug 'gfontenot/vim-xcode'
 Plug 'chrisbra/Colorizer'
 Plug 'keith/parsec.vim'
+Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
 filetype plugin on
@@ -151,6 +147,7 @@ set rtp+=/usr/local/opt/fzf
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+set statusline+=%{fugitive#statusline()}
 
 " Configures vim-xcode
 let g:xcode_run_command = 'VtrSendCommandToRunner! {cmd}'
@@ -167,9 +164,6 @@ call plug#end()            " required
 
 syntax on                 " syntax highlight on by default
 filetype plugin indent on    " required 
-
-" Auto load NERDTree when VIM opens
-autocmd vimenter * NERDTree
 
 " Load podfiles and fastfiles as Ruby
 autocmd BufRead,BufNewFile  Podfile set filetype=ruby
