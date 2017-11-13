@@ -31,4 +31,10 @@ export HOMEBREW_EDITOR="mvim"
 export CD_TOOLS_HOME=$HOME/Documents/Tools
 export PATH=$PATH:$CD_TOOLS_HOME
 
+# ANDROID
+ANDROID_HOME=/usr/local/opt/android-sdk/ #Or another location`
+export ANDROID_HOME=$ANDROID_HOME
+export ANDROID_SDK_ROOT=$ANDROID_HOME
+export ANDROID_SDK_HOME=$ANDROID_HOME
+
 # vim: ft=muttrc
