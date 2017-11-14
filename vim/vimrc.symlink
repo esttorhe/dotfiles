@@ -127,6 +127,7 @@ Plug 'chrisbra/Colorizer'
 Plug 'keith/parsec.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'jremmen/vim-ripgrep'
 
 filetype plugin on
 filetype plugin indent on     " required! 
