@@ -7,9 +7,6 @@ colorscheme basic-dark "sets the color scheme
 set updatetime=250 "Updates the gutter every quarter of a second
 set autochdir "automatically set working directory to open file
 
-" Map F5 for Gundo
-nnoremap <F5> :GundoToggle<CR>
-
 " Map File Explorer
 map <F2> :!ls<CR>:e
 
@@ -110,24 +107,23 @@ set listchars=tab:>_,trail:.,extends:#,nbsp:.
 call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-dispatch'
-Plug 'gmarik/Vundle.vim'
+Plug 'gmarik/Vundle'
 Plug 'bling/vim-airline'
-Plug 'https://github.com/vim-scripts/Gundo.git'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
-Plug 'Shougo/vimfiler.vim'
-Plug 'Shougo/vimshell.vim'
+Plug 'Shougo/vimfiler'
+Plug 'Shougo/vimshell'
 Plug 'Shougo/unite.vim'
 Plug 'edkolev/tmuxline.vim'
 Plug 'itchyny/lightline.vim'
-Plug 'togglecursor'
-Plug 'keith/swift.vim'
+Plug 'keith/swift'
 Plug 'gfontenot/vim-xcode'
 Plug 'chrisbra/Colorizer'
-Plug 'keith/parsec.vim'
+Plug 'keith/parsec'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'jremmen/vim-ripgrep'
+Plug 'rizzatti/dash.vim'
 
 filetype plugin on
 filetype plugin indent on     " required! 
