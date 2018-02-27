@@ -1,2 +1,5 @@
 osx/personal_variables.symlink
 .DS_Store
+
+# Ignore vi plugins and configs
+*.vim
