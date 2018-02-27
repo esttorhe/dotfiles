@@ -2,8 +2,8 @@
 
 [user]
 	name = Esteban Torres
-	email = me@estebantorr.es
   signingkey = 91FD6C347BB21A99 #<= SoundCloud | B6595468 => Home
+	email = me@estebantorr.es
 [github]
   user = esttorhe
 
@@ -65,7 +65,7 @@
     unracked = red
 
 [credential]
-  helper = osxkeychain
+	helper = osxkeychain
 
 [http]
     # Without this. Git would often have trouble with stupidly large commits (see Twitter for iOS source code).
@@ -122,6 +122,7 @@
     # Hide merges from the log
     log = log --no-merges --name-status
     undo = checkout --
+    rno = revert --no-commit
 
     # This is singlehandedly the most useful alias. If you borrow nothing else from this config, borrow this (and credential.helper)
     subup = submodule update --init --recursive

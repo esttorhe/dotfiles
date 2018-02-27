@@ -23,3 +23,8 @@ EOF
     echo $OUTPUT
     exit 1
 fi
+
+###SoundCloud hook
+if [ -e ./scripts/shared-hooks/shared-pre-commit ]; then
+  ./scripts/shared-hooks/shared-pre-commit
+fi
