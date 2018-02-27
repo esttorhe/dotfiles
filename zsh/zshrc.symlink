@@ -32,3 +32,6 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # vim: ft=muttrc
 
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
+
+# added by travis gem
+[ -f /Users/estebantorres/.travis/travis.sh ] && source /Users/estebantorres/.travis/travis.sh

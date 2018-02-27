@@ -6,7 +6,7 @@ alias buu="brew update && brew upgrade -all && brew cleanup && brew cask cleanup
 alias gu="gem update --no-document && gem cleanup"
 eval "$(hub alias -s)"
 #alias la='ls -lan'
-alias la="exa -bghHliS --git"
+alias la="exa -abghHliS --git"
 alias xc='open *.xcworkspace'
 alias appcode='/Applications/AppCode.app'
 
@@ -29,5 +29,11 @@ function brew.info {
 }
 
 alias dlog='idevicesyslog | grep'
+
+alias dls='docker ps'
+alias drm='docker rm -f'
+
+# Bundle install
+alias bip='bundle install --path=./vendor/bundle'
 
 # vim: ft=muttrc

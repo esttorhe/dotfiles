@@ -8,6 +8,8 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(git brew xcode)
 DEFAULT_USER="`whoami`"
 export FPATH=$FPATH:/usr/share/zsh/site-functions:/usr/local/Cellar/zsh/5.4.1/share/zsh/functions/
+# Add qt to the path
+export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
 
 ###############################################################################
 # powerline theme configuration
@@ -96,6 +98,9 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ##############################################################################
 
-export CD_TOOLS_HOME=$HOME/Code/SoundCloud/tools
+export CD_TOOLS_HOME=$HOME/Code/SoundCloud.nosync/tools
+
+# Ntfy support
+eval "$(ntfy shell-integration)"
 
 # vim: ft=muttrc

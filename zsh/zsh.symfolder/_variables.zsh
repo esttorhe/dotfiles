@@ -6,7 +6,7 @@ export PATH=/usr/local/bin:$PATH
 export PATH=/usr/bin/gcov:$PATH
 export PATH=/usr/local/bin/mergepbx:$PATH
 export PATH=$(brew --prefix ruby)/bin:$PATH
-export PATH=$HOME/Documents/Code/SoundCloud/ios/scripts/bin:$PATH
+export PATH=$HOME/Documents/SoundCloud/Code/SoundCloud.nosync/ios-repos/ios/scripts/bin:$PATH
 
 # Ruby exec path
 export PATH=$HOME/.gem/ruby/2.3.0/bin:$PATH
@@ -28,11 +28,11 @@ export HOMEBREW_EDITOR="mvim"
 #export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/usr/local/Caskroom"
 
 # DOCKER
-export CD_TOOLS_HOME=$HOME/Documents/Tools
+export CD_TOOLS_HOME=$HOME/Documents/SoundCloud/Tools
 export PATH=$PATH:$CD_TOOLS_HOME
 
 # ANDROID
-ANDROID_HOME=/usr/local/opt/android-sdk/ #Or another location`
+ANDROID_HOME=$HOME/Library/Android/sdk
 export ANDROID_HOME=$ANDROID_HOME
 export ANDROID_SDK_ROOT=$ANDROID_HOME
 export ANDROID_SDK_HOME=$ANDROID_HOME
