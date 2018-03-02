@@ -5,7 +5,7 @@ ZSH_THEME="agnoster"
 ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
-plugins=(git brew xcode)
+plugins=(git brew xcode alias-tips)
 DEFAULT_USER="`whoami`"
 export FPATH=$FPATH:/usr/share/zsh/site-functions:/usr/local/Cellar/zsh/5.4.1/share/zsh/functions/
 # Add qt to the path
