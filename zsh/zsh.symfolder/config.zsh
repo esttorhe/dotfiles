@@ -61,10 +61,11 @@ setopt HIST_REDUCE_BLANKS
 # After !! previous command don't execute, allow editing
 setopt HIST_VERIFY
 
-# Source nvm
-. $HOME/.nvm/nvm.sh
+ # Load NVM
 export NVM_DIR="$HOME/.nvm"
-. "$(brew --prefix nvm)/nvm.sh"
+"$(brew --prefix nvm)/nvm.sh"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+nvm use 8.0
 
 # BREW CASK
 # Specify your defaults in this environment variable
