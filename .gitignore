@@ -3,3 +3,6 @@ osx/personal_variables.symlink
 
 # Ignore vi plugins and configs
 *.vim
+
+# Ignore git refs
+git/git_templates.symfolder/info/refs
