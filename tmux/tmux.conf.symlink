@@ -1,13 +1,6 @@
 # Set the default shell to ZSH
 set-option -g default-shell $SHELL
 
-# Set the default colors
-set -g default-terminal "screen-256color"
-
-# use UTF8
-set -g utf8
-set-window-option -g utf8 on
-
 # make tmux display things in 256 colors
 set -g default-terminal "screen-256color"
 
@@ -19,22 +12,14 @@ set -g history-limit 10000
 set -g prefix C-x
 unbind C-b
 
-
 # reload config without killing server
-bind R source-file ~/.tmux/conf \; display-message "  Config reloaded..".
+bind R source-file ~/.tmux.conf \; display-message "  Config reloaded..".
 
 # use send-prefix to pass C-a through to application
 bind C-a send-prefix
 
 # shorten command delay
-set -sg escape-time 1
-
-# set window and pane index to 1 (0 by default)
-set-option -g base-index 1
-setw -g pane-base-index 1
-
-# reload ~/.tmux.conf using PREFIX r
-bind r source-file ~/.tmux.conf \; display "Reloaded!"
+set -sg escape-time 2
 
 # use PREFIX | to split window horizontally and PREFIX - to split vertically
 unbind %
@@ -51,7 +36,7 @@ bind j select-pane -D
 bind k select-pane -U
 bind l select-pane -R
 
-# and use C-h and C-l to cycle thru panes
+# and use C-h and C-l to cycle thru windows
 bind -r C-h select-window -t :-
 bind -r C-l select-window -t :+
 
@@ -66,3 +51,22 @@ bind L resize-pane -R 5
 #set -g mouse-select-pane off
 #set -g mouse-resize-pane off
 #set -g mouse-select-window off
+
+# Pane switching with Alt+arrow
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R
+bind -n M-Up select-pane -U
+bind -n M-Down select-pane -D
+
+# Active monitoring
+setw -g monitor-activity on
+set -g visual-activity on
+
+# Highlighting Current Window Using Specified Colour
+set-window-option -g window-status-current-bg yellow
+
+# Split into dev configuration
+bind D source ~/.tmux_dev
+
+# Creates a new session (and a new window group)
+new-session -s main
