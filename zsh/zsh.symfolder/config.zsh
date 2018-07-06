@@ -106,6 +106,6 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export CD_TOOLS_HOME=$HOME/Code/SoundCloud.nosync/tools
 
 # Ntfy support
-eval "$(ntfy shell-integration)"
+#eval "$(ntfy shell-integration)"
 
 # vim: ft=muttrc
