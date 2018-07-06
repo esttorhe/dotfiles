@@ -34,8 +34,6 @@
 [mergetool "Kaleidoscope"]
 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
   trustexitcode = true
-[interactive]
-  diffFilter = "diff-so-fancy"
 [diff "plist"]
   textconv = plutil -convert xml1 -o -
 [diff]
