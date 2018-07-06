@@ -7,9 +7,14 @@ COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(git brew xcode alias-tips)
 DEFAULT_USER="`whoami`"
-export FPATH=$FPATH:/usr/share/zsh/site-functions:/usr/local/Cellar/zsh/5.4.1/share/zsh/functions/
-# Add qt to the path
-export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
+
+# Mac, adjust for Python version
+if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
+    PATH="$HOME/Library/Python/3.6/bin/:$PATH"
+fi
+
+autoload -U promptinit; promptinit
+prompt pure
 
 ###############################################################################
 # powerline theme configuration
