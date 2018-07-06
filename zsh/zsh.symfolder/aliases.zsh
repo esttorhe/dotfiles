@@ -8,7 +8,6 @@ eval "$(hub alias -s)"
 #alias la='ls -lan'
 alias la="exa -abghHliS --git"
 alias xc='open *.xcworkspace'
-alias appcode='/Applications/AppCode.app'
 
 # Look up for unreachable commits || Use it with --grep=<something useful>
 alias gitlost="git fsck --unreachable | grep commit | cut -d ' ' -f3 | xargs git log --merges --no-walk --grep="
@@ -35,5 +34,12 @@ alias drm='docker rm -f'
 
 # Bundle install
 alias bip='bundle install --path=./vendor/bundle'
+
+# Remove all .orig files
+alias rmorig='rm -rf **/**.orig'
+
+# SoundCloud knife
+
+alias scknife='crun -i -o "-e USER=${USER} -v ${HOME}/.chef:${HOME}/.chef" system:latest -- bash'
 
 # vim: ft=muttrc
