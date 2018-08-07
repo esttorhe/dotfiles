@@ -132,6 +132,9 @@
 
     # From http://git-wt-commit.rubyforge.org
     wtf = !git-wtf
+
+    # Frank Calma's alias to auto-resolve the remote
+    ptom = !git push origin $(git rev-parse --abbrev-ref HEAD)
 [ghi]
 	token = !security find-internet-password -a me@estebantorr.es -s github.com -l 'ghi token' -w
 [pager]
