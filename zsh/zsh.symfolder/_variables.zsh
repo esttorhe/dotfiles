@@ -12,7 +12,7 @@ export FPATH=$FPATH:/usr/share/zsh/site-functions:/usr/local/Cellar/zsh/5.4.1/sh
 # Add qt to the path
 export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
 
-export GOPATH=~/Documents/SoundCloud/workspace.nosync/
+export GOPATH=~/workspace/
 export PATH=$PATH:/usr/local/bin/go
 export PATH=$PATH:$GOPATH/bin
 export PATH=$HOME/Documents/SoundCloud/workspace.nosync/src/github.com/soundcloud/ios/scripts/bin:$PATH
