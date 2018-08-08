@@ -15,7 +15,7 @@ export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
 export GOPATH=~/workspace/
 export PATH=$PATH:/usr/local/bin/go
 export PATH=$PATH:$GOPATH/bin
-export PATH=$HOME/Documents/SoundCloud/workspace.nosync/src/github.com/soundcloud/ios/scripts/bin:$PATH
+export PATH=$HOME/workspace/src/github.com/soundcloud/ios/scripts/bin:$PATH
 
 # Ruby exec path
 export PATH=$HOME/.gem/ruby/2.3.0/bin:$PATH
@@ -37,7 +37,7 @@ export HOMEBREW_EDITOR="vi"
 #export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/usr/local/Caskroom"
 
 # DOCKER
-export CD_TOOLS_HOME=$HOME/Documents/SoundCloud/Tools
+export CD_TOOLS_HOME=$HOME/workspace/Tools
 export PATH=$PATH:$CD_TOOLS_HOME
 
 # ANDROID
