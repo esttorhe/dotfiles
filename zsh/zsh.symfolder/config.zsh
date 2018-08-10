@@ -107,6 +107,10 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export CD_TOOLS_HOME=$HOME/Code/SoundCloud.nosync/tools
 
 # Ntfy support
-#eval "$(ntfy shell-integration)"
+eval "$(ntfy shell-integration)"
+
+# Load ssh keys
+ssh-add -K ~/.ssh/sc_servers
+ssh-add -K ~/.ssh/soundcloud_rsa
 
 # vim: ft=muttrc
