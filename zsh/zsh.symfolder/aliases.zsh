@@ -2,7 +2,7 @@
 alias rm="trash"
 alias be="bundle exec"
 alias bef="be fastlane"
-alias buu="brew update && brew upgrade -all && brew cleanup && brew cask cleanup"
+alias buu="brew update && brew upgrade -all && brew cleanup -s"
 alias gu="gem update --no-document && gem cleanup"
 eval "$(hub alias -s)"
 #alias la='ls -lan'
