@@ -8,6 +8,7 @@ eval "$(hub alias -s)"
 #alias la='ls -lan'
 alias la="exa -abghHliS --git"
 alias xc='open *.xcworkspace'
+alias swift-format-all='docker run -v $PWD:/source -it esttorhe/swift-format:latest'
 
 # Look up for unreachable commits || Use it with --grep=<something useful>
 alias gitlost="git fsck --unreachable | grep commit | cut -d ' ' -f3 | xargs git log --merges --no-walk --grep="
