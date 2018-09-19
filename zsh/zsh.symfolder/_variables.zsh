@@ -7,7 +7,8 @@ export PATH=/usr/local/bin/mergepbx:$PATH
 export PATH=$(brew --prefix ruby)/bin:$PATH
 export ZSH_PLUGINS_ALIAS_TIPS_EXCLUDES="_ g"
 
-export FPATH=$FPATH:/usr/share/zsh/site-functions:/usr/local/Cellar/zsh/5.4.1/share/zsh/functions/
+export FPATH=$FPATH:/usr/share/zsh/site-functions/:/usr/share/zsh/5.3/functions/
+#:/usr/local/Cellar/zsh/5.4.1/share/zsh/functions/
 
 # Add qt to the path
 export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
