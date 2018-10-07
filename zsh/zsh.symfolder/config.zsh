@@ -89,6 +89,9 @@ zle -N zle-line-init
 zle -N zle-keymap-select
 export KEYTIMEOUT=1
 
+# Load Ruby version
+chruby ruby-2.5.0
+
 ##############################################################################
 
 function xcode() {
