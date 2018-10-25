@@ -7,6 +7,9 @@
 [github]
   user = esttorhe
 
+[includeIf "gitdir:~/workspace/src/github.com/soundcloud/"]
+  path = ~/.gitconfig_soundcloud
+
 ########################################################################
 
 [mergetool]
