@@ -22,3 +22,10 @@ riemann: jwalton$ cat ~/.gdbinit
 set breakpoint pending on
 set breakpoint malloc_error_break
 set breakpoint pending auto
+
+
+##############################################################################
+# Load spo
+##############################################################################
+command script import $HOME/workspace/src/github.com/kastiglione/swift_po/spo.py
+
