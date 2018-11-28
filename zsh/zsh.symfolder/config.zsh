@@ -65,11 +65,12 @@ setopt HIST_VERIFY
 export NVM_DIR="$HOME/.nvm"
 "$(brew --prefix nvm)/nvm.sh"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-nvm use 8.0
+nvm use v11.1.0
 
 # BREW CASK
 # Specify your defaults in this environment variable
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+export PATH="/usr/local/sbin:$PATH"
 
 # Vi mode
 # Based off http://dougblack.io/words/zsh-vi-mode.html
