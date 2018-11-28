@@ -117,4 +117,16 @@ eval "$(ntfy shell-integration)"
 ssh-add -K ~/.ssh/sc_servers
 ssh-add -K ~/.ssh/soundcloud_rsa
 
+##############################################################################
+
+# Load custom config per directory
+# Add this to your ~/.zshrc
+function chpwd() {
+  if [ -r $PWD/.zsh_config ]; then
+    source $PWD/.zsh_config
+  else
+    source $HOME/.zsh/config
+  fi
+}
+
 # vim: ft=muttrc
