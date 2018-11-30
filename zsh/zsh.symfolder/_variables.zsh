@@ -1,6 +1,5 @@
 # Export Variables
 export ZSH=$HOME/.oh-my-zsh
-export PATH=$PATH:$GOROOT/bin
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/bin/gcov:$PATH
 export PATH=/usr/local/bin/mergepbx:$PATH
@@ -13,10 +12,12 @@ export FPATH=$FPATH:/usr/share/zsh/site-functions/:/usr/share/zsh/5.3/functions/
 # Add qt to the path
 export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
 
-export GOPATH=~/workspace/
+GOROOT="/usr/local/Cellar/go/1.11.2/libexec"
+export GOPATH=~/workspace
 export PATH=$PATH:/usr/local/bin/go
 export PATH=$PATH:$GOPATH/bin
 export PATH=$HOME/workspace/src/github.com/soundcloud/ios/scripts/bin:$PATH
+export PATH=$PATH:$GOROOT/bin
 
 # Ruby exec path
 export PATH=$HOME/.gem/ruby/2.3.0/bin:$PATH
