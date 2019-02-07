@@ -8,6 +8,9 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(git brew xcode alias-tips)
 DEFAULT_USER="`whoami`"
 
+# Sign in to 1Password
+eval $(op signin lucca_keka_toa)
+
 # Mac, adjust for Python version
 if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
     PATH="$HOME/Library/Python/3.6/bin/:$PATH"
@@ -74,7 +77,8 @@ export PATH="/usr/local/sbin:$PATH"
 
 # Vi mode
 # Based off http://dougblack.io/words/zsh-vi-mode.html
-bindkey -v
+#bindkey -v
+bindkey -M vicmd "^V" visual-mode
 
 # ctrl-w removed word backwards
 bindkey '^w' backward-kill-word
@@ -113,20 +117,22 @@ export CD_TOOLS_HOME=$HOME/Code/SoundCloud.nosync/tools
 # Ntfy support
 eval "$(ntfy shell-integration)"
 
-# Load ssh keys
-ssh-add -K ~/.ssh/sc_servers
-ssh-add -K ~/.ssh/soundcloud_rsa
-
 ##############################################################################
 
 # Load custom config per directory
 # Add this to your ~/.zshrc
 function chpwd() {
-  if [ -r $PWD/.zsh_config ]; then
-    source $PWD/.zsh_config
-  else
-    source $HOME/.zsh/config
-  fi
+#  if [ -r $PWD/.zsh_config ]; then
+#    source $PWD/.zsh_config
+#  else
+#    source $HOME/.zsh/config.zsh
+#  fi
 }
+
+##############################################################################
+#
+# Load credentials ssh keys, etc
+
+$HOME/.security/*.sh
 
 # vim: ft=muttrc
