@@ -1,0 +1,10 @@
+#!/usr/bin/expect -f
+
+set file [lindex $argv 0];
+set password [lindex $argv 1];
+
+spawn ssh-add "$file"
+expect "Enter passphrase for $file:"
+send "$password\n";
+
+interact
