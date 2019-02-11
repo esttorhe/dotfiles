@@ -8,9 +8,6 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(git brew xcode alias-tips)
 DEFAULT_USER="`whoami`"
 
-# Sign in to 1Password
-eval $(op signin lucca_keka_toa)
-
 # Mac, adjust for Python version
 if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
     PATH="$HOME/Library/Python/3.6/bin/:$PATH"
@@ -95,7 +92,7 @@ zle -N zle-keymap-select
 export KEYTIMEOUT=1
 
 # Load Ruby version
-chruby ruby-2.5.0
+chruby ruby-2.6.0
 
 ##############################################################################
 
