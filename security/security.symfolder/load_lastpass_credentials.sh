@@ -13,14 +13,15 @@ for key in $(ls $HOME/.ssh/*_rsa); do
 
   if [ -z "$creds" ]; then
     creds="$(lpass show --notes ssh)"
-    op_creds="$(op get item ssh)"
+    op_creds="$(op get item ssh | jq '.details.notesPlain' --raw-output)"
     creds="$creds\n$op_creds"
-    $op_creds"
+
+    creds=$(echo "$creds" | awk '{gsub(/\\n/,"\n")}1')
   fi
 
-  pw=$(echo "$creds" | grep "${key#$HOME/}" | cut -d\  -f2)
+  pw=$(echo "$creds" | grep "${key#$HOME/}" | cut -d\  -f2-)
   if [ -n "$pw" ]; then
-    ssh-add-p "$key" "$pw"
+    /usr/local/bin/ssh-app-p $key "$pw"
   else
     ssh-add "$key"
   fi
