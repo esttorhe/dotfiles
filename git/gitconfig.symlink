@@ -124,6 +124,7 @@
     log = log --no-merges --name-status
     undo = checkout --
     rno = revert --no-commit
+    mbm = merge-base -a master 
 
     # This is singlehandedly the most useful alias. If you borrow nothing else from this config, borrow this (and credential.helper)
     subup = submodule update --init --recursive
