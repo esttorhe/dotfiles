@@ -132,4 +132,5 @@ function chpwd() {
 
 $HOME/.security/*.sh
 
+export PATH="$HOME/.cargo/bin:$PATH"
 # vim: ft=muttrc
