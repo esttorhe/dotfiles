@@ -12,8 +12,9 @@ export FPATH=$FPATH:/usr/share/zsh/site-functions/:/usr/share/zsh/5.3/functions/
 # Add qt to the path
 export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
 
-GOROOT="/usr/local/Cellar/go/1.11.2/libexec"
+GOROOT="/usr/local/Cellar/go/1.12.4/libexec"
 export GOPATH=~/workspace
+export GO111MODULE=on
 export PATH=$PATH:/usr/local/bin/go
 export PATH=$PATH:$GOPATH/bin
 export PATH=$HOME/workspace/src/github.com/soundcloud/ios/scripts/bin:$PATH
