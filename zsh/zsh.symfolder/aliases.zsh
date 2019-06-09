@@ -28,6 +28,10 @@ function brew.info {
   grep desc $(brew --prefix)/Library/Formula/*.rb | perl -ne 'm{^.*/(.*?)\.rb.*?\"(.*)"$} and print "$1|$2\n"' | column -t -s '|' | fzf --reverse
 }
 
+function mount_remote_file(){
+  sudo sshfs -o allow_other,defer_permissions estebantorres@shell:$1 $2
+}
+
 alias dlog='idevicesyslog | grep'
 
 alias dls='docker ps'
