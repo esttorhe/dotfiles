@@ -36,12 +36,17 @@ alias dlog='idevicesyslog | grep'
 
 alias dls='docker ps'
 alias drm='docker rm -f'
+alias dockrun='docker run -v `pwd`:/root/`printf '%q\n' "${PWD##*/}"` -it'
+eval "$(docker-machine env default)"
 
 # Bundle install
 alias bip='bundle install --path=./vendor/bundle'
 
 # Remove all .orig files
 alias rmorig='rm -rf **/**.orig'
+
+# Run specific go test
+alias gotr='go test -run'
 
 # SoundCloud knife
 
