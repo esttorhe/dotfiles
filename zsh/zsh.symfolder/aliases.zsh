@@ -24,6 +24,9 @@ eval $(thefuck --alias)
 
 alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
 
+# GoLand
+alias goland="/Users/estebantorres/.jetbrains/goland"
+
 function brew.info {
   grep desc $(brew --prefix)/Library/Formula/*.rb | perl -ne 'm{^.*/(.*?)\.rb.*?\"(.*)"$} and print "$1|$2\n"' | column -t -s '|' | fzf --reverse
 }

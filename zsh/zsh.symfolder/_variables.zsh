@@ -40,8 +40,8 @@ export HOMEBREW_EDITOR="vi"
 #export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/usr/local/Caskroom"
 
 # DOCKER
-export CD_TOOLS_HOME=$HOME/workspace/Tools
-export PATH=$PATH:$CD_TOOLS_HOME
+export SD_TOOLS_HOME=$HOME/workspace/Tools
+export PATH=$PATH:$SD_TOOLS_HOME
 
 # ANDROID
 ANDROID_HOME=$HOME/Library/Android/sdk
