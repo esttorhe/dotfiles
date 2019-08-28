@@ -102,6 +102,7 @@ brew 'zsh'
 
 cask 'appcleaner'
 cask 'atom'
+cask 'boostnote'
 cask 'cheatsheet'
 cask 'chitchat'
 cask 'conductor'
