@@ -4,7 +4,6 @@ tap 'caskroom/cask'
 tap 'homebrew/bundle'
 tap 'facebook/fb'
 tap 'px4/px4'
-tap 'sgeb/mutt'
 tap 'thoughtbot/formulae'
 tap 'klaaspieter/homebrew-formula'
 
