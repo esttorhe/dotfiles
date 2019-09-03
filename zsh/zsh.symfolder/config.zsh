@@ -133,4 +133,14 @@ function chpwd() {
 $HOME/.security/*.sh
 
 export PATH="$HOME/.cargo/bin:$PATH"
+
+##############################################################################
+#
+# Fixes the GPG signing error: Inappropiate ioctl for device
+# https://github.com/keybase/keybase-issues/issues/2798
+#
+##############################################################################
+
+export GPG_TTY=$(tty)
+
 # vim: ft=muttrc
