@@ -166,3 +166,5 @@
 
 [log]
 	date = local
+[hub]
+	protocol = ssh
