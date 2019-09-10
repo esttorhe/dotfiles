@@ -107,6 +107,8 @@ source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # Syntax hightlight
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
+
 ##############################################################################
 
 export SD_TOOLS_HOME=$HOME/workspace/Tools
