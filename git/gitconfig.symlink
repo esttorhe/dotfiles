@@ -2,7 +2,7 @@
 
 [user]
 	name = Esteban Torres
-  signingkey = A9711D4C504046A7
+  signingkey = 504046A7
 	email = me@estebantorr.es
 [github]
   user = esttorhe
@@ -31,7 +31,26 @@
 [core]
 	excludesfile = ~/.gitignore_global
   editor = /usr/bin/vim
-	pager = diff-so-fancy | less --tabs=4 -RFX
+  pager = delta
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  features = side-by-side line-numbers decorations
+  whitespace-error-style = 22 reverse
+  plus-color = syntax "#003800"
+  minus-color = syntax "#3f0001"
+  syntax-theme = Dracula
+  colorMoved = default
+[delta "decorations"]
+  commit-decoration-style = bold yellow box ul
+  file-style = bold yellow ul
+  file-decoration-style = none
+  hunk-header-decoration-style = cyan box ul
+[delta "line-numbers"]
+  line-numbers-left-style = cyan
+  line-numbers-right-style = cyan
+  line-numbers-minus-style = 124
+  line-numbers-plus-style = 28
 [difftool "Kaleidoscope"]
 	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 [mergetool "Kaleidoscope"]
@@ -141,8 +160,6 @@
     ptom = !git push origin $(git rev-parse --abbrev-ref HEAD)
 [ghi]
 	token = !security find-internet-password -a me@estebantorr.es -s github.com -l 'ghi token' -w
-[pager]
-  show = diff-so-fancy | less --tabs=1,5 -RFX
 [color]
   ui = always
 [color "diff"]
@@ -162,7 +179,7 @@
 [commit]
 	gpgsign = true
 [gpg]
-  program = gpg2
+	program = gpg2
 
 [log]
 	date = local
