@@ -2,11 +2,16 @@
 alias rm="trash"
 alias be="bundle exec"
 alias bef="be fastlane"
-alias buu="brew update && brew upgrade && brew cask upgrade && brew cleanup -s"
+alias buu="brew update && brew upgrade && brew upgrade --cask && brew cleanup -s"
 alias gu="gem update --no-document && gem cleanup"
 eval "$(hub alias -s)"
 #alias la='ls -lan'
 alias la="exa -abghHliS --git"
+#alias lt=""
+function lt() {
+  tree -ugDFlfx --dirsfirst --filelimit 20 -L ${1:-3} -aC $2 -I '.git|DS_Store|DerivedData'
+}
+
 alias xc='open *.xcworkspace'
 alias swift-format-all='docker run -v $PWD:/source -it esttorhe/swift-format:latest'
 
@@ -40,7 +45,6 @@ alias dlog='idevicesyslog | grep'
 alias dls='docker ps'
 alias drm='docker rm -f'
 alias dockrun='docker run -v `pwd`:/root/`printf '%q\n' "${PWD##*/}"` -it'
-eval "$(docker-machine env default)"
 
 # Bundle install
 alias bip='bundle install --path=./vendor/bundle'

@@ -1,12 +1,25 @@
 # Configure ZSH
 #ZSH_THEME="pygmalion"
-ZSH_THEME="agnoster"
+#ZSH_THEME="agnoster"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 #ZSH_THEME="powerline"
 ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
-plugins=(git brew xcode alias-tips)
+plugins=(git brew alias-tips)
 DEFAULT_USER="`whoami`"
+
+###################################################
+# plonk
+###################################################
+export PATH="$HOME/workspace/src/github.com/winkoz/plonk/bin/:$PATH"
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
 # Mac, adjust for Python version
 if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
@@ -62,10 +75,8 @@ setopt HIST_REDUCE_BLANKS
 setopt HIST_VERIFY
 
  # Load NVM
-export NVM_DIR="$HOME/.nvm"
-"$(brew --prefix nvm)/nvm.sh"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-nvm use v11.1.0
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # BREW CASK
 # Specify your defaults in this environment variable
@@ -102,10 +113,13 @@ function xcode() {
 }
 
 source $ZSH/oh-my-zsh.sh
-# Auto suggestions
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-# Syntax hightlight
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Auto suggestions & syntax highlight
+
+if [ -z "$_zsh_custom_scripts_loaded" ]; then
+  _zsh_custom_scripts_loaded=1
+  plugins+=(zsh-autosuggestions zsh-syntax-highlighting)
+fi
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 
@@ -144,5 +158,28 @@ export PATH="$HOME/.cargo/bin:$PATH"
 ##############################################################################
 
 export GPG_TTY=$(tty)
+
+##############################################################################
+#
+# gh Github CLI autocompletion
+#
+##############################################################################
+
+eval "$(gh completion -s zsh)"
+
+
+##############################################################################
+#
+# ASDF evaluation
+#
+##############################################################################
+$(brew --prefix asdf)/asdf.sh"
+
+
+##############################################################################
+# SOUNDCLOUD NFS docker crun mount configuration
+##############################################################################
+
+CRUN_NFS=1
 
 # vim: ft=muttrc

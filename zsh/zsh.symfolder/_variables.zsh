@@ -42,6 +42,7 @@ export HOMEBREW_EDITOR="vi"
 # DOCKER
 export SD_TOOLS_HOME=$HOME/workspace/Tools
 export PATH=$PATH:$SD_TOOLS_HOME
+export CRUN_NFS=1
 
 # ANDROID
 ANDROID_HOME=$HOME/Library/Android/sdk
