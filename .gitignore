@@ -2,7 +2,7 @@ osx/personal_variables.symlink
 .DS_Store
 
 # Ignore vi plugins and configs
-*.vim
+plugged/
 
 # Ignore git refs
 git/git_templates.symfolder/info/refs

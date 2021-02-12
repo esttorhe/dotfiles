@@ -1,0 +1,116 @@
+filetype plugin indent on
+filetype plugin on
+syntax on " Sets synxtax highlight for files
+set backspace=indent,eol,start " Allows deleting from last char in line
+set noswapfile " Disables the creation of swapfiles
+
+" Dynamic variables
+let $RTP=split(&runtimepath, ',')[0] " Sets dynamically the runtime path as a var
+let $RC="$HOME/.vim/vimrc" " Var pointing to this rc file for easy access
+
+set incsearch " Does incremental search while typing
+set hls " Sets highlighting on for search results
+set path=.,** " Dynamically sets the path to the current file folder and working directory
+set autochdir " automatically set working directory to open file
+
+" Color configuration
+colorscheme basic-dark " sets the color scheme
+set background=dark " sets the background color to dark
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Following 4 lines where taken from Ornithologist Coder blogpost
+" https://ornithocoder.github.io/programming/commit-msg-with-vim/
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Draw a hard line at 50 chars for commit messages
+au FileType gitcommit setlocal tw=50
+au FileType gitcommit setlocal cc=+1
+" Spell checker when editing commit messages
+set complete+=kspell
+au FileType gitcommit setlocal spell
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vim gutter
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set updatetime=250 " updates the gutter every quarter of a second
+set number " numbers on the left
+set title " title on the file menu bar
+set ruler " enables showing ruler at the bottom (line number, character and percentage of file)
+
+let g:gitgutter_enabled = 1
+highlight SignColumn ctermbg=NONE
+hi CursorLineNr guifg=#00ff00
+let g:lightline = {
+  \ 'colorscheme': 'jellybeans',
+  \ 'mode_map': { 'c': 'NORMAL' },
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ], ['fugitive', 'filename'  ] ]
+  \ },
+  \ 'component_function': {
+  \   'modified': 'MyModified',
+  \   'readonly': 'MyReadonly',
+  \   'filename': 'MyFilename',
+  \   'fileformat': 'MyFileformat',
+  \   'filetype': 'MyFiletype',
+  \   'fileencoding': 'MyFileencoding',
+  \   'mode': 'MyMode',
+  \ },
+  \ }
+
+function! MyModified()
+	return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! MyReadonly()
+	return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '⭤' : ''
+endfunction
+
+function! MyFilename()
+	return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+		\ (&ft == 'vimfiler' ? vimfiler#get_status_string() : 
+		\  &ft == 'unite' ? unite#get_status_string() : 
+		\  &ft == 'vimshell' ? vimshell#get_status_string() :
+		\ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+		\ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFileformat()
+	return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+	return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+	return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+	return winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Powerline configurations
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
+set laststatus=2
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugins
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" manages bundles with vim-plu
+call plug#begin('~/.vim/plugged')
+
+Plug 'itchyny/lightline.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdtree'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+call plug#end()
+
+" NERDTree plugin specific commands
+:nnoremap <C-n> :NERDTreeToggle<CR>
