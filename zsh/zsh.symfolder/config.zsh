@@ -14,6 +14,11 @@ DEFAULT_USER="`whoami`"
 ###################################################
 export PATH="$HOME/workspace/src/github.com/winkoz/plonk/bin/:$PATH"
 
+###################################################
+# sc-tools
+###################################################
+export PATH="$HOME/.local/bin/:$PATH"
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -41,7 +46,12 @@ POWERLINE_DETECT_SSH="true"
 ###############################################################################
 
 # Configure z plugin
-. `brew --prefix`/etc/profile.d/z.sh
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     . ~/.zsh/z.sh;;
+    Darwin*)    . `brew --prefix`/etc/profile.d/z.sh;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
 
 # Show menu after multiple tabs
 setopt AUTO_MENU
