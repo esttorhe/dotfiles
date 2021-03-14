@@ -7,3 +7,6 @@ plugged/
 # Ignore git refs
 git/git_templates.symfolder/info/refs
 zsh/zsh.symfolder/_secrets.zsh
+
+# Ignore python caches
+__pycache__/
