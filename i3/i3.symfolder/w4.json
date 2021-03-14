@@ -1,0 +1,22 @@
+// vim:ts=4:sw=4:et
+{
+    "border": "normal",
+    "current_border_width": 2,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 459,
+       "width": 734,
+       "x": 0,
+       "y": 0
+    },
+    "name": "Terminal",
+    "percent": 1,
+    "swallows": [
+       {
+        "class": "^Gnome\\-terminal$",
+        "window_role": "^gnome\\-terminal\\-window\\-60782990\\-24ca\\-42b2\\-8271\\-d599d4fb6933$"
+       }
+    ],
+    "type": "con"
+}
+
