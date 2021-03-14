@@ -21,7 +21,7 @@ for key in $(ls $HOME/.ssh/*_rsa); do
 
   pw=$(echo "$creds" | grep "${key#$HOME/}" | cut -d\  -f2-)
   if [ -n "$pw" ]; then
-    /usr/local/bin/ssh-app-p $key "$pw"
+    $HOME/.security/ssh-add-p $key "$pw"
   else
     ssh-add "$key"
   fi
