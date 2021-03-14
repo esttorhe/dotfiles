@@ -328,6 +328,7 @@ mode "restore" {
   bindsym 1 exec --no-startup-id "i3-msg 'workspace 1; append_layout /home/esteban/.i3/w1.json'"
   bindsym 2 exec --no-startup-id "i3-msg 'workspace 2; append_layout /home/esteban/.i3/w2.json'"
   bindsym 3 exec --no-startup-id "i3-msg 'workspace 3; append_layout /home/esteban/.i3/w3.json'"
+  bindsym 5 exec --no-startup-id "i3-msg 'workspace 5; append_layout /home/esteban/.i3/w5.json'"
 
   bindsym Escape mode "default"
 }
