@@ -13,6 +13,12 @@ unameOut="$(uname -s)"
 ###################################################
 export PATH="$HOME/workspace/src/github.com/winkoz/plonk/bin/:$PATH"
 
+
+###################################################
+# i3blocks contrib
+###################################################
+export PATH="$HOME/workspace/src/github.com/vivien/i3blocks-contrib/**/:$PATH"
+
 ###################################################
 # Security scripts
 ###################################################
