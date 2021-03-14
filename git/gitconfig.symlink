@@ -2,8 +2,8 @@
 
 [user]
 	name = Esteban Torres
-  signingkey = 504046A7
-	email = me@estebantorr.es
+	signingkey = C75AB4047FB8CAB3
+	email = me+github@estebantorr.es
 [github]
   user = esttorhe
 
@@ -179,7 +179,7 @@
 [commit]
 	gpgsign = true
 [gpg]
-	program = gpg2
+	program = gpg
 
 [log]
 	date = local
