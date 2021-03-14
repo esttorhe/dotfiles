@@ -108,6 +108,14 @@ min_width=CPU 100.00%
 label=⚡
 interval=30
 
+# Weather =>  Guess the weather hourly
+#
+[weather]
+label=🌦️
+command=curl -Ss 'https://wttr.in?0&T&Q' | cut -c 16- | head -2 | xargs echo
+interval=3600
+color=#A4C2F4
+
 # Date Time
 #
 [time]

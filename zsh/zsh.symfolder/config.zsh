@@ -56,6 +56,9 @@ if [ "${unameOut}" = "Darwin" ]; then
   #
   #########################################################################
   "$(brew --prefix asdf)/asdf.sh"
+
+  # Ntfy support
+  eval "$(ntfy shell-integration)"
 elif [ "${unameOut}" = "Linux" ]; then
   # Configures z plugin
   . ~/.zsh/z.sh
@@ -146,11 +149,6 @@ if [ -z "$_zsh_custom_scripts_loaded" ]; then
 fi
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
-
-##############################################################################
-
-# Ntfy support
-eval "$(ntfy shell-integration)"
 
 ##############################################################################
 
