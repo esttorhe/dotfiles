@@ -19,5 +19,8 @@ elif [ "${unameOut}" = "Linux" ]; then
     sudo apt-clone restore packages-list.apt-clone.tar.gz
 fi
 
+# Install pip3 packages
+pip3 install -r pip3-packages.txt
+
 # find the installers and run them iteratively
 find . -name install.sh | while read installer ; do sh -c "${installer}" ; done
