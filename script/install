@@ -14,6 +14,9 @@ if [ "${unameOut}" = "Darwin" ]; then
     # Run Homebrew through the Brewfile
     echo "› brew bundle"
     brew bundle
+elif [ "${unameOut}" = "Linux" ]; then
+    sudo apt-get install apt-clone
+    sudo apt-clone restore packages-list.apt-clone.tar.gz
 fi
 
 # find the installers and run them iteratively
