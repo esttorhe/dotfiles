@@ -11,6 +11,18 @@
 
 set $mod Mod4
 
+mode "clipster" {
+    # Start clipster daemon
+    bindsym c exec --no-startup-id clipster -d 
+    
+    # shortcut to selection widget (primary)
+    bindsym $mod+c exec "clipster -sp"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+c mode "clipster"
+
 # Remap CapsLock for the Compose key
 exec --no-startup-id setxkbmap -option compose:caps
 

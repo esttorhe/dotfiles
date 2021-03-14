@@ -29,6 +29,18 @@ command=$SCRIPT_DIR/$BLOCK_NAME/$BLOCK_NAME
 separator_block_width=15
 markup=pango
 
+# Clipboard manager
+#
+#[clipster2]                                                                      
+#command=$HOME/.config/i3blocks/clipster                                                
+#instance=2                                                                       
+#interval=1                                                                       
+
+#[clipster1]                                                                      
+#command=$HOME/.config/i3blocks/clipster                                                
+#instance=1                                                                       
+#interval=1 
+
 # Notifications
 [dunst]
 interval=30
