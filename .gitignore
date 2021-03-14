@@ -10,3 +10,6 @@ zsh/zsh.symfolder/_secrets.zsh
 
 # Ignore python caches
 __pycache__/
+
+# Ignore clipboard manager share
+$HOME/.local/share/clipster/history
