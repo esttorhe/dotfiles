@@ -1,3 +1,6 @@
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 # Load personal variables
 source "$HOME/.personal_variables"
 
@@ -34,6 +37,3 @@ export PATH=$PATH:/Users/estebantorres/bin/slack-theme
 export SLACK_THEME_SHELL_PROFILE="/Users/estebantorres/.zshrc"
 source /usr/local/share/chruby/chruby.sh
 source /usr/local/share/chruby/auto.sh
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

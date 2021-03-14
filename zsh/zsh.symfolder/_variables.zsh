@@ -3,14 +3,20 @@ export ZSH=$HOME/.oh-my-zsh
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/bin/gcov:$PATH
 export PATH=/usr/local/bin/mergepbx:$PATH
-export PATH=$(brew --prefix ruby)/bin:$PATH
+unameOut="$(uname -s)"
+if [ "${unameOut}" = "Darwin" ]; then
+    export PATH=$(brew --prefix ruby)/bin:$PATH
+    # Add qt to the path
+    export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
+
+    # HOMEBREW
+    export HOMEBREW_EDITOR="vi"
+fi
+
 export ZSH_PLUGINS_ALIAS_TIPS_EXCLUDES="_ g"
 
 export FPATH=$FPATH:/usr/share/zsh/site-functions/:/usr/share/zsh/5.3/functions/
 #:/usr/local/Cellar/zsh/5.4.1/share/zsh/functions/
-
-# Add qt to the path
-export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
 
 GOROOT="/usr/local/Cellar/go/1.12.4/libexec"
 export GOPATH=~/workspace
@@ -30,24 +36,8 @@ export LC_ALL"=en_US.UTF-8"
 export LANG="en_US.UTF-8"
 export EDITOR="vi"
 export TERM=xterm-256color
-# Disable sending stats to speed up `pod install`
-# https://twitter.com/zadr/status/705092258152878080
-export COCOAPODS_DISABLE_STATS=1
-
-# HOMEBREW
-export HOMEBREW_EDITOR="vi"
-# Specify your defaults in this environment variable
-#export HOMEBREW_CASK_OPTS="--appdir=/Applications --caskroom=/usr/local/Caskroom"
 
 # DOCKER
-export SD_TOOLS_HOME=$HOME/workspace/Tools
-export PATH=$PATH:$SD_TOOLS_HOME
 export CRUN_NFS=1
-
-# ANDROID
-ANDROID_HOME=$HOME/Library/Android/sdk
-export ANDROID_HOME=$ANDROID_HOME
-export ANDROID_SDK_ROOT=$ANDROID_HOME
-export ANDROID_SDK_HOME=$ANDROID_HOME
 
 # vim: ft=muttrc

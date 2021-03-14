@@ -1,18 +1,22 @@
 # Configure ZSH
-#ZSH_THEME="pygmalion"
-#ZSH_THEME="agnoster"
 ZSH_THEME="powerlevel10k/powerlevel10k"
-#ZSH_THEME="powerline"
 ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(git brew alias-tips docker)
 DEFAULT_USER="`whoami`"
+# Read the running OS
+unameOut="$(uname -s)"
 
 ###################################################
 # plonk
 ###################################################
 export PATH="$HOME/workspace/src/github.com/winkoz/plonk/bin/:$PATH"
+
+###################################################
+# Security scripts
+###################################################
+export PATH="$HOME/.security/:$PATH"
 
 ###################################################
 # sc-tools
@@ -26,9 +30,29 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Mac, adjust for Python version
-if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
-    PATH="$HOME/Library/Python/3.6/bin/:$PATH"
+# Only run this if on Mac
+if [ "${unameOut}" = "Darwin" ]; then
+  # Mac, adjust for Python version
+  if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
+      PATH="$HOME/Library/Python/3.6/bin/:$PATH"
+  fi
+
+  # Configures z plugin
+  . `brew --prefix`/etc/profile.d/z.sh
+
+  # BREW CASK
+  # Specify your defaults in this environment variable
+  export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+
+  #########################################################################
+  #
+  # ASDF evaluation
+  #
+  #########################################################################
+  "$(brew --prefix asdf)/asdf.sh"
+elif [ "${unameOut}" = "Linux" ]; then
+  # Configures z plugin
+  . ~/.zsh/z.sh
 fi
 
 autoload -U promptinit; promptinit
@@ -40,18 +64,9 @@ prompt pure
 POWERLINE_RIGHT_A="exit-status-on-fail"
 POWERLINE_HIDE_USER_NAME="true"
 POWERLINE_HIDE_HOST_NAME="true"
-#POWERLINE_PATH="short"
 POWERLINE_DETECT_SSH="true"
 
 ###############################################################################
-
-# Configure z plugin
-unameOut="$(uname -s)"
-case "${unameOut}" in
-    Linux*)     . ~/.zsh/z.sh;;
-    Darwin*)    . `brew --prefix`/etc/profile.d/z.sh;;
-    *)          machine="UNKNOWN:${unameOut}"
-esac
 
 # Show menu after multiple tabs
 setopt AUTO_MENU
@@ -88,9 +103,7 @@ setopt HIST_VERIFY
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
-# BREW CASK
-# Specify your defaults in this environment variable
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+
 export PATH="/usr/local/sbin:$PATH"
 
 # Vi mode
@@ -117,11 +130,6 @@ chruby ruby-2.6.0
 
 ##############################################################################
 
-function xcode() {
-  _z $1
-  xc
-}
-
 source $ZSH/oh-my-zsh.sh
 
 # Auto suggestions & syntax highlight
@@ -134,8 +142,6 @@ fi
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 
 ##############################################################################
-
-export SD_TOOLS_HOME=$HOME/workspace/Tools
 
 # Ntfy support
 eval "$(ntfy shell-integration)"
@@ -155,7 +161,6 @@ function chpwd() {
 ##############################################################################
 #
 # Load credentials ssh keys, etc
-
 $HOME/.security/*.sh
 
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -176,15 +181,6 @@ export GPG_TTY=$(tty)
 ##############################################################################
 
 eval "$(gh completion -s zsh)"
-
-
-##############################################################################
-#
-# ASDF evaluation
-#
-##############################################################################
-$(brew --prefix asdf)/asdf.sh"
-
 
 ##############################################################################
 # SOUNDCLOUD NFS docker crun mount configuration

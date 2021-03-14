@@ -1,40 +1,33 @@
+##################################################################
 # Aliases
-alias rm="trash"
+##################################################################
+# Read the running OS
+unameOut="$(uname -s)"
+
+if [ "${unameOut}" = "Darwin" ]; then
+  alias rm="trash"
+  eval $(thefuck --alias)
+  alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
+
+  function brew.info {
+    grep desc $(brew --prefix)/Library/Formula/*.rb | perl -ne 'm{^.*/(.*?)\.rb.*?\"(.*)"$} and print "$1|$2\n"' | column -t -s '|' | fzf --reverse
+  }
+fi
+
 alias be="bundle exec"
 alias bef="be fastlane"
 alias buu="brew update && brew upgrade && brew upgrade --cask && brew cleanup -s"
 alias gu="gem update --no-document && gem cleanup"
-eval "$(hub alias -s)"
-#alias la='ls -lan'
 alias la="exa -abghHliS --git"
-#alias lt=""
-function lt() {
-  tree -ugDFlfx --dirsfirst --filelimit 20 -L ${1:-3} -aC $2 -I '.git|DS_Store|DerivedData'
-}
-
-alias xc='open *.xcworkspace'
-alias swift-format-all='docker run -v $PWD:/source -it esttorhe/swift-format:latest'
 
 # Look up for unreachable commits || Use it with --grep=<something useful>
 alias gitlost="git fsck --unreachable | grep commit | cut -d ' ' -f3 | xargs git log --merges --no-walk --grep="
 
-alias swiftc='xcrun -sdk macosx swiftc'
-
 alias zsource="source $HOME/.zshrc"
 alias imaps="imapu; imapr"
 
-alias make=gmake
-
-eval $(thefuck --alias)
-
-alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
-
 # GoLand
 alias goland="/Users/estebantorres/.jetbrains/goland"
-
-function brew.info {
-  grep desc $(brew --prefix)/Library/Formula/*.rb | perl -ne 'm{^.*/(.*?)\.rb.*?\"(.*)"$} and print "$1|$2\n"' | column -t -s '|' | fzf --reverse
-}
 
 function mount_remote_file(){
   sudo sshfs -o allow_other,defer_permissions estebantorres@shell:$1 $2
