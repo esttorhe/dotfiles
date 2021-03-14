@@ -1,7 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 SCRIPT=`realpath $0`
 SCRIPTPATH=`dirname $SCRIPT`
+unameOut="$(uname -s)"
 source "$(readlink $SCRIPTPATH/shared_functionality)"
 
 install_launch_agents () {
@@ -18,4 +19,7 @@ install_launch_agents () {
   done
 }
 
-install_launch_agents
+# Only run if executing on MacOS
+if [ "${unameOut}" = "Darwin" ]; then
+    install_launch_agents
+fi

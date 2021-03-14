@@ -18,7 +18,7 @@ setup_execute_rights
 source "$DOTFILES_ROOT/script/shared_functionality"
 
 info '• bootstrapping'
-sh "$DOTFILES_ROOT/script/bootstrap"
+bash "$DOTFILES_ROOT/script/bootstrap"
 
 info '• installing'
-sh "$DOTFILES_ROOT/script/install"
+bash "$DOTFILES_ROOT/script/install"
