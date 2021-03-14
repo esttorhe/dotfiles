@@ -4,11 +4,17 @@
 
 set -e
 
+# Detect running OS
+unameOut="$(uname -s)"
+
 cd "$(dirname $0)"/..
 
-# Run Homebrew through the Brewfile
-echo "› brew bundle"
-brew bundle
+# Only run if on Darwin OS
+if [ "${unameOut}" = "Darwin" ]; then
+    # Run Homebrew through the Brewfile
+    echo "› brew bundle"
+    brew bundle
+fi
 
 # find the installers and run them iteratively
 find . -name install.sh | while read installer ; do sh -c "${installer}" ; done
