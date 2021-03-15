@@ -326,6 +326,7 @@ mode "$mode_gaps_left" {
 mode "lock" {
 	bindsym l exec i3lock
         bindsym Escape mode "default"
+        bindsym Return mode "default"
 }
 
 bindsym $mod+Shift+x mode "lock"
