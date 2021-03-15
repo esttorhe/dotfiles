@@ -22,5 +22,8 @@ fi
 # Install pip3 packages
 pip3 install -r pip3-packages.txt
 
+# Connect camera to Brave
+sudo snap connect brave:camera :camera
+
 # find the installers and run them iteratively
 find . -name install.sh | while read installer ; do sh -c "${installer}" ; done

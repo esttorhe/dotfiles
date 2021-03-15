@@ -22,3 +22,6 @@ DerivedData
 
 ### SoundCloud Specific
 ModuleCache/
+
+### Clipster history
+$HOME/.local/share/clipster/history
