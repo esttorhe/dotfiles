@@ -16,16 +16,10 @@ set $mod Mod4
 bindsym $mod+Shift+greater move container to output right
 bindsym $mod+Shift+less move container to output left
 
-mode "clipster" {
-    # Start clipster daemon
-    bindsym c exec --no-startup-id clipster -d 
-
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-bindsym $mod+c mode "clipster"
+# Start clipster daemon
+bindsym --release $mod+Shift+z exec --no-startup-id clipster -d
 # shortcut to selection widget (primary)
-bindsym --release $mod+Shift+z exec "clipster -sp"
+bindsym --release $mod+c exec "clipster -sp"
 
 # Remap CapsLock for the Compose key
 exec --no-startup-id setxkbmap -option compose:caps
