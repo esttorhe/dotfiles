@@ -17,9 +17,9 @@ bindsym $mod+Shift+greater move container to output right
 bindsym $mod+Shift+less move container to output left
 
 # Start clipster daemon
-bindsym --release $mod+Shift+z exec --no-startup-id clipster -d
+bindsym --release $mod+Shift+z exec --no-startup-id "$HOME/.bin/clipster -d"
 # shortcut to selection widget (primary)
-bindsym --release $mod+c exec "clipster -sp"
+bindsym --release $mod+c exec "$HOME/.bin/clipster -sp"
 
 # Remap CapsLock for the Compose key
 exec --no-startup-id setxkbmap -option compose:caps

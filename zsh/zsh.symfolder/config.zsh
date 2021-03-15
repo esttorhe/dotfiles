@@ -13,6 +13,10 @@ unameOut="$(uname -s)"
 ###################################################
 export PATH="$HOME/workspace/src/github.com/winkoz/plonk/bin/:$PATH"
 
+###################################################
+# Add all symlinked bin to PATH
+###################################################
+export PATH="$HOME/.bin:$PATH"
 
 ###################################################
 # i3blocks contrib
