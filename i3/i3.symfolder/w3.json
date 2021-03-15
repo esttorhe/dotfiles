@@ -8,27 +8,6 @@
     "type": "con",
     "nodes": [
         {
-            "border": "none",
-            "current_border_width": 2,
-            "floating": "auto_off",
-            "geometry": {
-               "height": 656,
-               "width": 840,
-               "x": 540,
-               "y": 212
-            },
-            "name": "Calendar",
-            "percent": 0.5,
-            "swallows": [
-               {
-                "class": "^Gnome\\-calendar$",
-                "instance": "^gnome\\-calendar$",
-                "title": "^Calendar$"
-               }
-            ],
-            "type": "con"
-        },
-        {
             "border": "normal",
             "current_border_width": 2,
             "floating": "auto_off",
@@ -38,13 +17,35 @@
                "x": 0,
                "y": 0
             },
-            "name": "Inbox - Mozilla Thunderbird",
+            "name": "Inbox - SoundCloud - Mozilla Thunderbird",
             "percent": 0.5,
             "swallows": [
                {
                 "class": "^Thunderbird$",
                 "instance": "^Mail$",
                 "window_role": "^3pane$"
+               }
+            ],
+            "type": "con"
+        },
+        {
+            "border": "normal",
+            "current_border_width": 2,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 480,
+               "width": 640,
+               "x": 0,
+               "y": 0
+            },
+            "name": "Calendar — Evolution",
+            "percent": 0.5,
+            "swallows": [
+               {
+                "class": "^Evolution$",
+                "instance": "^evolution$",
+                "title": "^Calendar\\ \\—\\ Evolution$",
+                "window_role": "^EShellWindow\\-94730560103600$"
                }
             ],
             "type": "con"
