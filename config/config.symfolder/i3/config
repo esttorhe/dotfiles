@@ -321,13 +321,8 @@ mode "$mode_gaps_left" {
 ###################################################
 # i3lock
 ###################################################
-mode "lock" {
-	bindsym l exec i3lock
-        bindsym Escape mode "default"
-        bindsym Return mode "default"
-}
-
-bindsym $mod+Shift+x mode "lock"
+#bindsym $mod+Shift+x mode "lock"
+bindsym --release $mod+Shift+x exec i3lock
 
 # OSX-like area selection screenshots
 bindsym --release $mod+Print exec scrot -s 'screenshot_%Y%m%d_%H%M%S.png' -e 'mkdir -p ~/Pictures/screenshots && mv $f ~/Pictures/screenshots && xclip -selection clipboard -t image/png -i ~/Pictures/screenshots/`ls -1 -t ~/Pictures/screenshots | head -1`' # Area selection
