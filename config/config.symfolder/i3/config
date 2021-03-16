@@ -24,7 +24,7 @@ bindsym --release $mod+Shift+z exec --no-startup-id "$HOME/.bin/clipster -d"
 bindsym --release $mod+c exec "$HOME/.bin/clipster -sp"
 
 # Remap CapsLock for the Compose key
-exec --no-startup-id setxkbmap -option compose:caps
+exec --no-startup-id "setxkbmap -option compose:caps"
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
