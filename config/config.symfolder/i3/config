@@ -190,7 +190,7 @@ bindsym $mod+r mode "resize"
 # finds out, if available) #status_command i3status
 bar {
 	position top
-	status_command SCRIPT_DIR=~/workspace/src/github.com/vivien/i3blocks-contrib i3blocks $HOME/.config/i3blocks/config
+	status_command SCRIPT_DIR=~/workspace/src/github.com/vivien/i3blocks-contrib SCRIPT_DIR_2=~/workspace/src/github.com/Anachron/i3blocks/blocks i3blocks $HOME/.config/i3blocks/config
 }
 
 ###################################################

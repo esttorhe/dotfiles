@@ -26,8 +26,37 @@
 # Each block command defaults to the script name to avoid boilerplate.
 # Change $SCRIPT_DIR to the location of your scripts!
 command=$SCRIPT_DIR/$BLOCK_NAME/$BLOCK_NAME
+COMMAND2=$SCRIPT_DIR_2/$BLOCK_NAME
 separator_block_width=15
 markup=pango
+
+#####################################################
+# Mail
+####################################################
+# SoundCloud
+[sc-mail]
+command=$HOME/.i3blocks/blocks/email
+label= sc: 
+interval=300
+min_width=messages:99
+instance=sc_config
+
+# Me
+[mail]
+command=$HOME/.i3blocks/blocks/email
+label= me: 
+interval=300
+min_width=messages:99
+instance=me_config
+
+# Old
+[mail]
+command=$HOME/.i3blocks/blocks/email
+label= old: 
+interval=300
+min_width=messages:99
+instance=old_config
+#####################################################
 
 # Notifications
 [dunst]
@@ -43,25 +72,47 @@ DUNST_MUTE=off
 # The first parameter sets the step (and units to display)
 # The second parameter overrides the mixer selection
 # See the script for details.
+[audio]
+label= 
+interval=5
+command=$SCRIPT_DIR_2/$BLOCK_NAME
 
-[volume]
-label= 
-interval=once
-signal=10
+[microphone]
+label=
+interval=5
+command=$SCRIPT_DIR_2/$BLOCK_NAME
+
+[webcam]
+label=
+instance=/dev/video0
+interval=5
+command=$SCRIPT_DIR_2/$BLOCK_NAME
+
+[display]
+label=
+interval=5
+command=$SCRIPT_DIR_2/$BLOCK_NAME
+
 
 # Memory usage
 #
 # The type defaults to "mem" if the instance is not specified.
 [memory]
-label= 
-separator=false
+label=
+instance=mem;free
 interval=30
+command=$SCRIPT_DIR_2/$BLOCK_NAME
 
 [memory]
-label=SWAP
-instance=swap
-separator=true
+label=
+instance=swap;total
 interval=30
+command=$SCRIPT_DIR_2/$BLOCK_NAME
+
+[cpu]
+label=
+interval=2
+command=$SCRIPT_DIR_2/$BLOCK_NAME
 
 # Disk usage
 #
@@ -72,6 +123,12 @@ interval=30
 label= 
 #DIR=/mnt/data
 interval=30
+
+# Shows the number of items in the trash can
+[trash]
+label=
+interval=10
+command=$SCRIPT_DIR_2/$BLOCK_NAME
 
 # Network interface monitoring
 #
@@ -84,25 +141,21 @@ color=#00FF00
 interval=10
 separator=false
 
-[wifi]
-#INTERFACE=wlp3s0
-label=wifi:
-interval=10
-separator=false
-
-[bandwidth]
-#INTERFACE=eth0
+[vpn]
+label=
 interval=5
+command=$SCRIPT_DIR_2/$BLOCK_NAME
 
 # CPU usage
 #
 # The script may be called with -w and -c switches to specify thresholds,
 # see the script for details.
-[cpu_usage]
-label= 
-interval=10
-min_width=CPU 100.00%
-#separator=false
+#[cpu_usage]
+#label= 
+#interval=10
+#min_width=CPU 100.00%
+
+
 
 # Battery indicator
 #
@@ -111,13 +164,10 @@ min_width=CPU 100.00%
 label= 
 interval=30
 
-# Weather =>  Guess the weather hourly
-#
 [weather]
-label= 
-command=curl -Ss 'https://wttr.in?0&T&Q' | cut -c 16- | head -2 | xargs echo
-interval=3600
-color=#A4C2F4
+instance=2950159
+interval=60
+command=$SCRIPT_DIR_2/$BLOCK_NAME
 
 # Date Time
 #
