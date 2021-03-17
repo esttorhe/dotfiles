@@ -31,9 +31,11 @@ markup=pango
 
 # Notifications
 [dunst]
-interval=30
+markup=pango
+interval=once
 format=json
-align=center
+separator=true
+DUNST_MUTE=off
 
 # Volume indicator
 #
