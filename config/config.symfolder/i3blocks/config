@@ -31,11 +31,12 @@ markup=pango
 
 # Notifications
 [dunst]
+command=$HOME/.i3blocks/blocks/$BLOCK_NAME/$BLOCK_NAME
 markup=pango
 interval=once
 format=json
 separator=true
-DUNST_MUTE=off
+DUNST_MUTE=on
 
 # Volume indicator
 #
