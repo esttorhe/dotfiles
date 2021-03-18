@@ -107,7 +107,7 @@ def block_event():
         event = '0'
     if event == '1':
         NULL = open(os.devnull, 'w')
-        subprocess.Popen(['xdg-open', config['URL']], stdout=NULL)
+        subprocess.Popen(["i3-msg", "-t", "run_command", "workspace", "number", "3"], stdout=NULL)
 
 
 def serf():
