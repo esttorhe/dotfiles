@@ -155,10 +155,8 @@ command=$SCRIPT_DIR_2/$BLOCK_NAME
 #
 # The battery instance defaults to 0.
 [battery]
-label=
-instance=0
 interval=5
-command=$SCRIPT_DIR_2/$BLOCK_NAME
+command=$HOME/.i3blocks/blocks/$BLOCK_NAME
 
 [weather]
 instance=2950159
