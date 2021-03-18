@@ -4,8 +4,9 @@
 # Read the running OS
 unameOut="$(uname -s)"
 
+alias rm="trash"
+
 if [ "${unameOut}" = "Darwin" ]; then
-  alias rm="trash"
   eval $(thefuck --alias)
   alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
 

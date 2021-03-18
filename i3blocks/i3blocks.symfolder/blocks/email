@@ -35,7 +35,9 @@ config = {
     'PORT': 993,
     'USER': 'my_mailbox@mail_server.com',
     'PASS': '',
-    'URL': 'https://www.mail_server.com'
+    'URL': 'https://www.mail_server.com',
+    'EMAIL_COLOR': '#00ff00',
+    'EMPTY_COLOR': '#ededed'
 }
 # _____________________________________________________________________________
 
@@ -123,9 +125,9 @@ def printer(new_count):
     print(new_count)
     print(new_count)
     if new_count > 0:
-        print('#00ff00')
+        print(config['EMAIL_COLOR'])
     else:
-        print('#ededed')
+        print(config['EMPTY_COLOR'])
 
 if (keyring_loaded and not get_args()) or not keyring_loaded:
     parse_instance()

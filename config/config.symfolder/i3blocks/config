@@ -150,19 +150,15 @@ command=$SCRIPT_DIR_2/$BLOCK_NAME
 #
 # The script may be called with -w and -c switches to specify thresholds,
 # see the script for details.
-#[cpu_usage]
-#label= 
-#interval=10
-#min_width=CPU 100.00%
-
-
 
 # Battery indicator
 #
 # The battery instance defaults to 0.
 [battery]
-label= 
-interval=30
+label=
+instance=0
+interval=5
+command=$SCRIPT_DIR_2/$BLOCK_NAME
 
 [weather]
 instance=2950159
