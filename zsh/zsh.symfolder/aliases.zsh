@@ -9,6 +9,9 @@ alias rm="trash"
 if [ "${unameOut}" = "Darwin" ]; then
   eval $(thefuck --alias)
   alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
+  alias buu="brew update && brew upgrade && brew upgrade --cask && brew cleanup -s"
+  # GoLand
+  alias goland="$HOME/.jetbrains/goland"
 
   function brew.info {
     grep desc $(brew --prefix)/Library/Formula/*.rb | perl -ne 'm{^.*/(.*?)\.rb.*?\"(.*)"$} and print "$1|$2\n"' | column -t -s '|' | fzf --reverse
@@ -16,8 +19,6 @@ if [ "${unameOut}" = "Darwin" ]; then
 fi
 
 alias be="bundle exec"
-alias bef="be fastlane"
-alias buu="brew update && brew upgrade && brew upgrade --cask && brew cleanup -s"
 alias gu="gem update --no-document && gem cleanup"
 alias la="exa -abghHliS --git"
 
@@ -26,9 +27,6 @@ alias gitlost="git fsck --unreachable | grep commit | cut -d ' ' -f3 | xargs git
 
 alias zsource="source $HOME/.zshrc"
 alias imaps="imapu; imapr"
-
-# GoLand
-alias goland="/Users/estebantorres/.jetbrains/goland"
 
 function mount_remote_file(){
   sudo sshfs -o allow_other,defer_permissions estebantorres@shell:$1 $2
