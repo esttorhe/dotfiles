@@ -30,34 +30,6 @@ COMMAND2=$SCRIPT_DIR_2/$BLOCK_NAME
 separator_block_width=15
 markup=pango
 
-#####################################################
-# Mail
-####################################################
-# SoundCloud
-[sc-mail]
-command=$HOME/.i3blocks/blocks/email
-label= sc: 
-interval=300
-min_width=messages:99
-instance=sc_config
-
-# Me
-[mail]
-command=$HOME/.i3blocks/blocks/email
-label= me: 
-interval=300
-min_width=messages:99
-instance=me_config
-
-# Old
-[mail]
-command=$HOME/.i3blocks/blocks/email
-label= old: 
-interval=300
-min_width=messages:99
-instance=old_config
-#####################################################
-
 # Notifications
 [dunst]
 command=$HOME/.i3blocks/blocks/$BLOCK_NAME/$BLOCK_NAME
@@ -66,6 +38,34 @@ interval=once
 format=json
 separator=true
 DUNST_MUTE=off
+
+#####################################################
+# Mail
+####################################################
+# SoundCloud
+[sc-mail]
+command=$HOME/.i3blocks/blocks/email
+label= sc: 
+interval=300
+min_width=messages:99
+instance=sc_config
+
+# Me
+[mail]
+command=$HOME/.i3blocks/blocks/email
+label= me: 
+interval=300
+min_width=messages:99
+instance=me_config
+
+# Old
+[mail]
+command=$HOME/.i3blocks/blocks/email
+label= old: 
+interval=300
+min_width=messages:99
+instance=old_config
+#####################################################
 
 # Volume indicator
 #
@@ -82,17 +82,10 @@ label=
 interval=5
 command=$SCRIPT_DIR_2/$BLOCK_NAME
 
-[webcam]
-label=
-instance=/dev/video0
-interval=5
-command=$SCRIPT_DIR_2/$BLOCK_NAME
-
 [display]
 label=
 interval=5
 command=$SCRIPT_DIR_2/$BLOCK_NAME
-
 
 # Memory usage
 #
@@ -110,7 +103,7 @@ interval=30
 command=$SCRIPT_DIR_2/$BLOCK_NAME
 
 [cpu]
-label=
+label=
 interval=2
 command=$SCRIPT_DIR_2/$BLOCK_NAME
 
@@ -123,12 +116,6 @@ command=$SCRIPT_DIR_2/$BLOCK_NAME
 label= 
 #DIR=/mnt/data
 interval=30
-
-# Shows the number of items in the trash can
-[trash]
-label=
-interval=10
-command=$SCRIPT_DIR_2/$BLOCK_NAME
 
 # Network interface monitoring
 #
@@ -146,11 +133,6 @@ label=
 interval=5
 command=$SCRIPT_DIR_2/$BLOCK_NAME
 
-# CPU usage
-#
-# The script may be called with -w and -c switches to specify thresholds,
-# see the script for details.
-
 # Battery indicator
 #
 # The battery instance defaults to 0.
@@ -167,6 +149,6 @@ command=$SCRIPT_DIR_2/$BLOCK_NAME
 #
 [time]
 label= 
-command=date '+%Y-%m-%d %H:%M:%S'
+command=date '+%H:%M:%S %d.%m.%Y'
 interval=5
 
