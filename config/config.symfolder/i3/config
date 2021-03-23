@@ -237,8 +237,8 @@ bindsym $mod+Shift+v mode "restore
 ###################################################
 # Dracula
 # class                 border      bground     text      indicator   child_border
-client.focused          #003C3C     #003C3C     #F8F8F2   #003C3C     #003C3C
-client.focused_inactive #112626     #112626     #F8F8F2   #112626     #112626
+client.focused          #003C3C     #003C3C     #CFCFCF   #003C3C     #003C3C
+client.focused_inactive #112626     #112626     #CFCFCF   #112626     #112626
 client.unfocused        #002121     #002121     #BFBFBF   #002121     #002121
 client.urgent           #44475A     #FF5555     #F8F8F2   #FF5555     #FF5555
 client.placeholder      #282A36     #282A36     #F8F8F2   #282A36     #282A36
