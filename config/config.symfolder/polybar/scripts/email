@@ -125,9 +125,9 @@ def serf():
 def printer(new_count):
     label = config['LABEL']
     if new_count > 0:
-        print('%{F' + config['EMAIL_COLOR'] + '} ' + label + ': ' + str(new_count)) + ': %{F-}'
+        print('%{F' + config['EMAIL_COLOR'] + '}  ' + label + ': ' + str(new_count)) + ': %{F-}'
     else:
-        print('%{F' + config['EMPTY_COLOR'] + '} ' + label + ': ' + str(new_count)) + ': %{F-}'
+        print('%{F' + config['EMPTY_COLOR'] + '}  ' + label + ': ' + str(new_count)) + ': %{F-}'
 
 if (keyring_loaded and not get_args()) or not keyring_loaded:
     parse_instance()

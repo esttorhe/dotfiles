@@ -20,12 +20,12 @@ import sys
 def mute_on():
     '''Turns off dunst notifications'''
     subprocess.run(["dunstctl", "set-paused", "toggle"], check=True)
-    return ""
+    return ""
 
 def mute_off():
     '''Turns back on dunst notifications'''
     subprocess.run(["dunstctl", "set-paused", "toggle"], check=True)
-    return ""
+    return ""
 
 def clicked():
     '''Returns True if the button was clicked'''
@@ -45,7 +45,7 @@ if clicked():
         RTN = mute_on()
 else:
     if muted():
-        RTN = ""
+        RTN = ""
     else:
-        RTN = ""
+        RTN = ""
 print(RTN)

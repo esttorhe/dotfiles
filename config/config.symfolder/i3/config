@@ -16,10 +16,10 @@ set $mod Mod4
 bindsym $mod+Shift+greater move container to output right
 bindsym $mod+Shift+less move container to output left
 # detect monitors and move workspaces around
-bindsym --release $mod+Shift+n exec --no-startup-id "xrandr --auto && ~/.config/polybar/launch.sh --material"
+bindsym --release $mod+Shift+n exec --no-startup-id "xrandr --auto && ~/.config/polybar/launch.sh --cuts"
 
 # Launch polybar
-exec_always --no-startup-id "$HOME/.config/polybar/launch.sh --material"
+exec_always --no-startup-id "$HOME/.config/polybar/launch.sh --cuts"
 
 # Start clipster daemon
 exec_always --no-startup-id "$HOME/.bin/clipster -d"
@@ -236,16 +236,16 @@ bindsym $mod+Shift+v mode "restore
 # Theming
 ###################################################
 # Dracula
-# class                 border  bground text    indicator child_border
-client.focused          #6272A4 #6272A4 #F8F8F2 #6272A4   #6272A4
-client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
-client.unfocused        #282A36 #282A36 #BFBFBF #282A36   #282A36
-client.urgent           #44475A #FF5555 #F8F8F2 #FF5555   #FF5555
-client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
+# class                 border      bground     text      indicator   child_border
+client.focused          #003C3C     #003C3C     #F8F8F2   #003C3C     #003C3C
+client.focused_inactive #112626     #112626     #F8F8F2   #112626     #112626
+client.unfocused        #002121     #002121     #BFBFBF   #002121     #002121
+client.urgent           #44475A     #FF5555     #F8F8F2   #FF5555     #FF5555
+client.placeholder      #282A36     #282A36     #F8F8F2   #282A36     #282A36
 
-client.background       #F8F8F2
+client.background       #003C3C
 
-bindsym $mod+d exec "i3-dmenu-desktop --dmenu='dmenu -i -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -fn 'monospace-10' -p 'dmenu%''"
+bindsym $mod+d exec "i3-dmenu-desktop --dmenu='dmenu -i -nf '#CFCFCF' -nb '#003C3C' -sb '#002121' -sf '#CFCFCF' -fn 'monospace-10' -p 'dmenu%''"
 
 ###################################################
 # Scratchpad
