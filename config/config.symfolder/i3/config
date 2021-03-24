@@ -38,8 +38,8 @@ font pango:DejaVu Sans Mono 8
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec_always --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -c 000000
-exec_always --no-startup-id xautolock -time 1 -locker 'i3lock -c 000000' &
+exec_always --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -c 002121
+exec_always --no-startup-id xautolock -time 1 -locker 'i3lock -c 002121' &
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -212,7 +212,7 @@ bindsym $mod+r mode "resize"
 # i3lock
 ###################################################
 #bindsym $mod+Shift+x mode "lock"
-bindsym --release $mod+Shift+x exec --no-startup-id i3lock -c 000000
+bindsym --release $mod+Shift+x exec --no-startup-id i3lock -c 002121
 
 # OSX-like area selection screenshots
 bindsym --release $mod+Print exec scrot -s 'screenshot_%Y%m%d_%H%M%S.png' -e 'mkdir -p ~/Pictures/screenshots && mv $f ~/Pictures/screenshots && xclip -selection clipboard -t image/png -i ~/Pictures/screenshots/`ls -1 -t ~/Pictures/screenshots | head -1`' # Area selection
@@ -240,12 +240,13 @@ bindsym $mod+Shift+v mode "restore
 client.focused          #003C3C     #003C3C     #CFCFCF   #003C3C     #003C3C
 client.focused_inactive #112626     #112626     #CFCFCF   #112626     #112626
 client.unfocused        #002121     #002121     #BFBFBF   #002121     #002121
-client.urgent           #44475A     #FF5555     #F8F8F2   #FF5555     #FF5555
+client.urgent           #358038     #FF5555     #F8F8F2   #FF5555     #FF5555
 client.placeholder      #282A36     #282A36     #F8F8F2   #282A36     #282A36
 
-client.background       #003C3C
+client.background       #002121
 
 bindsym $mod+d exec "i3-dmenu-desktop --dmenu='dmenu -i -nf '#CFCFCF' -nb '#003C3C' -sb '#002121' -sf '#CFCFCF' -fn 'monospace-10' -p 'dmenu%''"
+exec --no-startup-id xsetroot -solid "#002121"
 
 ###################################################
 # Scratchpad
