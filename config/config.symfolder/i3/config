@@ -236,12 +236,12 @@ bindsym $mod+Shift+v mode "restore
 # Theming
 ###################################################
 # Dracula
-# class                 border      bground     text      indicator   child_border
-client.focused          #003C3C     #003C3C     #CFCFCF   #003C3C     #003C3C
-client.focused_inactive #112626     #112626     #CFCFCF   #112626     #112626
-client.unfocused        #002121     #002121     #BFBFBF   #002121     #002121
-client.urgent           #358038     #358038     #F8F8F2   #358038     #358038
-client.placeholder      #282A36     #282A36     #F8F8F2   #282A36     #282A36
+# class                 border      bground     text        indicator   child_border
+client.focused          #003C3C     #003C3C     #CFCFCF     #003C3C     #003C3C
+client.focused_inactive #112626     #112626     #BFBFBF     #112626     #112626
+client.unfocused        #002121     #002121     #003C3C     #002121     #002121
+client.urgent           #358038     #358038     #F8F8F2     #358038     #358038
+client.placeholder      #282A36     #282A36     #F8F8F2     #282A36     #282A36
 
 client.background       #002121
 
