@@ -13,19 +13,20 @@
             "current_border_width": 2,
             "floating": "auto_off",
             "geometry": {
-               "height": 600,
-               "width": 1000,
-               "x": 2,
-               "y": 36
+               "height": 1024,
+               "width": 1916,
+               "x": 12,
+               "y": 46
             },
             "marks": [],
-            "name": "Apple Music",
+            "name": "Apple Music - Google Chrome",
             "percent": 0.5,
             "swallows": [
                {
-                "class": "^apple\\-music\\-for\\-linux$",
-                "instance": "^music\\.apple\\.com__gb_browse$",
-                "window_role": "^pop\\-up$"
+                "class": "^Google\\-chrome$",
+                "instance": "^google\\-chrome$",
+                "title": "^Apple\\ Music\\ \\-\\ Google\\ Chrome$",
+                "window_role": "^browser$"
                }
             ],
             "type": "con"
