@@ -12,6 +12,7 @@ set incsearch " Does incremental search while typing
 set hls " Sets highlighting on for search results
 set path=.,** " Dynamically sets the path to the current file folder and working directory
 set autochdir " automatically set working directory to open file
+let mapleader = ","
 
 " Color configuration
 colorscheme basic-dark " sets the color scheme
@@ -117,15 +118,18 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 " manages bundles with vim-plu
 call plug#begin('~/.vim/plugged')
 
-Plug 'vim-airline/vim-airline'
-Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/nerdtree'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'vim-airline/vim-airline' " Vim 'fancy' bottom 'status line'
+Plug 'tpope/vim-fugitive' " Vim git wrapper
+Plug 'scrooloose/nerdtree' " File navigation tree
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' } " Enables using vim for go development
+Plug 'ruanyl/vim-gh-line' " Open github directly from marked line <leader>gh
+Plug 'ryanoasis/vim-devicons' " Adds filetype icons to NERDTree
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight' " Adds color highlight per filetype to NERDTree
 
 call plug#end()
 
 " NERDTree plugin specific commands
-:nnoremap <C-n> :NERDTreeToggle<CR>
+:nnoremap t <C-n> :NERDTreeToggle<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
