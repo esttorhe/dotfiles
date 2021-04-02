@@ -248,7 +248,7 @@ client.placeholder      #282A36     #282A36     #F8F8F2     #282A36     #282A36
 
 client.background       #002121
 
-bindsym $mod+d exec "i3-dmenu-desktop --dmenu='dmenu -i -nf '#CFCFCF' -nb '#003C3C' -sb '#002121' -sf '#CFCFCF' -fn 'monospace-10' -p 'dmenu%''"
+bindsym $mod+d exec "i3-dmenu-desktop --dmenu='dmenu -i -nf '#CFCFCF' -nb '#003C3C' -sb '#002121' -sf '#CFCFCF' -fn 'monospace-10' -p 'dmenu''"
 exec --no-startup-id xsetroot -solid "#002121"
 
 ###################################################

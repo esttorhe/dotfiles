@@ -45,6 +45,12 @@ The `.symfolder` extension lets you set a folder with that extension and everyth
 
 ===
 
+# *nix
+
+For a better integration of `AppImage` files install [`AppImageLauncher`][appimagelauncher]. This will generate .desktop files as well as move the images to a centralised location and integrate them with the app launcher of choice.
+
+===
+
 After some refactoring I extracted some [`shared_functionality`](script/shared_functionality) to its own script and then I'm must `source`ing it where needed.
 
 e.g.:
@@ -56,3 +62,4 @@ e.g.:
 
 [holman]:https://github.com/holman/dotfiles
 [hooks]:http://appventure.me/2016/04/04/prevent-accidental-test-code-commits/
+[appimagelauncher]:https://itsfoss.com/use-appimage-linux/
