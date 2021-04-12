@@ -17,6 +17,7 @@ export PATH="$HOME/workspace/src/github.com/winkoz/plonk/bin/:$PATH"
 # Add all symlinked bin to PATH
 ###################################################
 export PATH="$HOME/.bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 ###################################################
 # i3blocks contrib
@@ -32,13 +33,6 @@ export PATH="$HOME/.security/:$PATH"
 # sc-tools
 ###################################################
 export PATH="$HOME/.local/bin:$PATH"
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 
 # Only run this if on Mac
 if [ "${unameOut}" = "Darwin" ]; then
