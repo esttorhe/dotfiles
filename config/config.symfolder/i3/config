@@ -14,7 +14,9 @@ set $mod Mod4
 # Configures multi-monitor
 #
 bindsym $mod+Shift+greater move container to output right
+bindsym $mod+Shift+Control+greater move container to output up
 bindsym $mod+Shift+less move container to output left
+bindsym $mod+Shift+Contro+less move container to output down
 # detect monitors and move workspaces around
 bindsym --release $mod+Shift+n exec --no-startup-id "xrandr --auto && ~/.config/polybar/launch.sh --cuts"
 
@@ -23,6 +25,12 @@ exec_always --no-startup-id "$HOME/.config/polybar/launch.sh --cuts"
 
 # Launch playerctl daemon
 exec_always --no-startup-id "playerctld daemon"
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
 
 # Start clipster daemon
 exec_always --no-startup-id "$HOME/.bin/clipster -d"
