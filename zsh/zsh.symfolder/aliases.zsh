@@ -97,4 +97,9 @@ transfer() {
     fi
 }
 
+# pbcopy
+if [ "${unameOut}" = "Linux" ]; then
+	alias pbcopy='xclip -selection clipboard'
+fi
+
 # vim: ft=muttrc
