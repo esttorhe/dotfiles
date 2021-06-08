@@ -23,6 +23,9 @@ bindsym --release $mod+Shift+n exec --no-startup-id "xrandr --auto && ~/.config/
 # Launch polybar
 exec_always --no-startup-id "$HOME/.config/polybar/launch.sh --cuts"
 
+# Launch dunst
+exec_always --no-startup-id "dunst &"
+
 # Launch playerctl daemon
 exec_always --no-startup-id "playerctld daemon"
 
