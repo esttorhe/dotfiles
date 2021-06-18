@@ -14,6 +14,11 @@ unameOut="$(uname -s)"
 export PATH="$HOME/workspace/src/github.com/winkoz/plonk/bin/:$PATH"
 
 ###################################################
+# rip-grep
+###################################################
+export RIPGREP_CONFIG_PATH="$HOME/.config/ripgreprc"
+
+###################################################
 # Add all symlinked bin to PATH
 ###################################################
 export PATH="$HOME/.bin:$PATH"
