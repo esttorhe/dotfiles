@@ -23,14 +23,10 @@ done
 autoload -Uz compinit
 compinit -i
 
-# chruby
-source /usr/local/opt/chruby/share/chruby/chruby.sh
-source /usr/local/opt/chruby/share/chruby/auto.sh
-
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Load powerline
-. $HOME/Library/Python/2.7/lib/python/site-packages/powerline/bindings/zsh/powerline.zsh
+source $HOME/Library/Python/2.7/lib/python/site-packages/powerline/bindings/zsh/powerline.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -42,7 +38,5 @@ export PATH="/usr/local/opt/sqlite/bin:$PATH"
 [ -f /Users/estebantorres/.travis/travis.sh ] && source /Users/estebantorres/.travis/travis.sh
 export PATH=$PATH:/Users/estebantorres/bin/slack-theme
 export SLACK_THEME_SHELL_PROFILE="/Users/estebantorres/.zshrc"
-source /usr/local/share/chruby/chruby.sh
-source /usr/local/share/chruby/auto.sh
 
 [ -d "$HOME/.sc-tools" ] && source "$HOME/.sc-tools/dotfiles/env.zsh" #sc-tools-setup
