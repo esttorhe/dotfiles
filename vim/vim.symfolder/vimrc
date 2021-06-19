@@ -13,10 +13,26 @@ set hls " Sets highlighting on for search results
 set path=.,** " Dynamically sets the path to the current file folder and working directory
 set autochdir " automatically set working directory to open file
 let mapleader = ","
+" code folding
+set foldmethod=manual
+
+" running wild brother
+set wildmenu
+set wildmode=list:longest
+set title
+
+" line under the cursorline
+set cursorline
+" highlighting current column
+set cursorcolumn
+" two lines in status bar
+set laststatus=2
 
 " Color configuration
 colorscheme basic-dark " sets the color scheme
 set background=dark " sets the background color to dark
+" Explicitly tell vim that the terminal supports 256 colors
+set t_Co=256
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Following 4 lines where taken from Ornithologist Coder blogpost
