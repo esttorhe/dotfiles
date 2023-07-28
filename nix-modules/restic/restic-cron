@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+
+# Load keys into memory
+source $HOME/.restic-keys
+export RESTIC_REPOSITORY="s3:s3.eu-central-1.wasabisys.com/$WASABI_BUCKET"
+
+echo -e "\n$(date) - Starting backup...\n"
+
+/usr/local/bin/restic backup /etc
+/usr/local/bin/restic backup $HOME --exclude .cache --exclude .local --exclude workspace --exclude Download/ubuntu* --exclude *Cache*
+/usr/local/bin/restic backup /var/log
+
+echo -e "\n$(date) - Running forget and prune...\n"
+
+/usr/local/bin/restic forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 12
+
+echo -e "\n$(date) - Backup finished.\n"

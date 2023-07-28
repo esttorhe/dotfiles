@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=GOA Replace
+Exec=/usr/libexec/goa-daemon --replace
+NoDisplay=true
+Terminal=false
+Type=Application
+

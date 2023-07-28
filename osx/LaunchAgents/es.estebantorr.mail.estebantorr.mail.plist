@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>es.estebantorr.mail.estebantorr.mail</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/creegan/.mutt/sync.sh</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StartInterval</key>
+	<integer>150</integer>
+	<key>TimeOut</key>
+	<integer>180</integer>
+	<key>KeyAplive</key>
+	<true />
+	<key>StandardErrorPath</key>
+	<string>/Users/creegan/log/offlineimap_error.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/creegan/log/offlineimap_me.log</string>
+</dict>
+</plist>

@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# bootstrap installs things.
+
+cd "$(dirname "$0")/.."
+DOTFILES_ROOT=$(pwd -P)
+source "$DOTFILES_ROOT/script/shared_functionality"
+
+set -e
+
+echo ''
+
+setup_gitconfig () {
+  if ! [ -f git/gitconfig.symlink ]
+  then
+    info 'setup gitconfig'
+
+    git_credential='cache'
+    if [ "$(uname -s)" == "Darwin" ]
+    then
+      git_credential='osxkeychain'
+    fi
+
+    user ' - What is your github author name?'
+    read -e git_authorname
+    user ' - What is your github author email?'
+    read -e git_authoremail
+
+    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" git/gitconfig.symlink.example > git/gitconfig.symlink
+
+    success 'gitconfig'
+  fi
+}
+
+install_dotfiles () {
+  info 'installing dotfiles'
+
+  local overwrite_all=false backup_all=false skip_all=false
+
+  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
+  do
+    dst="$HOME/.$(basename "${src%.*}")"
+    link_file "$src" "$dst"
+  done
+}
+
+install_dotfolders () {
+  info 'installing dotfolders'
+
+  local overwrite_all=false backup_all=false skip_all=false
+  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 4 -name '*.symfolder' -not -path '*.git*')
+  do
+    dstFldr="$HOME/.$(basename "${src%.*}")"
+    # If directory doesn't exist in $HOME lets create it
+    if [ ! -d "$dstFldr" ]; then
+      mkdir $dstFldr
+    fi
+
+    for file in $(find -H "$src" -maxdepth 1 -not -name '.DS_Store')
+    do
+      ext=$(basename "${file/*./}")
+      if [ $ext != "symfolder" ]
+      then
+        dst="$dstFldr/$(basename "${file}")"
+        info "$file"
+        link_file "$file" "$dst"
+      fi
+    done
+  done
+}
+
+setup_gitconfig
+install_dotfiles
+install_dotfolders
+
+# If we're on a Mac, let's install and setup homebrew.
+if [ "$(uname -s)" == "Darwin" ]
+then
+  info "installing dependencies"
+  if source bin/dot > /tmp/dotfiles-dot 2>&1
+  then
+    success "dependencies installed"
+  else
+    fail "error installing dependencies"
+  fi
+fi
+
+echo ''
+echo '  All installed!'
