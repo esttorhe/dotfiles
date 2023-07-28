@@ -14,6 +14,18 @@
       syntaxHighlighting = {
         enable = true;
         };
+      shellAliases = {
+          gst = "git status";
+          ga = "git add";
+          gp = "git push";
+          gcmsg = "git commit -m";
+          grbi = "git rebase -i";
+          grbc = "git rebase --continue";
+          grba = "git rebase --abort";
+          gc = "git commit";
+          gco = "git checkout";
+          "gc!" = "git commit --amend";
+        };
       initExtraBeforeCompInit = (builtins.readFile ./zsh/zshrc);
       plugins = [
         {

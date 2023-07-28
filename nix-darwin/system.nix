@@ -13,7 +13,7 @@
   system.defaults.NSGlobalDomain.NSNavPanelExpandedStateForSaveMode2 = true;
   system.defaults.NSGlobalDomain._HIHideMenuBar = true;
   
-  system.defaults.dock.autohide = false;
+  system.defaults.dock.autohide = true;
   system.defaults.dock.mru-spaces = false;
   system.defaults.dock.orientation = "right";
   system.defaults.dock.showhidden = true;
