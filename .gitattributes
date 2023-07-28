@@ -1,0 +1,11 @@
+ssh/ssh.symfolder/config filter=git-crypt diff=git-crypt
+config/config.symfolder/i3/workspaces/* filter=git-crypt diff=git-crypt
+config/config.symfolder/gtk-3.0/bookmarks filter=git-crypt diff=git-crypt
+nix-modules/restic/restic-keys filter=git-crypt diff=git-crypt
+
+nix-modules/git/gitconfig* filter=git-crypt diff=git-crypt
+nix-modules/zsh/zsh/_keys.zsh filter=git-crypt diff=git-crypt
+nix-modules/zsh/zsh/googlerc.zsh filter=git-crypt diff=git-crypt
+nix-modules/zsh/zsh/_secrets.zsh filter=git-crypt diff=git-crypt
+nix-modules/zsh/zsh/restic.zsh filter=git-crypt diff=git-crypt
+nix-modules/zsh/zsh/zenjob.zsh filter=git-crypt diff=git-crypt

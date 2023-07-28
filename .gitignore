@@ -1,0 +1,17 @@
+osx/personal_variables.symlink
+.DS_Store
+
+# Ignore vi plugins and configs
+plugged/
+
+# Ignore git refs
+git/git_templates.symfolder/info/refs
+
+# Ignore python caches
+__pycache__/
+
+# Ignore clipboard manager share
+$HOME/.local/share/clipster/history
+
+# Ignore tmux plugins
+tmux/tmux.symfolder/plugins/
