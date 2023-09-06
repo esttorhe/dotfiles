@@ -10,6 +10,7 @@
     "slack"
     "rescuetime"
     "vscode"
+    "telegram"
   ];
 
   imports = [ ./system.nix ];
@@ -24,6 +25,7 @@
       "anki"
       "arq"
       "daisydisk"
+      "handbrake"
       "imageoptim"
       "keybase"
       "kindle"
@@ -34,6 +36,8 @@
       "selfcontrol"
       "sequel-pro"
       "teensy"
+      "telegram"
+      "yacreader"
       "wkhtmltopdf"
     ];
 
