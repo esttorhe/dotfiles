@@ -17,12 +17,14 @@
       shellAliases = {
           gst = "git status";
           ga = "git add";
+          gb = "git branch";
           gp = "git push";
           gcmsg = "git commit -m";
           grbi = "git rebase -i";
           grbc = "git rebase --continue";
           grba = "git rebase --abort";
           gc = "git commit";
+          gd = "git diff";
           gco = "git checkout";
           "gc!" = "git commit --amend";
         };
