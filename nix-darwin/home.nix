@@ -55,7 +55,10 @@
         mkdir -p "$baseDir"
         for appFile in ${apps}/Applications/*; do
           target="$baseDir/$(basename "$appFile")"
-          $DRY_RUN_CMD cp ''${VERBOSE_ARG:+-v} -fHRL "$appFile" "$baseDir"
+          if [ -d "$target" ]; then
+            rm -rf "$target"
+          fi
+          $DRY_RUN_CMD cp ''${VERBOSE_ARG:+-v} -rfHRL "$appFile" "$baseDir"
           $DRY_RUN_CMD chmod ''${VERBOSE_ARG:+-v} -R +w "$target"
         done
       '';
