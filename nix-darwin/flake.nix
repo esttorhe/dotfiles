@@ -15,7 +15,8 @@
 
   outputs = inputs@{ nixpkgs, home-manager, darwin, ... }: {
     darwinConfigurations = {
-      "EstebanorresMBP" = darwin.lib.darwinSystem {
+      #"ZEN-XQQDXW76JN" = darwin.lib.darwinSystem {
+      "carbon" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         specialArgs = {
           inherit inputs;

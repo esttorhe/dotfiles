@@ -25,21 +25,6 @@
       };
 
 	  activation = {
-      #aliasApplications = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      #    baseDir="$HOME/Applications/Home Manager Apps"
-      #    if [ -d "$baseDir" ]; then
-      #      rm -rf "$baseDir"
-      #    fi
-      #    mkdir -p "$baseDir"
-      #    app_folder=$(echo ~/Applications);
-      #    for app in "$(find "$genProfilePath/home-path/Applications" -type l)"; do
-      #      app_name=$(basename "$app")
-      #      $DRY_RUN_CMD echo "$app_name"
-      #      #$DRY_RUN_CMD rm -f "$app_folder"/"$app_name"
-      #      #$DRY_RUN_CMD /usr/bin/osascript -e "tell app \"Finder\"" -e "make new alias file at POSIX file \"$app_folder\" to POSIX file \"$app_name\"" -e "set name of result to \"$app_name\"" -e "end tell"
-      #    done
-      #  '';
-
       copyApplications = let
           apps = pkgs.buildEnv {
             name = "home-manager-applications";
@@ -69,27 +54,29 @@
     stateVersion = builtins.trace (builtins.attrNames inputs) "23.05";
 
     packages = with pkgs; [
+       discord
        docker
-       mosh
+       fzf
+       git-crypt
+       htop
+       httpie
+       imagemagick
        jq
+       keybase
+       libsixel
+       meld
+       mosh
+       obsidian
+       raycast
+       rescuetime
+       restic
        ripgrep
        ripgrep-all
-       git-crypt
-       zsh-syntax-highlighting
-       wget
-       htop
-       fzf
-       imagemagick
-       httpie
-       discord
-       spotify
-       obsidian
        slack
-       rescuetime
-       keybase
-       meld
+       spotify
+       wget
        wtf
-       restic
+       zsh-syntax-highlighting
     ];
 
     sessionVariables = {

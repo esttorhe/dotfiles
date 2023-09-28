@@ -9,7 +9,7 @@ alias vim="nvim"
 alias vi="nvim"
 
 if [ "${unameOut}" = "Darwin" ]; then
-  alias obsidian='SSH_AUTH_SOCK=~/.1password/agent.sock "/Applications/Obsidian.app/Contents/MacOS/Obsidian" &'
+  alias obsidian='SSH_AUTH_SOCK=~/.1password/agent.sock ~/Applications/Obsidian.app/Contents/MacOS/Obsidian &'
   eval $(thefuck --alias)
   alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
   alias update="brew update && brew upgrade && brew upgrade --cask && brew cleanup -s && mas upgrade"
