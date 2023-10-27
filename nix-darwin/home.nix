@@ -1,6 +1,7 @@
 { config, pkgs, lib, inputs, system, ... }:
 {
   imports = [
+    ../nix-modules/ripgrep.nix
     ../nix-modules/zsh.nix
     ../nix-modules/tmux.nix
     ../nix-modules/git.nix

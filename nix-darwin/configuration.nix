@@ -30,6 +30,7 @@
       "amethyst"
       "anki"
       "arq"
+      "asana"
       "calibre"
       "daisydisk"
       "figma"
