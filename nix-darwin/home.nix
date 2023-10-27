@@ -57,6 +57,7 @@
        discord
        docker
        fzf
+       fx
        git-crypt
        htop
        httpie

@@ -56,7 +56,7 @@
       "autoconf"
       "automake"
       "aws-iam-authenticator"
-      "awscli"
+      #"awscli"
       "bdw-gc"
       "berkeley-db"
       "brotli"
