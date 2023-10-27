@@ -12,6 +12,7 @@
     "spotify"
     "telegram"
     "ticktick"
+    "todoist-electron"
     "vscode"
     "yazi"
   ];

@@ -1,7 +1,6 @@
 { config, pkgs, lib, inputs, system, ... }:
 {
   imports = [
-    ../nix-modules/ripgrep.nix
     ../nix-modules/zsh.nix
     ../nix-modules/tmux.nix
     ../nix-modules/git.nix
@@ -11,6 +10,7 @@
     ../nix-modules/gh.nix
     ../nix-modules/vscode.nix
     ../nix-modules/exa.nix
+    ../nix-modules/ripgrep.nix
   ];
 
   nixpkgs.config = {
@@ -76,6 +76,7 @@
        ripgrep-all
        slack
        spotify
+       todoist-electron
        wget
        wtf
        zsh-syntax-highlighting

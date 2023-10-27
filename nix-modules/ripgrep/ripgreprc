@@ -4,18 +4,7 @@
 
 # Add my 'web' type.
 --type-add
-web:*.{html,css,js}*
-
-# Using glob patterns to include/exclude files or folders
---glob=!git/*
---glob=!**/*.xcmappingmodel
-
-# or
---glob
-!git/*
-
-# Set the colors.
---colors=line:none
+web:none
 --colors=line:style:bold
 
 # Because who cares about case!?
