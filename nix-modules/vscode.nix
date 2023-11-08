@@ -14,6 +14,7 @@
       "workbench.iconTheme" = "vscode-icons";
       "go.autocompleteUnimportedPackages" = true;
       "go.docsTool" = "gogetdoc";
+      "redhat.telemetry.enabled" = true;
       "editor.inlineSuggest.enabled" = true;
       "github.copilot.enable" = {
         "*" = true;
