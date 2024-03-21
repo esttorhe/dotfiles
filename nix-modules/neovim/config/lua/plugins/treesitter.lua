@@ -18,7 +18,6 @@ return {
         "query",
         "regex",
         "vim",
-        "yaml",
       })
     end
   end,

@@ -3,6 +3,7 @@
   # Make sure the nix daemon always runs
   services.nix-daemon.enable = true;
   nixpkgs.config.allowUnsupportedSystem = true;
+  nixpkgs.config.allowBroken = true;
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "discord"
     "obsidian"
@@ -11,11 +12,11 @@
     "slack"
     "spotify"
     "telegram"
-    "ticktick"
     "todoist-electron"
     "vscode"
     "yazi"
   ];
+  nix.package = pkgs.nix;
 
   imports = [ ./system.nix ];
 
@@ -218,8 +219,8 @@
       "zstd"
     ];
 
-    masApps = {
-      "TickTick:To-Do List, Calendar" = 966085870;
-    };
+    #masApps = {
+    #  "TickTick:To-Do List, Calendar" = 966085870;
+    #};
   };
 }

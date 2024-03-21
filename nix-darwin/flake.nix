@@ -15,7 +15,7 @@
 
   outputs = inputs@{ nixpkgs, home-manager, darwin, ... }: {
     darwinConfigurations = {
-      ZEN-LFQ6XGJTQK = darwin.lib.darwinSystem {
+      ZEN-V7LQFQX0L4 = darwin.lib.darwinSystem {
       #"ZEN-XQQDXW76JN" = darwin.lib.darwinSystem {
       #"carbon" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";

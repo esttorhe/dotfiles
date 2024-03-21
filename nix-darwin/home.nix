@@ -55,8 +55,10 @@
     stateVersion = builtins.trace (builtins.attrNames inputs) "23.05";
 
     packages = with pkgs; [
+       atuin
        discord
        docker
+       element-desktop
        fzf
        fx
        git-crypt
