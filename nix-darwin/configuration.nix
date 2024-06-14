@@ -1,5 +1,14 @@
 { lib, config, pkgs, ... }:
 {
+  # Enable experimental nix command and flakes
+  # nix.package = pkgs.nixUnstable;
+  nix.extraOptions = ''
+    auto-optimise-store = true
+    experimental-features = nix-command flakes
+  '' + lib.optionalString (pkgs.system == "aarch64-darwin") ''
+    extra-platforms = aarch64-darwin
+  '';
+
   # Make sure the nix daemon always runs
   services.nix-daemon.enable = true;
   nixpkgs.config.allowUnsupportedSystem = true;
@@ -12,11 +21,56 @@
     "slack"
     "spotify"
     "telegram"
-    "todoist-electron"
     "vscode"
     "yazi"
   ];
   nix.package = pkgs.nix;
+
+  # Apps
+  # `home-manager` currently has issues adding them to `~/Applications`
+  # Issue: https://github.com/nix-community/home-manager/issues/1341
+  environment.systemPackages = with pkgs; [
+    alacritty
+    atuin
+    commitizen
+    discord
+    docker
+    element-desktop
+    eza
+    fx
+    fzf
+    git-crypt
+    htop
+    httpie
+    imagemagick
+    jq
+    keybase
+    libsixel
+    meld
+    mosh
+    neovim
+    obsidian
+    raycast
+    rescuetime
+    ripgrep
+    ripgrep-all
+    slack
+    spotify
+    terminal-notifier
+    tmux
+    tree
+    wget
+    wtf
+    zsh-syntax-highlighting
+  ];
+  programs.nix-index.enable = true;
+
+  # Fonts
+  fonts.fontDir.enable = true;
+  fonts.fonts = with pkgs; [
+     recursive
+     (nerdfonts.override { fonts = [ "FiraCode" ]; })
+   ];
 
   imports = [ ./system.nix ];
 
@@ -31,17 +85,16 @@
       "1password-cli"
       "amethyst"
       "anki"
-      "arq"
-      "asana"
+#      "asana"
       "calibre"
       "daisydisk"
-      "figma"
+#      "figma"
       "font-symbols-only-nerd-font"
       "handbrake"
       "imageoptim"
       "keybase"
-      "kindle"
-      "monitorcontrol"
+      # "kindle"
+      # "monitorcontrol"
       "notion"
       "proxyman"
       "rescuetime"
@@ -97,7 +150,6 @@
       "guile"
       "harfbuzz"
       "icu4c"
-      "ilmbase"
       "imagemagick"
       "ipmitool"
       "isl"
@@ -175,6 +227,7 @@
       "pcre"
       "pdsh"
       "pinentry"
+      "pipX"
       "pixman"
       "pkg-config"
       "python@3.11"
@@ -200,7 +253,7 @@
       "tldr"
       "tokyo-cabinet"
       "trash-cli"
-      "tree"
+      # "tree"
       "unbound"
       "unixodbc"
       "urlview"

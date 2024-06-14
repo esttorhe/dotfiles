@@ -2,7 +2,7 @@
 {
   home = {
     file = {
-      ".alacritty_dracula.yml".source = ./alacritty/alacritty_dracula.yml;
+      ".alacritty_dracula.toml".source = ./alacritty/alacritty_dracula.toml;
     };
   };
   programs.alacritty = {

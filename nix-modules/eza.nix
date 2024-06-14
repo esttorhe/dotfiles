@@ -1,8 +1,9 @@
 { lib, config, pkgs, ... }:
 {
-  programs.exa = {
+  programs.eza = {
       enable = true;
       icons = true;
       git = true;
+      enableZshIntegration = false;
     };
 }

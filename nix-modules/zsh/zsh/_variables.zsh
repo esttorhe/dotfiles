@@ -35,6 +35,7 @@ export TERM=xterm-256color
 
 # DOCKER
 export CRUN_NFS=1
+export DOCKER_ENABLE_DEPRECATED_PULL_SCHEMA_1_IMAGE=true
 
 # 1Password
 export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock

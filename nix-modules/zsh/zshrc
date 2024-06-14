@@ -11,12 +11,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Source restic keys
-source $HOME/.restic-keys
-
-# Load personal variables
-source "$HOME/.personal_variables"
-
 # Find all zsh files
 configs=($HOME/.zsh/*.zsh)
 for file in ${configs:#*/completions.zsh}
@@ -30,8 +24,6 @@ done
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
 
 # vim: ft=muttrc
-
-eval "$(atuin init zsh)"
 
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"

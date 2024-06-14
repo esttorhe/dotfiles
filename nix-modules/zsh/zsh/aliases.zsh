@@ -25,12 +25,12 @@ fi
 
 alias be="bundle exec"
 alias gu="gem update --no-document && gem cleanup"
-alias la="exa -abghHliS --git --icons"
+alias la="eza -abghHliS --git --icons"
 
 # Look up for unreachable commits || Use it with --grep=<something useful>
 alias gitlost="git fsck --unreachable | grep commit | cut -d ' ' -f3 | xargs git log --merges --no-walk --grep="
 
-alias zsource="source $HOME/.config/zsh/.zshrc"
+alias zsource="source $HOME/.config/zsh/.zshrc | tte slide --merge"
 alias imaps="imapu; imapr"
 
 function mount_remote_file(){

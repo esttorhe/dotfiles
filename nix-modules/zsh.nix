@@ -8,7 +8,7 @@
 
   programs.zsh = {
       enable = true;
-      enableAutosuggestions = false;
+      autosuggestion.enable = true;
       defaultKeymap = "viins";
       dotDir = ".config/zsh";
       syntaxHighlighting = {
@@ -35,8 +35,8 @@
             src = pkgs.fetchFromGitHub {
               owner = "zsh-users";
               repo = "zsh-autosuggestions";
-              rev = "v0.4.0";
-              sha256 = "0z6i9wjjklb4lvr7zjhbphibsyx51psv50gm07mbb0kj9058j6kc";
+              rev = "c3d4e576c9c86eac62884bd47c01f6faed043fc5";
+              sha256 = "sha256-B+Kz3B7d97CM/3ztpQyVkE6EfMipVF8Y4HJNfSRXHtU=";
             };
           }
         {

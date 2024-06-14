@@ -187,15 +187,7 @@ eval "$(atuin init zsh)"
 ##############################################################################
 # Specifies platform when executing docker
 ##############################################################################
-# useful only for Mac OS Silicon M1, 
-# still working but useless for the other platforms
-docker() {
- if [[ `uname -m` == "arm64" ]] && [[ "$1" == "run" || "$1" == "build" ]]; then
-    /usr/local/bin/docker "$1" --platform linux/amd64 "${@:2}"
-  else
-     /usr/local/bin/docker "$@"
-  fi
-}
+export PATH="$HOME/.docker/bin:$PATH"
 
 ##############################################################################
 # pyenv
@@ -203,6 +195,7 @@ docker() {
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
 
 # vim: ft=muttrc
 
