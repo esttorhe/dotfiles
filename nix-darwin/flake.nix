@@ -17,7 +17,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, darwin, ... }: 
+  outputs = inputs@{ self, nixpkgs, home-manager, darwin, ... }:
     let
       inherit (darwin.lib) darwinSystem;
       inherit (inputs.nixpkgs-unstable.lib) attrValues makeOverridable optionalAttrs singleton;
@@ -30,7 +30,7 @@
         final: prev: (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
           inherit (final.pkgs-x86)
             idris2
-            nix-index
+            #nix-index
             niv
             purescript;
         })
