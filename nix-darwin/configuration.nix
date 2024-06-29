@@ -180,6 +180,7 @@
     unbound
     unixODBC
     utf8proc
+    vscode
     wget
     wtf
     x264
