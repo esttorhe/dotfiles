@@ -126,8 +126,8 @@
     meld
     mosh
     mpfr
-    ncdu
-    ncurses
+#    ncdu
+#    ncurses
     neovim
     nettle
     nghttp2
