@@ -176,7 +176,7 @@
     tmux
     trash-cli
     tree
-    tree
+    ueberzugpp
     unbound
     unixODBC
     utf8proc
