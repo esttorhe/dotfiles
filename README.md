@@ -1,6 +1,22 @@
 # dotfiles
 My very own dotfiles (intended mostly for when I change computers)
 
+# nix flake
+
+## Update the setup
+
+The following command will update the derivations
+
+```bash
+nix flake update ./nix-darwin
+```
+
+The following account will run the derivation to update the setup
+
+```bash
+darwin-rebuild switch --flake ./nix-darwin
+```
+
 ## Scripts
 
 The scripts are just a copy of [Holman's dotfiles scripts][holman] with a little modification from me.
