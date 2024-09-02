@@ -38,10 +38,9 @@
     };
     in
     {
+      #packages.aarch64-darwin.default' or 'defaultPackage.aarch64-darwin
       darwinConfigurations = {
-        ZEN-V7LQFQX0L4 = darwinSystem {
-        #"ZEN-XQQDXW76JN" = darwin.lib.darwinSystem {
-        #"carbon" = darwin.lib.darwinSystem {
+        default = darwinSystem {
           system = "aarch64-darwin";
           specialArgs = {
             inherit inputs;
