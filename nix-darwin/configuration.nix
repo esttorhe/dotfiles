@@ -24,7 +24,6 @@
     "vscode"
     "yazi"
   ];
-  nix.package = pkgs.nix;
 
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`
@@ -77,7 +76,6 @@
     harfbuzz
     htop
     httpie
-    imagemagick
     imagemagick
     ipmitool
     isl
@@ -238,6 +236,7 @@
       "aom"
       "bdw-gc"
       "berkeley-db"
+      "git"
       "git-delta"
       "gnu-getopt"
       "gnu-sed"
@@ -268,8 +267,8 @@
       "zstd"
     ];
 
-    masApps = {
-     "TickTick:To-Do List, Calendar" = 966085870;
-    };
+    #masApps = {
+    # "TickTick:To-Do List, Calendar" = 966085870;
+    #};
   };
 }
