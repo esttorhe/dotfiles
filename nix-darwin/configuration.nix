@@ -252,7 +252,6 @@
       "libvo-aacenc"
       "little-cms2"
       "make"
-      "openssl@1.1"
       "opus"
       "pipX"
       "pixman"

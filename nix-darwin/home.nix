@@ -28,7 +28,6 @@
 
   disabledModules = ["targets/darwin/linkapps.nix"];
 
-  nix.package = pkgs.nix;
   home = {
     username = "esteban.torres";
     homeDirectory = lib.mkForce "/Users/esteban.torres/";
