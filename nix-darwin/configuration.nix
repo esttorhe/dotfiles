@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, inputs, ... }:
 {
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
@@ -190,6 +190,7 @@
     zlib
     zsh-syntax-highlighting
     zstd
+    inputs.flox.packages.${pkgs.system}.default
   ];
   programs.nix-index.enable = true;
 
@@ -266,8 +267,9 @@
       "zstd"
     ];
 
-    #masApps = {
+    masApps = {
     # "TickTick:To-Do List, Calendar" = 966085870;
-    #};
+    "Flow" = 1423210932;
+    };
   };
 }

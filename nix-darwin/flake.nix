@@ -1,6 +1,11 @@
 {
   description = "Darwin configuration";
 
+  nixConfig = {
+    extra-trusted-substituters = ["https://cache.flox.dev"];
+    extra-trusted-public-keys = ["flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="];
+  };
+
   inputs = {
     # Package sets
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
@@ -9,18 +14,38 @@
     # Environment/system management
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
+
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
+    flox.url = "github:flox/flox/v1.3.0";
+
     mkAlias = {
       url = "github:reckenrode/mkAlias";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, darwin, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, darwin, flox, ... }:
     let
       inherit (darwin.lib) darwinSystem;
       inherit (inputs.nixpkgs-unstable.lib) attrValues makeOverridable optionalAttrs singleton;
+      configuration = { pkgs, ... }: {
+        environment.systemPackages =
+          [
+            inputs.flox.packages.${pkgs.system}.default
+          ];
+
+        nix.settings = {
+          experimental-features = "nix-command flakes";
+          substituters = [
+            "https://cache.flox.dev"
+          ];
+          trusted-public-keys = [
+            "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+          ];
+        };
+      };
 
     # Configuration for `nixpkgs`
     nixpkgsConfig = {
