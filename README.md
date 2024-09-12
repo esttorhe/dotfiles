@@ -76,6 +76,28 @@ e.g.:
 * [Zack Holman][holman]
 * [Benedikt Terhechte | Pre-commit hooks][hooks]
 
+---
+
+# Pihole
+
+[This is a tutorial to flush data/space on the pihole](https://i12bretro.github.io/tutorials/0613.html)
+
+```bash
+# output current pihole db size
+sudo du /etc/pihole/pihole-FTL.db -h
+# flush pihole logs
+pihole flush
+# stop pihole FTL service
+sudo systemctl stop pihole-FTL
+# delete the FTL database file
+sudo rm /etc/pihole/pihole-FTL.db
+# stop pihole FTL service
+sudo systemctl start pihole-FTL
+# output reduced pihole db size
+sudo du /etc/pihole/pihole-FTL.db -h
+```
+```
+
 [holman]:https://github.com/holman/dotfiles
 [hooks]:http://appventure.me/2016/04/04/prevent-accidental-test-code-commits/
 [appimagelauncher]:https://itsfoss.com/use-appimage-linux/
