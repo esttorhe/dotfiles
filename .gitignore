@@ -15,3 +15,5 @@ $HOME/.local/share/clipster/history
 
 # Ignore tmux plugins
 tmux/tmux.symfolder/plugins/
+
+result
