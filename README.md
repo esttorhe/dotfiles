@@ -16,6 +16,19 @@ The following account will run the derivation to update the setup
 ```bash
 darwin-rebuild switch --flake ./nix-darwin
 ```
+## Increasing sudo timeout on macOS
+
+Run sudo visudo
+
+```bash
+sudo visudo
+```
+
+And add the following line
+
+```
+Defaults    timestamp_timeout=-1
+```
 
 ## Scripts
 
