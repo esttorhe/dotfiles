@@ -1,7 +1,7 @@
 { config, pkgs, lib, inputs, system, ... }:
 {
   # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
+  programs.home-manager.enable = true; 
 
   # Direnv, load and unload environment variables depending on the current directory.
   # https://direnv.net

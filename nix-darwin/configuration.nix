@@ -207,7 +207,10 @@
     onActivation.upgrade = true; 
     onActivation.autoUpdate = true;
 
-    taps = [ "homebrew/cask-fonts" ];
+    taps = [ 
+      "homebrew/cask-fonts" 
+      "zenjob/zenpie"
+    ];
   
     casks = [
       "amethyst"
@@ -264,6 +267,7 @@
       "wtfutil"
       "xvid"
       "z"
+      "zenpie"
       "zstd"
     ];
 
