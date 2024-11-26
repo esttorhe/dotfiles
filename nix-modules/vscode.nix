@@ -12,8 +12,6 @@
       "terminal.integrated.defaultProfile.linux" = "zsh";
       "workbench.colorTheme" = "Default Dark+";
       "workbench.iconTheme" = "vscode-icons";
-      "go.autocompleteUnimportedPackages" = true;
-      "go.docsTool" = "gogetdoc";
       "redhat.telemetry.enabled" = true;
       "editor.inlineSuggest.enabled" = true;
       "github.copilot.enable" = {
@@ -22,6 +20,12 @@
         "markdown" = true;
         "scminput" = false;
       };
+      "sonarlint.connectedMode.connections.sonarcloud" = [
+        { 
+          "organizationKey" = "zenjob"; 
+          "connectionId" = "zenjob"; 
+        }
+      ];
     };
   };
 }
