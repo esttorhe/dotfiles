@@ -167,6 +167,7 @@
     srt
     talloc
     terminal-notifier
+    terraform
     tesseract
     thefuck
     tig
