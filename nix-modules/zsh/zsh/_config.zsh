@@ -34,11 +34,6 @@ export PATH="$HOME/workspace/src/github.com/vivien/i3blocks-contrib/**/:$PATH"
 ###################################################
 #export PATH="$HOME/.security/:$PATH"
 
-###################################################
-# sc-tools
-###################################################
-export PATH="$HOME/.local/bin:$PATH"
-
 # Only run this if on Mac
 if [ "${unameOut}" = "Darwin" ]; then
   # Mac, adjust for Python version
@@ -52,7 +47,7 @@ if [ "${unameOut}" = "Darwin" ]; then
   # BREW CASK
   # Specify your defaults in this environment variable
   export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-  export PATH="$PATH:/opt/homebrew/bin"
+  export PATH="/opt/homebrew/bin:$PATH"
 elif [ "${unameOut}" = "Linux" ]; then
   # Configures z plugin
   . ~/.zsh/z.sh

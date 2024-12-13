@@ -15,7 +15,7 @@
   };
   programs.git = {
     package = pkgs.gitAndTools.gitFull;
-    enable = true;
+    enable = false; #true;
     userName = "Esteban Torres";
     userEmail = "me+github@estebantorr.es";
     signing = {
