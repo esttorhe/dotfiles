@@ -233,6 +233,7 @@
       "sequel-pro"
       "teensy"
       "telegram"
+      "whatsapp"
       "wkhtmltopdf"
       "yacreader"
     ];
