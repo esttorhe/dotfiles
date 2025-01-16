@@ -227,6 +227,7 @@
       # "kindle"
       # "monitorcontrol"
       "notion"
+      "podman-desktop"
       "proxyman"
       "rescuetime"
       "selfcontrol"
