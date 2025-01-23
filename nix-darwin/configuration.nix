@@ -36,6 +36,7 @@
     autoconf
     automake
     aws-iam-authenticator
+    bat
     c-ares
     cairo
     cmake

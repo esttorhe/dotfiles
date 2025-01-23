@@ -112,4 +112,6 @@ alias activate-toolbelt='source ~/toolbelt/bin/activate'
 # Podman <-> Docker
 ##########################################################################
 alias docker='podman'
+
+alias cat='bat'
 # vim: ft=muttrc
