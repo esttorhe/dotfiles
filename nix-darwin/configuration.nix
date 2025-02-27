@@ -88,6 +88,7 @@
     keybase
     krb5
     lame
+    lazygit
     lcov
     ldns
     leptonica
