@@ -15,7 +15,6 @@
     ../nix-modules/tmux.nix
     ../nix-modules/git.nix
     ../nix-modules/neovim.nix
-    ../nix-modules/alacritty.nix
     ../nix-modules/wezterm.nix
     ../nix-modules/gh.nix
     ../nix-modules/vscode.nix
