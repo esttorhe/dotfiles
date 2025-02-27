@@ -1,9 +1,14 @@
 local wezterm = require("wezterm")
 
 return {
+	-- Dracula Theme
 	color_scheme = "Dracula",
+
+	-- Font settings
 	font = wezterm.font("FiraCode Nerd Font Propo"),
 	font_size = 11.5,
+
+	-- Window settings
 	window_background_opacity = 0.75,
 	hide_mouse_cursor_when_typing = true,
 	window_padding = {
@@ -12,9 +17,11 @@ return {
 		top = 10,
 		bottom = 10,
 	},
+
+	-- Disable the tab bar to match Alacritty’s "buttonless" style
 	enable_tab_bar = false,
 
-	-- Keybindings (Converted from Alacritty)
+	-- Keybindings converted from Alacritty
 	keys = {
 		{ key = "1", mods = "CMD", action = wezterm.action.SendString("\x021") },
 		{ key = "2", mods = "CMD", action = wezterm.action.SendString("\x022") },
