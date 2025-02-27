@@ -18,6 +18,9 @@ return {
 		bottom = 10,
 	},
 
+	-- Hide window decorations (no title bar, no border)
+	window_decorations = "RESIZE",
+
 	-- Disable the tab bar to match Alacritty’s "buttonless" style
 	enable_tab_bar = false,
 
