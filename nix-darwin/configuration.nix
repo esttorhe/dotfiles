@@ -181,6 +181,7 @@
     unixODBC
     utf8proc
     vscode
+    wezterm
     wget
     wtf
     x264
