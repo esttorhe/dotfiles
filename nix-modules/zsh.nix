@@ -50,7 +50,6 @@
           plugins = [
             "z"
             "git"
-            "docker"
           ];
         };
     }; 

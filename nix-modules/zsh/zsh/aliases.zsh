@@ -114,4 +114,7 @@ alias activate-toolbelt='source ~/toolbelt/bin/activate'
 alias docker='podman'
 
 alias cat='bat'
+
+alias lg='lazygit'
+
 # vim: ft=muttrc
