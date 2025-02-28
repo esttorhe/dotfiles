@@ -5,7 +5,7 @@
     file = {
       # Place the wezterm configuration file in the expected location
       ".wezterm.lua".source = ./wezterm/wezterm.lua;
-      ".wezterm.theme.lua".source = ./wezterm/wezterm.theme.lua;
+      ".wezterm.theme.lua".source = ./wezterm/theme.lua;
       ".mappings.lua".source = ./wezterm/mappings.lua;
     };
   };

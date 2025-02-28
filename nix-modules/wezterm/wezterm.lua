@@ -1,5 +1,5 @@
 local wezterm = require("wezterm")
-local theme = require("wezterm.theme")
+local theme = require("theme")
 local mappings = require("mappings")
 
 local config = wezterm.config_builder()
