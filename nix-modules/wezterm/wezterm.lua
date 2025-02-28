@@ -1,5 +1,5 @@
 local wezterm = require("wezterm")
-local theme = require("theme")
+--local theme = require("theme")
 local mappings = require("mappings")
 
 local config = wezterm.config_builder()
@@ -10,6 +10,10 @@ config.color_scheme = "Dracula"
 -- Font settings
 config.font = wezterm.font("FiraCode Nerd Font Propo")
 config.font_size = 11.5
+
+-- Apply modular configurations
+mappings.apply_to_config(config)
+--theme.apply_to_config(config)
 
 -- Window settings
 config.window_background_opacity = 0.75
@@ -23,9 +27,5 @@ config.window_padding = {
 	top = 10,
 	bottom = 10,
 }
-
--- Apply modular configurations
-mappings.apply_to_config(config)
-theme.apply_to_config(config)
 
 return config
