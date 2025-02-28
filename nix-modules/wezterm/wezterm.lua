@@ -1,4 +1,5 @@
 local wezterm = require("wezterm")
+local theme = require("wezterm.theme")
 
 return {
 	-- Dracula Theme
