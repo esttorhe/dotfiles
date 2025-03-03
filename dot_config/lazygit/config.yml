@@ -1,0 +1,7 @@
+[user]
+	name = Esteban Torres
+	email = esttorhe@example.com
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
