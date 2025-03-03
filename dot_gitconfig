@@ -1,0 +1,184 @@
+########################################################################
+
+[user]
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMynlWjH+LLkyLyO1nwl4nc4l3yyixrvmFvBUSaB2nXe
+	name = Esteban Torres
+  email = "me+github@estebantorr.es"
+
+[gpg]
+  format = ssh
+
+[includeIf "gitdir:/Users"]
+  path = ~/.gitconfig-macos
+
+[includeIf "gitdir:/home"]
+  path = ~/.gitconfig-linux
+
+[commit]
+  gpgsign = true
+
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+  
+[github]
+  user = esttorhe
+
+########################################################################
+
+[mergetool]
+	keepBackup = true
+  prompt = false
+
+[mergetool "meld"]
+    
+########################################################################
+
+[core]
+	excludesfile = ~/.gitignore_global
+  editor = nvim # Need to move this to per OS level path
+  pager = delta
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  features = side-by-side line-numbers decorations
+  whitespace-error-style = 22 reverse
+  plus-color = syntax "#003800"
+  minus-color = syntax "#3f0001"
+  syntax-theme = Dracula
+  colorMoved = default
+[delta "decorations"]
+  commit-decoration-style = bold yellow box ul
+  file-style = bold yellow ul
+  file-decoration-style = none
+  hunk-header-decoration-style = cyan box ul
+[delta "line-numbers"]
+  line-numbers-left-style = cyan
+  line-numbers-right-style = cyan
+  line-numbers-minus-style = 124
+  line-numbers-plus-style = 28
+[mergetool "meld"]
+  cmd = meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label \"MERGE (REMOTE BASE MY)\"
+  trustExitCode = false
+[diff "plist"]
+  textconv = plutil -convert xml1 -o -
+[merge]
+    tool = meld
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+  required = true
+	process = git-lfs filter-process
+
+########################################################################
+
+[color]
+    ui = auto
+    branch = auto
+    status = auto
+
+# Works well for my green on black terminal
+[color "status"]
+    header = white
+    added = green
+    updated = blue
+    changed = yellow
+    unracked = red
+
+[credential]
+	helper = osxkeychain
+
+[http]
+    # Without this. Git would often have trouble with stupidly large commits (see Twitter for iOS source code).
+    postBuffer = 524288000
+    sslVerify = true
+
+[pack]
+    # Auto detect right number of threads
+    threads = 0
+
+[push]
+    # This is now the default...
+    default = simple
+    autoSetupRemote = true
+
+[receive]
+    denyCurrentBranch = updateInstead
+
+[rebase]
+    autosquash = true
+    autostash = true
+
+[rerere]
+    # Remember and re-apply your git conflict resolutions. This is magic: https://www.kernel.org/pub/software/scm/git/docs/git-rerere.html
+    enabled = true
+
+[status]
+    # Painfully verbose (but vitally important) info about submodules.
+    submodulesummary = true
+
+########################################################################
+
+[alias]
+    # cleanup merged branches
+    cleanup = "!git branch --merged | grep  -v '\\*\\|master\\|beta' | xargs -n 1 git branch -d"
+    # cleanup merged remote branches
+    cleanupr = "!git fetch --prune ; git branch -r --merged | grep origin | grep -v '>' | grep  -v '\\*\\|master\\|beta' | xargs -L1 | cut -d"/" -f2- | xargs git push origin --delete"
+    cp = cherry-pick
+    deleted = log --diff-filter=D --summary
+    find-sha = branch -avv --contains
+    graph = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative
+    ours = checkout --ours --
+    outgoing = log --branches --not --remotes '--format=format:%C(auto,yellow)%h%C(auto,reset) %s %C(auto,blue)%d' --decorate
+    root = rev-parse --show-toplevel
+    score = shortlog --numbered --summary --no-merges
+    status = status -sb
+    subpush = push --recurse-submodules=check
+    po = push origin 
+    sync = fetch origin; rebase origin/master; push origin HEAD:master
+    puf = pull --ff-only
+    pufo = pull --ff-only origin
+    pur = pull --ff --rebase
+    puro = pull --ff --rebase origin
+    puo = push -u origin
+    # Hide merges from the log
+    log = log --no-merges --name-status
+    undo = checkout --
+    rno = revert --no-commit
+    mbm = merge-base -a master 
+
+    # This is singlehandedly the most useful alias. If you borrow nothing else from this config, borrow this (and credential.helper)
+    subup = submodule update --init --recursive
+    theirs = checkout --theirs --
+
+    report = "log --author=Esteban --format='%Cred%ci%Creset - %Cblue<%an>%Creset %Cgreen%+s%Creset' --no-merges"
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit
+    wtf = !git-wtf
+
+    # From http://git-wt-commit.rubyforge.org
+    wtf = !git-wtf
+
+    # Frank Calma's alias to auto-resolve the remote
+    ptom = !git push origin $(git rev-parse --abbrev-ref HEAD)
+[ghi]
+	token = !security find-internet-password -a me@estebantorr.es -s github.com -l 'ghi token' -w
+[color]
+  ui = always
+[color "diff"]
+  meta = yellow bold
+  commit = green bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+  whitespace = red reverse
+[color "diff-highlight"]
+  oldNormal = red bold
+  oldHighlight = "red bold 52"
+  newNormal = "green bold"
+  newHighlight = "green bold 22"
+[init]
+	templatedir = ~/.git_templates/
+
+[log]
+	date = local
+[hub]
+	protocol = ssh
