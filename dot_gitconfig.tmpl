@@ -8,11 +8,17 @@
 [gpg]
   format = ssh
 
-[includeIf "gitdir:/Users"]
-  path = ~/.gitconfig-macos
+{{- if eq .chezmoi.os "darwin" -}}
+########################################################################
 
-[includeIf "gitdir:/home"]
-  path = ~/.gitconfig-linux
+[gpg "ssh"]
+  program = "/opt/1Password/op-ssh-sign"
+{{- else if eq .chezmoi.os "linux" -}}
+########################################################################
+{{- end -}}
+
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
 [commit]
   gpgsign = true
