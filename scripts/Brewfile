@@ -158,6 +158,7 @@ brew "tfenv"
 brew "theora"
 brew "thefuck"
 brew "tldr"
+brew "tmux"
 brew "tokyo-cabinet"
 brew "trash-cli", link: true
 brew "tree"
