@@ -30,7 +30,7 @@ alias la="eza -abghHliS --git --icons"
 # Look up for unreachable commits || Use it with --grep=<something useful>
 alias gitlost="git fsck --unreachable | grep commit | cut -d ' ' -f3 | xargs git log --merges --no-walk --grep="
 
-alias zsource="source $HOME/.config/zsh/.zshrc | tte slide --merge"
+alias zsource="source $HOME/.zshrc | tte slide --merge"
 alias imaps="imapu; imapr"
 
 function mount_remote_file(){

@@ -127,7 +127,7 @@ export KEYTIMEOUT=1
 
 # Skip all aliases, in lib files and enabled plugins
 zstyle ':omz:*' aliases no
-source $ZSH_CUSTOM/../oh-my-zsh.sh
+source $HOME/.oh-my-zsh/oh-my-zsh.sh
 
 # Auto suggestions & syntax highlight
 
