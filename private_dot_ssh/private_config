@@ -1,0 +1,19 @@
+# DevPod Start backstage.devpod
+Host backstage.devpod
+  ForwardAgent yes
+  LogLevel error
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  HostKeyAlgorithms rsa-sha2-256,rsa-sha2-512,ssh-rsa
+  ProxyCommand "/Applications/DevPod.app/Contents/MacOS/devpod-cli" ssh --stdio --context default --user node backstage
+  User node
+# DevPod End backstage.devpod
+Host pixeltowers-staging
+  HostName 188.34.205.78
+  User root
+Host pixeltowers-prod-v1
+  HostName 5.75.137.245
+  User root
+
+Host *
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
