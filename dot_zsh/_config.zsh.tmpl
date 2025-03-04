@@ -1,5 +1,5 @@
 # Configure ZSH
-#ZSH_THEME="powerlevel10k"
+#ZSH_THEME="powerlevel10k/powerlevel10k"
 ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
@@ -35,7 +35,7 @@ export PATH="$HOME/workspace/src/github.com/vivien/i3blocks-contrib/**/:$PATH"
 # Only run this if on Mac
 # Mac, adjust for Python version
 if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
-    PATH="$HOME/Library/Python/3.6/bin/:$PATH"
+  PATH="$HOME/Library/Python/3.6/bin/:$PATH"
 fi
 
 # Configures z plugin
@@ -50,7 +50,6 @@ export PATH="/opt/homebrew/bin:$PATH"
 . ~/.zsh/z.sh
 {{- end -}}
 
-autoload -U promptinit; promptinit
 #prompt pure
 
 ###############################################################################
