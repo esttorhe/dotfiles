@@ -24,34 +24,31 @@ export RIPGREP_CONFIG_PATH="$HOME/.config/ripgreprc"
 export PATH="$HOME/.bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
+{{- if eq .chezmoi.os "linux" -}}
 ###################################################
 # i3blocks contrib
 ###################################################
 export PATH="$HOME/workspace/src/github.com/vivien/i3blocks-contrib/**/:$PATH"
+{{- end -}}
 
-###################################################
-# Security scripts
-###################################################
-#export PATH="$HOME/.security/:$PATH"
-
+{{- if eq .chezmoi.os "darwin" -}}
 # Only run this if on Mac
-if [ "${unameOut}" = "Darwin" ]; then
-  # Mac, adjust for Python version
-  if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
-      PATH="$HOME/Library/Python/3.6/bin/:$PATH"
-  fi
-
-  # Configures z plugin
-  . `brew --prefix`/etc/profile.d/z.sh
-
-  # BREW CASK
-  # Specify your defaults in this environment variable
-  export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-  export PATH="/opt/homebrew/bin:$PATH"
-elif [ "${unameOut}" = "Linux" ]; then
-  # Configures z plugin
-  . ~/.zsh/z.sh
+# Mac, adjust for Python version
+if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
+    PATH="$HOME/Library/Python/3.6/bin/:$PATH"
 fi
+
+# Configures z plugin
+. `brew --prefix`/etc/profile.d/z.sh
+
+# BREW CASK
+# Specify your defaults in this environment variable
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+export PATH="/opt/homebrew/bin:$PATH"
+{{- else if eq .chezmoi.os "linux" -}}
+# Configures z plugin
+. ~/.zsh/z.sh
+{{- end -}}
 
 autoload -U promptinit; promptinit
 #prompt pure
