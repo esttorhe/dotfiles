@@ -6,6 +6,7 @@ tap "kreuzwerker/taps"
 tap "lindell/multi-gitter"
 tap "zenjob/zenpie", "git@github.com:zenjob/zenpie.git"
 
+brew "aichat"
 brew "adns"
 brew "aom"
 brew "asdf"
