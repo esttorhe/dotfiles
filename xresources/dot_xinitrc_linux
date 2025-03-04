@@ -1,0 +1,3 @@
+xrandr --dpi 162
+xrdb ~/.Xresources
+
