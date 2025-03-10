@@ -67,7 +67,8 @@ config.inactive_pane_hsb = {
 }
 
 mappings.apply_to_config(config)
-theme.apply_to_config(config)
+--theme.apply_to_config(config)
+config.color_scheme = "Dracula"
 tab_bar.apply_to_config(config)
 
 return config
