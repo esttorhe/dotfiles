@@ -117,4 +117,21 @@ alias cat='bat'
 
 alias lg='lazygit'
 
+##########################################################################
+# Git
+##########################################################################
+alias gst="git status"
+alias ga="git add"
+alias gb="git branch"
+alias gp="git push"
+alias gcmsg="git commit -m"
+alias grbi="git rebase -i"
+alias grbc="git rebase --continue"
+alias grba="git rebase --abort"
+alias gc="git commit"
+alias gd="git diff"
+alias gco="git checkout"
+alias gc="git commit --amend"
+
+
 # vim: ft=muttrc
