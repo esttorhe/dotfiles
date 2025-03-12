@@ -3,6 +3,23 @@
 # confirmations, etc.) must go above this block; everything else may go below.
 # source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
 
+# Amazon Q pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
+
+check_and_source() {
+  if [ -s $1 ]; then
+    source $1
+  fi
+}
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(atuin init zsh)"
+
+check_and_source "$HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh"
+
+# Load Antidote
+antidote load
+
 # Find all zsh files
 configs=($HOME/.zsh/*.zsh)
 for file in ${configs:#*/completions.zsh}
@@ -18,3 +35,6 @@ export PATH="/usr/local/opt/sqlite/bin:$PATH"
 # vim: ft=muttrc
 
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+# Amazon Q post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
