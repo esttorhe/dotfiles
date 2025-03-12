@@ -14,6 +14,5 @@ Host pixeltowers-staging
 Host pixeltowers-prod-v1
   HostName 5.75.137.245
   User root
-
 Host *
 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
