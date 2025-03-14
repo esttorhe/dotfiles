@@ -35,7 +35,7 @@
 	keepBackup = true
   prompt = false
 
-[mergetool "meld"]
+[mergetool "opendiff"]
     
 ########################################################################
 
@@ -62,13 +62,12 @@
   line-numbers-right-style = cyan
   line-numbers-minus-style = 124
   line-numbers-plus-style = 28
-[mergetool "meld"]
-  cmd = meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label \"MERGE (REMOTE BASE MY)\"
+[mergetool "opendiff"]
   trustExitCode = false
 [diff "plist"]
   textconv = plutil -convert xml1 -o -
 [merge]
-    tool = meld
+    tool = opendiff
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
