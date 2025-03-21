@@ -1,8 +1,5 @@
 # Export Variables
 
-# Podman
-export PATH=/opt/podman/bin:$PATH
-
 #export ZSH=$HOME/.oh-my-zsh
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/bin/gcov:$PATH
