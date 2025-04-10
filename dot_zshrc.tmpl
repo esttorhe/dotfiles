@@ -40,3 +40,25 @@ export PATH="/usr/local/opt/sqlite/bin:$PATH"
 
 # Amazon Q post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
+
+# pnpm
+export PNPM_HOME="/Users/esteban.torres/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# bun completions
+[ -s "/Users/esteban.torres/.bun/_bun" ] && source "/Users/esteban.torres/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Cloudflare Zero PixelTowers
+export INFISICAL_CUSTOM_HEADERS="CF-Access-Client-Id={{onepasswordRead "op://Private/CF-Access-Client-Id/password"}} CF-Access-Client-Secret={{onepasswordRead "op://Private/CF-Access-Client-Secret/password"}}"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
