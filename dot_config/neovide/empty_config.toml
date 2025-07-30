@@ -1,0 +1,32 @@
+# Path to neovim executable (adjust if needed)
+neovim_bin = "/opt/homebrew/bin/nvim"
+
+# Window settings
+maximized = false
+fullscreen = false
+frame = "full"
+
+# Performance settings
+vsync = true
+refresh_rate = 60
+
+# Appearance
+font_size = 14.0
+font_family = "JetBrainsMono Nerd Font" # Adjust to your preferred font
+line_height = 1.2
+
+# Cursor settings
+cursor_animation_length = 0.13
+cursor_vfx_mode = "railgun"    # Options: railgun, torpedo, pixiedust, sonicboom, ripple, wireframe
+
+# GUI features
+padding_top = 0
+padding_bottom = 0
+padding_right = 0
+padding_left = 0
+
+# Scale
+scale = 1.0
+
+# Behavior
+idle_timeout = 5
