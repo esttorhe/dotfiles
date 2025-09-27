@@ -51,6 +51,7 @@ esac
 
 # mise activation
 eval "$($HOME/.local/bin/mise activate zsh)"
+eval "$(mise activate zsh --shims)"
 
 # bun completions
 [ -s "/Users/esteban.torres/.bun/_bun" ] && source "/Users/esteban.torres/.bun/_bun"
