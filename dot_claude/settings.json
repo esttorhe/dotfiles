@@ -1,0 +1,61 @@
+{
+  "model": "opusplan",
+  "permissions": {
+    "allow": [
+      "mcp__zen__chat",
+      "mcp__zen__thinkdeep",
+      "mcp__zen__planner",
+      "mcp__zen__consensus",
+      "mcp__zen__codereview",
+      "mcp__private-journal__process_thoughts"
+    ],
+    "deny": []
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run $HOME/.claude/hooks/utilities/UserPromptSubmit/append_ultrathink.py"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": []
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": []
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": []
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": []
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": []
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bunx -y ccstatusline@latest",
+    "padding": 0
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754360713440
+  }
+}
