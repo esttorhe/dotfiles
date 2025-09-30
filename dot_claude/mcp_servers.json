@@ -1,0 +1,17 @@
+{
+  "chrome-devtools": {
+    "type": "stdio",
+    "command": "bunx",
+    "args": [
+      "chrome-devtools-mcp@latest"
+    ],
+    "env": {}
+  },
+  "joshuayoes-ios-simulator-mcp": {
+    "args": [
+      "-y",
+      "ios-simulator-mcp"
+    ],
+    "command": "npx"
+  }
+}
