@@ -127,6 +127,11 @@ alias gc="git commit"
 alias gd="git diff"
 alias gco="git checkout"
 alias gc="git commit --amend"
+alias gum="gco main && git pufo main"
 
+##########################################################################
+# Claude 
+##########################################################################
+alias claudio="claude --dangerously-skip-permissions"
 
 # vim: ft=muttrc
