@@ -443,10 +443,8 @@
         },
         "private-journal": {
           "type": "stdio",
-          "command": "npx",
-          "args": [
-            "github:obra/private-journal-mcp"
-          ],
+          "command": "private-journal-mcp",
+          "args": [],
           "env": {}
         }
       },
