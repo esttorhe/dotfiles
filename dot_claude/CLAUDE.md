@@ -159,7 +159,7 @@ Remember: Quality tools are guardrails that help you, not barriers that block yo
 - Write atomic commits of your work so that they are easier to review, check or undo if something goes wrong.
 - Commit messages should follow the EU commit guidelines <https://ec.europa.eu/component-library/v1.14.2/ec/docs/conventions/git/>
 
-# Other thinsg
+# Other things
 
 - timeout and gtimeout are not installed, do not try and use them
 - When searching or modifying code, you must use ast-grep (sg). Do not use grep, ripgrep, ag, sed, or regex-only tools.
