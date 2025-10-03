@@ -446,6 +446,18 @@
           "command": "private-journal-mcp",
           "args": [],
           "env": {}
+        },
+        "plane": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@makeplane/plane-mcp-server"
+          ],
+          "env": {
+            "PLANE_API_KEY": "{{onepasswordRead "op://PixelTowers/PLANE_API_KEY/password" }}",
+            "PLANE_API_HOST_URL": "https://tasks.pixeltowers.io/",
+            "PLANE_WORKSPACE_SLUG": "pixeltowers"
+          }
         }
       },
       "enabledMcpjsonServers": [],
