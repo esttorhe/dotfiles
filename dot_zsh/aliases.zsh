@@ -134,4 +134,18 @@ alias gum="gco main && git pufo main"
 ##########################################################################
 alias claudio="claude --dangerously-skip-permissions"
 
+##########################################################################
+# Claude-Telegram Bridge aliases
+##########################################################################
+alias show-telegram='python3 ~/.claude/show-telegram.py'
+alias show-changes='python3 ~/.claude/show-changes.py'
+alias telegram-status='ps aux | grep telegram_listener | grep -v grep'
+alias telegram-start='nohup python3 ~/.claude/telegram_listener.py > ~/telegram_listener.log 2>&1 &'
+alias telegram-stop='pkill -f telegram_listener.py'
+
+##########################################################################
+# Chezmoi
+##########################################################################
+alias chemaf="chezmoi apply --force"
+
 # vim: ft=muttrc
