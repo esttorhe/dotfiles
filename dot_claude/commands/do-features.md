@@ -1,11 +1,13 @@
 1. Open `FEATURES.claude.md` and select the first unchecked items to work on.
-2. Carefully plan each item, then post your plan as a new .md file with an appropriate name for the feature to be tackled.
-3. Create a new branch and implement your plan:
+2. Check the Plane reference id attached to the feature; using your tools move it to in progress and assign it to me (esteban on plane)
+3. Carefully plan each item, then post your plan as a comment to the plane task assigned to it
+4. Create a new branch and implement your plan:
     - Write robust, well-documented code.
     - Include comprehensive tests and debug logging.
     - Verify that all tests pass.
     - If the work is in a web app, or a mobile app and you are on a darwin machine, use your tools to visually validate that the changes work.
     - Take screenshots and use them to validate against the code and fix any visual issues you find
-4. Commit your changes and open a pull request referencing the issue.
-5. Attach relevant screenshots and videos when possible and available.
-6. Check off the items on FEATURES.claude.md
+4. Commit your changes and open a pull request referencing the issue, put a link to the plane task at the top of the pull request body, use the PLANE_API_HOST_URL & PLANE_WORKSPACE_SLUG environment variables when available to properly construct the task URL to be referenced on the PR. If you can't know for sure this URL, then just write the plane ticket number in the PR.
+5. Add a link to the PR on the task on plane
+6. Attach relevant screenshots and videos when possible and available.
+7. Check off the items on `FEATURES.claude.md`
