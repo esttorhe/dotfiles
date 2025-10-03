@@ -174,6 +174,7 @@ Remember: Quality tools are guardrails that help you, not barriers that block yo
 - WHEN facing template issues, debug the actual problem rather than creating workarounds
 - WHEN working on a website, use your tools available to verify the UI of the features and bugs you are working on, when opening PRs for this kind of work attach always pictures of the resulting UI. Use the screenshots to compare with the code and fix any issues you might notice
 - WHEN working on mobile applications AND running on a Darwin based architecture, use your tools available to interact with the simulator in order to validate the changes made. When creating PRs related to this kind of work always attach screenshots or videos of the feature and/or bug fixed
+- WHEN taking screenshots, ALWAYS store them in a folder relative to the current project. In `.claude-visual/` that way its easier to reference later and to clean-up as well
 
 Problem-Solving Approach:
 

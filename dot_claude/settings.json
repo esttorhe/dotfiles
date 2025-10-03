@@ -7,7 +7,7 @@
       "mcp__zen__planner",
       "mcp__zen__consensus",
       "mcp__zen__codereview",
-      "mcp__private-journal",
+      "mcp__private-journal__process_thoughts",
       "mcp__chrome-devtools",
       "mcp__joshuayoes-ios-simulator-mcp"
     ],
