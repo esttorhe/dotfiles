@@ -7,7 +7,7 @@
     - Verify that all tests pass.
     - If the work is in a web app, or a mobile app and you are on a darwin machine, use your tools to visually validate that the changes work.
     - Take screenshots and use them to validate against the code and fix any visual issues you find
-4. Commit your changes and open a pull request referencing the issue, put a link to the plane task at the top of the pull request body
+4. Commit your changes and open a pull request referencing the issue, put a link to the plane task at the top of the pull request body, use the PLANE_API_HOST_URL & PLANE_WORKSPACE_SLUG environment variables when available to properly construct the task URL to be referenced on the PR. If you can't know for sure this URL, then just write the plane ticket number in the PR.
 5. Add a link to the PR on the task on plane
 6. Attach relevant screenshots and videos when possible and available.
 7. Check off the items on `BUGS.claude.md`
