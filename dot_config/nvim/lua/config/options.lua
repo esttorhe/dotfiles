@@ -3,6 +3,8 @@
 -- Add any additional options here
 vim.opt.winbar = "%=%f %m %r%w%h%=%l/%L %p%%"
 
+vim.clipboard = "unnamedplus"
+
 vim.opt.statuscolumn = "%@SignCb@%s%=%T%@NumCb@%l %r│%T"
 
 vim.wo.relativenumber = false
