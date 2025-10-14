@@ -1,5 +1,6 @@
 [tools]
 "github:coder/coder" = "latest"
+"github:helix-editor/helix" = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 
 [settings]
