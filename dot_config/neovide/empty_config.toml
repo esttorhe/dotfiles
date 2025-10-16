@@ -4,7 +4,7 @@ neovim_bin = "/opt/homebrew/bin/nvim"
 # Window settings
 maximized = false
 fullscreen = false
-frame = "full"
+frame = "none"
 
 # Performance settings
 vsync = true
