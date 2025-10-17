@@ -1,6 +1,7 @@
 [tools]
 "github:coder/coder" = "latest"
 "github:helix-editor/helix" = "latest"
+"github:koekeishiya/yabai" = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 
 [settings]
