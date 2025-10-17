@@ -11,8 +11,6 @@ vim.wo.relativenumber = false
 
 vim.g.vim_markdown_folding_disabled = 1
 
-local homedir = os.getenv("HOME")
-
 vim.opt.spelllang = { "en" }
 
 vim.g.mapleader = ","
