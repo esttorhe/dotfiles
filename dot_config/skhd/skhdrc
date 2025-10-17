@@ -52,3 +52,31 @@ shift + alt - 0 : yabai -m window --opacity 0.1 && sleep $(yabai -m config windo
 ctrl + alt - q : yabai --stop-service
 ctrl + alt - s : yabai --start-service
 ctrl + alt - r : yabai --restart-service
+
+# workspace setup hotkeys
+# setup workspace for single display (laptop only)
+shift + alt + cmd - 1 : ~/.config/yabai/scripts/yabai-workspace-setup.sh single
+
+# setup workspace for dual display (laptop + 1 external)
+shift + alt + cmd - 2 : ~/.config/yabai/scripts/yabai-workspace-setup.sh dual
+
+# setup workspace for triple display (laptop + 2 external)
+shift + alt + cmd - 3 : ~/.config/yabai/scripts/yabai-workspace-setup.sh triple
+
+# focus specific workspaces
+cmd - 1 : yabai -m space --focus 1
+cmd - 2 : yabai -m space --focus 2
+cmd - 3 : yabai -m space --focus 3
+cmd - 4 : yabai -m space --focus 4
+cmd - 5 : yabai -m space --focus 5
+cmd - 6 : yabai -m space --focus 6
+cmd - 7 : yabai -m space --focus 7
+
+# move window and follow focus to workspace
+shift + cmd - 1 : yabai -m window --space 1 && yabai -m space --focus 1
+shift + cmd - 2 : yabai -m window --space 2 && yabai -m space --focus 2
+shift + cmd - 3 : yabai -m window --space 3 && yabai -m space --focus 3
+shift + cmd - 4 : yabai -m window --space 4 && yabai -m space --focus 4
+shift + cmd - 5 : yabai -m window --space 5 && yabai -m space --focus 5
+shift + cmd - 6 : yabai -m window --space 6 && yabai -m space --focus 6
+shift + cmd - 7 : yabai -m window --space 7 && yabai -m space --focus 7
