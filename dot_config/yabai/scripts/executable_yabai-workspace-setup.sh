@@ -18,10 +18,21 @@ setup_spaces() {
   echo "Detected displays: ${displays[*]}"
   echo "Main display (your configured main): $main_display"
 
-  # Create necessary spaces if they don't exist
-  for i in {1..9}; do
-    yabai -m space --create 2>/dev/null || true
-  done
+  # Only create spaces if we don't have enough
+  local current_spaces=$(yabai -m query --spaces | jq '. | length')
+  local needed_spaces=9
+
+  echo "Current spaces: $current_spaces, needed: $needed_spaces"
+
+  if [ "$current_spaces" -lt "$needed_spaces" ]; then
+    local spaces_to_create=$((needed_spaces - current_spaces))
+    echo "Creating $spaces_to_create additional spaces..."
+    for i in $(seq 1 $spaces_to_create); do
+      yabai -m space --create 2>/dev/null || true
+    done
+  else
+    echo "Sufficient spaces exist, skipping creation"
+  fi
 
   # Configure space layouts based on display count
   case $num_displays in
@@ -76,23 +87,15 @@ move_existing_windows() {
 
   # Move each app to its designated space (matching yabairc rules)
   move_app_windows "Neovide" 1
-  move_app_windows "Xcode" 1
-  move_app_windows "wezterm-gui" 1
   move_app_windows "Discord" 2
   move_app_windows "Telegram" 3
   move_app_windows "WhatsApp" 4
-  move_app_windows "‎WhatsApp" 4  # Handle the weird WhatsApp name with invisible char
+  move_app_windows "‎WhatsApp" 4 # Handle the weird WhatsApp name with invisible char
   move_app_windows "Notion" 5
-  move_app_windows "Claude" 5
-  move_app_windows "Todoist" 5
-  move_app_windows "AWS VPN Client" 5
   move_app_windows "Notion Calendar" 6
   move_app_windows "Asana" 7
-  move_app_windows "Finder" 7
   move_app_windows "Zen" 8
-  move_app_windows "zen" 8
   move_app_windows "Spotify" 9
-  move_app_windows "Sleeve" 9
 }
 
 launch_and_arrange_apps() {
@@ -103,7 +106,7 @@ launch_and_arrange_apps() {
 
   # Then launch any missing applications (only if not already running)
   # Development workspace (Space 1)
-  if ! pgrep -x "Neovide" >/dev/null && ! pgrep -x "Xcode" >/dev/null && ! pgrep -x "wezterm-gui" >/dev/null; then
+  if ! pgrep -x "Neovide" >/dev/null && ! pgrep -x "wezterm-gui" >/dev/null; then
     if command -v neovide >/dev/null; then
       open -a "Neovide" && sleep 2
     elif pgrep -x "WezTerm" >/dev/null; then
