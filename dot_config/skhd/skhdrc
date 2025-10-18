@@ -85,3 +85,7 @@ cmd - 9 : yabai -m space --focus 9
 
 # WezTerm toggle - simple working approach
 ctrl + alt - z : ~/.config/yabai/scripts/toggle-wezterm.sh
+
+# chezmoi apply --force
+ctrl + alt - c : echo "Applying chezmoi --force" && chemaf
+
