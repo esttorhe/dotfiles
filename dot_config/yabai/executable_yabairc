@@ -32,12 +32,11 @@ yabai -m config mouse_action1                move
 yabai -m config mouse_action2                resize        
 yabai -m config mouse_drop_action            swap
 yabai -m config menubar_opacity              1.0
-yabai -m signal --add label="flash_focus" event="window_focused" action="yabai -m window \$YABAI_WINDOW_ID --opacity 0.1 && sleep $(yabai -m config window_opacity_duration) && yabai -m window \$YABAI_WINDOW_ID --opacity 0.0"
 
 # App-specific rules for window management
 yabai -m rule --add app="^System Settings$" manage=off
-yabai -m rule --add app="^Todoist$" manage=off
-yabai -m rule --add app="^WezTerm$" manage=off
+yabai -m rule --add app="^Todoist$" manage=off layer=above
+yabai -m rule --add app="^WezTerm$" manage=on sticky=on layer=above opacity=1.0
 
 # Critical: 1Password authentication and security windows must be unmanaged
 yabai -m rule --add app="^1Password.*$" manage=off layer=above
@@ -66,7 +65,7 @@ yabai -m rule --add app="^Zen$" space=8
 yabai -m rule --add app="^Spotify$" space=9
 
 # Display-specific configuration signals
-yabai -m signal --add event=display_added action="~/scripts/yabai-display-setup.sh added"
-yabai -m signal --add event=display_removed action="~/scripts/yabai-display-setup.sh removed"
+yabai -m signal --add event=display_added action="~/.config/yabai/scripts/yabai-display-setup.sh added"
+yabai -m signal --add event=display_removed action="~/.config/yabai/scripts/yabai-display-setup.sh removed"
 
 yabai -m config debug_output on
