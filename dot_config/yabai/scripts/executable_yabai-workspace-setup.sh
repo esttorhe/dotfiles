@@ -20,7 +20,7 @@ setup_spaces() {
 
   # Only create spaces if we don't have enough
   local current_spaces=$(yabai -m query --spaces | jq '. | length')
-  local needed_spaces=9
+  local needed_spaces=10
 
   echo "Current spaces: $current_spaces, needed: $needed_spaces"
 
@@ -45,12 +45,13 @@ setup_spaces() {
     echo "Moving spaces to secondary display: $secondary_display"
     # Main display (your external): spaces 1-5 (Dev, Comm, Prod, Media, Productivity)
     # Secondary display (laptop): spaces 6-9 (Calendar, Asana, Zen, Files)
-    yabai -m space 2 --display $secondary_display 2>/dev/null || true # Discord
-    yabai -m space 3 --display $secondary_display 2>/dev/null || true # Telegram
-    yabai -m space 4 --display $secondary_display 2>/dev/null || true # WhatsApp
-    yabai -m space 6 --display $secondary_display 2>/dev/null || true # Notion Calendar
-    yabai -m space 7 --display $secondary_display 2>/dev/null || true # Asana
-    yabai -m space 9 --display $secondary_display 2>/dev/null || true # Spotify
+    yabai -m space 2 --display $secondary_display 2>/dev/null || true  # Discord
+    yabai -m space 3 --display $secondary_display 2>/dev/null || true  # Telegram
+    yabai -m space 4 --display $secondary_display 2>/dev/null || true  # WhatsApp
+    yabai -m space 6 --display $secondary_display 2>/dev/null || true  # Notion Calendar
+    yabai -m space 7 --display $secondary_display 2>/dev/null || true  # Asana
+    yabai -m space 9 --display $secondary_display 2>/dev/null || true  # Spotify
+    yabai -m space 10 --display $secondary_display 2>/dev/null || true # Slack
     ;;
   3) # Triple display - spread across all three
     echo "Setting up triple display workspace..."
@@ -58,11 +59,11 @@ setup_spaces() {
     # Main display (your external): spaces 1-3 (Dev, Comm, Prod)
     # Secondary display: spaces 4-6 (WhatsApp, Notion, Calendar)
     # Tertiary display: spaces 7-9 (Asana, Zen, Spotify)
-    yabai -m space 2 --display $secondary_display 2>/dev/null || true # Discord
-    yabai -m space 3 --display $secondary_display 2>/dev/null || true # Telegram
-    yabai -m space 4 --display $secondary_display 2>/dev/null || true # WhatsApp
-    yabai -m space 7 --display $secondary_display 2>/dev/null || true # Asana
-    yabai -m space 9 --display $secondary_display 2>/dev/null || true # Spotify
+    yabai -m space 2 --display $secondary_display 2>/dev/null || true  # Discord
+    yabai -m space 3 --display $secondary_display 2>/dev/null || true  # Telegram
+    yabai -m space 4 --display $secondary_display 2>/dev/null || true  # WhatsApp
+    yabai -m space 7 --display $secondary_display 2>/dev/null || true  # Asana
+    yabai -m space 10 --display $secondary_display 2>/dev/null || true # Slack
 
     yabai -m space 6 --display $tertiary_display 2>/dev/null || true # Notion Calendar
     yabai -m space 9 --display $tertiary_display 2>/dev/null || true # Spotify
@@ -96,6 +97,7 @@ move_existing_windows() {
   move_app_windows "Asana" 7
   move_app_windows "Zen" 8
   move_app_windows "Spotify" 9
+  move_app_windows "Slack" 10
 }
 
 launch_and_arrange_apps() {
@@ -127,6 +129,10 @@ launch_and_arrange_apps() {
 
   if ! pgrep -x "WhatsApp" >/dev/null; then
     open -a "WhatsApp" && sleep 2
+  fi
+
+  if ! pgrep -x "Slack" >/dev/null; then
+    open -a "Slack" && sleep 2
   fi
 
   # Productivity workspaces - launch if not running
