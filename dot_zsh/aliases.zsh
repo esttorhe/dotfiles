@@ -103,14 +103,10 @@ if [ "${unameOut}" = "Linux" ]; then
 	alias pbcopy='xclip -selection clipboard'
 fi
 
-##########################################################################
-# ZenJob
-##########################################################################
-alias activate-toolbelt='source ~/toolbelt/bin/activate'
-
 alias cat='bat'
 
 alias lg='lazygit'
+alias ld='lazydocker'
 
 ##########################################################################
 # Git
