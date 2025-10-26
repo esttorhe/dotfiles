@@ -1,6 +1,8 @@
 [tools]
+"github:FiloSottile/mkcert" = "latest"
 "github:coder/coder" = "latest"
 "github:helix-editor/helix" = "latest"
+"github:jesseduffield/lazydocker" = "latest"
 "github:koekeishiya/yabai" = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 
