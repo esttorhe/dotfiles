@@ -159,6 +159,11 @@ Remember: Quality tools are guardrails that help you, not barriers that block yo
 - Write atomic commits of your work so that they are easier to review, check or undo if something goes wrong.
 - Commit messages should follow the EU commit guidelines <https://ec.europa.eu/component-library/v1.14.2/ec/docs/conventions/git/>
 
+7. Don't attach yourself to the work
+
+- I don't want to see the commits being co-authored by Claude. That doesn't help me
+- If you are about to write the co-author in a commit stop and realise that doing that brings no value to anyone
+
 # Other things
 
 - timeout and gtimeout are not installed, do not try and use them
