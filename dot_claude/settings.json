@@ -1,5 +1,4 @@
 {
-  "model": "opusplan",
   "permissions": {
     "allow": [
       "mcp__zen__chat",
@@ -59,5 +58,6 @@
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754360713440
-  }
+  },
+  "model": "sonnet"
 }
