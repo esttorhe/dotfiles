@@ -1,9 +1,11 @@
 return {
   "coder/claudecode.nvim",
-  dependencies = { "folke/snacks.nvim" },
-
+  event = "VeryLazy",
   opts = {
-    terminal_cmd = "~/.local/share/mise/shims/claude --dangerously-skip-permissions",
+    terminal_cmd = "claude --dangerously-skip-permissions",
+    terminal = {
+      provider = "native",
+    },
   },
   config = true,
   keys = {
