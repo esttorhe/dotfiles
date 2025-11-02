@@ -9,10 +9,10 @@ Host backstage.devpod
   User node
 # DevPod End backstage.devpod
 Host pixeltowers-staging
-  HostName 188.34.205.78
+  HostName {{onepasswordRead "op://PixelTowers/PIXELTOWERS_STAGING/password" }}
   User root
 Host pixeltowers-prod-v1
-  HostName 5.75.137.245
+  HostName {{onepasswordRead "op://PixelTowers/PIXELTOWERS_PROD/password" }}
   User root
 Host *
 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
