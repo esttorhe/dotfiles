@@ -5,10 +5,10 @@ export PATH="/Users/esteban.torres/.local/share/mise/shims:$PATH"
 
 # Handle mouse click events
 if [ "$SENDER" = "mouse.clicked" ]; then
-    # Extract the space number from the item name (e.g., "space.1" -> "1")
-    SPACE_ID="${NAME#*.}"
-    # Focus the yabai space
-    yabai -m space --focus "$SPACE_ID"
+    # Extract the space label from the item name (e.g., "space.dev" -> "dev")
+    SPACE_LABEL="${NAME#*.}"
+    # Focus the yabai space by label
+    yabai -m space --focus "$SPACE_LABEL"
 else
     # Regular space update
     # The $SELECTED variable is available for space components and indicates if
