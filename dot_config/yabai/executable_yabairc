@@ -24,7 +24,8 @@ yabai -m config window_opacity on
 yabai -m config split_ratio 0.50
 yabai -m config split_type auto
 yabai -m config auto_balance on
-yabai -m config top_padding 7
+# Dynamic top padding - calculated based on sketchybar height + 7px
+~/.config/yabai/scripts/update-padding.sh
 yabai -m config bottom_padding 7
 yabai -m config left_padding 7
 yabai -m config right_padding 7

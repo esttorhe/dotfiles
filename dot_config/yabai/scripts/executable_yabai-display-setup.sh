@@ -18,6 +18,9 @@ main() {
   # Small delay to let display configuration settle
   sleep 2
 
+  # Recalculate yabai top padding for new display configuration
+  ~/.config/yabai/scripts/update-padding.sh
+
   case $display_count in
   1)
     echo "Single display detected - running single display setup"
