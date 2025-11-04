@@ -80,6 +80,16 @@ sketchybar --add item clock right \
            --set clock update_freq=10 icon=󰥔  script="$PLUGIN_DIR/clock.sh" \
            --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
+                        popup.background.color=0xff1e1e1e \
+                        popup.background.corner_radius=5 \
+                        popup.background.border_width=2 \
+                        popup.background.border_color=0xff0074cc \
+                        popup.label.color=0xffffffff \
+                        popup.label.font="Hack Nerd Font:Bold:14.0" \
+                        popup.label.padding_left=10 \
+                        popup.label.padding_right=10 \
+                        popup.label.padding_top=5 \
+                        popup.label.padding_bottom=5 \
            --subscribe volume volume_change mouse.clicked mouse.scrolled \
            --add item battery right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \

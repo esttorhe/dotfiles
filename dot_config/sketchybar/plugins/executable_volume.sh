@@ -25,6 +25,23 @@ if [ "$SENDER" = "volume_change" ]; then
 
 elif [ "$SENDER" = "mouse.clicked" ]; then
   case "$BUTTON" in
+    "left")
+      # Left click: Show volume popup
+      current_volume=$(osascript -e "output volume of (get volume settings)")
+      mute_status=$(osascript -e "output muted of (get volume settings)")
+
+      if [ "$mute_status" = "true" ]; then
+        popup_text="Volume: Muted"
+      else
+        popup_text="Volume: ${current_volume}%"
+      fi
+
+      sketchybar --set "$NAME" popup.drawing=on \
+                          popup.label="$popup_text"
+
+      # Hide popup after 2 seconds
+      (sleep 2; sketchybar --set "$NAME" popup.drawing=off) &
+      ;;
     "right")
       # Right click: Toggle mute
       current_volume=$(osascript -e "output volume of (get volume settings)")
