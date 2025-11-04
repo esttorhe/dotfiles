@@ -19,6 +19,7 @@ main() {
   sleep 2
 
   # Recalculate yabai top padding for new display configuration
+  echo "Recalculating padding for display change..."
   ~/.config/yabai/scripts/update-padding.sh
 
   case $display_count in

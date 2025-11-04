@@ -1,15 +1,35 @@
 #!/usr/bin/env sh
 
-# ABOUTME: Dynamically sets yabai top padding based on sketchybar height + 7px
-# ABOUTME: This ensures consistent spacing regardless of display configuration
+# ABOUTME: Dynamically sets yabai top padding based on display configuration
+# ABOUTME: Uses smaller padding for laptop-only, larger for external displays
 
-# Get the current sketchybar height
-sketchybar_height=$(sketchybar --query bar | jq -r '.height // 30')
+# Get display count
+get_display_count() {
+    yabai -m query --displays 2>/dev/null | jq '. | length' 2>/dev/null || echo "1"
+}
 
-# Calculate the top padding (sketchybar height + 7px gap)
-top_padding=$((sketchybar_height + 7))
+# Get the appropriate padding based on display configuration
+get_appropriate_padding() {
+    local display_count=$(get_display_count)
 
-# Apply the dynamic padding
+    if [ "$display_count" -eq 1 ]; then
+        # Laptop only - use the original smaller padding
+        echo "7"
+    else
+        # External displays connected - use larger padding
+        echo "37"
+    fi
+}
+
+# Get the appropriate padding
+top_padding=$(get_appropriate_padding)
+display_count=$(get_display_count)
+
+# Apply the padding
 yabai -m config top_padding "$top_padding"
 
-echo "Updated yabai top_padding to: $top_padding (sketchybar height: $sketchybar_height + 7px gap)"
+if [ "$display_count" -eq 1 ]; then
+    echo "Updated yabai top_padding to: $top_padding (laptop-only mode)"
+else
+    echo "Updated yabai top_padding to: $top_padding (external display mode, $display_count displays)"
+fi

@@ -24,7 +24,7 @@ yabai -m config window_opacity on
 yabai -m config split_ratio 0.50
 yabai -m config split_type auto
 yabai -m config auto_balance on
-# Dynamic top padding - calculated based on sketchybar height + 7px
+# Dynamic top padding - laptop (7px) vs external displays (37px)
 ~/.config/yabai/scripts/update-padding.sh
 yabai -m config bottom_padding 7
 yabai -m config left_padding 7
@@ -50,24 +50,36 @@ yabai -m rule --add title=".*1Password.*" manage=off layer=above
 yabai -m rule --add title="Touch ID" manage=off layer=above
 yabai -m rule --add title=".*authentication.*" manage=off layer=above
 
-# Automatic app placement rules
-# Development workspace (Space 1)
-yabai -m rule --add app="^Neovide$" space=1
+# Space labeling based on assigned applications
+yabai -m space 1 --label dev
+yabai -m space 2 --label discord
+yabai -m space 3 --label telegram
+yabai -m space 4 --label whatsapp
+yabai -m space 5 --label notion
+yabai -m space 6 --label calendar
+yabai -m space 7 --label asana
+yabai -m space 8 --label zen
+yabai -m space 9 --label spotify
+yabai -m space 10 --label slack
+
+# Automatic app placement rules using labeled spaces
+# Development workspace
+yabai -m rule --add app="^Neovide$" space=dev
 
 # Communications
-yabai -m rule --add app="^Discord$" space=2
-yabai -m rule --add app="^Telegram$" space=3
-yabai -m rule --add app="^WhatsApp$" space=4
-yabai -m rule --add app="^Slack$" space=10
+yabai -m rule --add app="^Discord$" space=discord
+yabai -m rule --add app="^Telegram$" space=telegram
+yabai -m rule --add app="^WhatsApp$" space=whatsapp
+yabai -m rule --add app="^Slack$" space=slack
 
 # Productivity workspace
-yabai -m rule --add app="^Notion$" space=5
-yabai -m rule --add app="^Notion Calendar$" space=6
-yabai -m rule --add app="^Asana$" space=7
-yabai -m rule --add app="^Zen$" space=8
+yabai -m rule --add app="^Notion$" space=notion
+yabai -m rule --add app="^Notion Calendar$" space=calendar
+yabai -m rule --add app="^Asana$" space=asana
+yabai -m rule --add app="^Zen$" space=zen
 
 # Music/Media workspace
-yabai -m rule --add app="^Spotify$" space=9
+yabai -m rule --add app="^Spotify$" space=spotify
 
 # Display-specific configuration signals
 yabai -m signal --add event=display_added action="~/.config/yabai/scripts/yabai-display-setup.sh added"

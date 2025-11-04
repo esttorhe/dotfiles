@@ -40,33 +40,34 @@ setup_spaces() {
     echo "Setting up single display workspace..."
     # All spaces stay on the main display by default
     ;;
-  2) # Dual display - distribute spaces
+  2) # Dual display - distribute spaces using labels
     echo "Setting up dual display workspace..."
-    echo "Moving spaces to secondary display: $secondary_display"
-    # Main display (your external): spaces 1-5 (Dev, Comm, Prod, Media, Productivity)
-    # Secondary display (laptop): spaces 6-9 (Calendar, Asana, Zen, Files)
-    yabai -m space 2 --display $secondary_display 2>/dev/null || true  # Discord
-    yabai -m space 3 --display $secondary_display 2>/dev/null || true  # Telegram
-    yabai -m space 4 --display $secondary_display 2>/dev/null || true  # WhatsApp
-    yabai -m space 6 --display $secondary_display 2>/dev/null || true  # Notion Calendar
-    yabai -m space 7 --display $secondary_display 2>/dev/null || true  # Asana
-    yabai -m space 9 --display $secondary_display 2>/dev/null || true  # Spotify
-    yabai -m space 10 --display $secondary_display 2>/dev/null || true # Slack
+    echo "Moving labeled spaces to secondary display: $secondary_display"
+    # Main display (your external): dev, notion (primary work)
+    # Secondary display (laptop): communications, calendar, productivity, media
+    yabai -m space discord --display $secondary_display 2>/dev/null || true
+    yabai -m space telegram --display $secondary_display 2>/dev/null || true
+    yabai -m space whatsapp --display $secondary_display 2>/dev/null || true
+    yabai -m space calendar --display $secondary_display 2>/dev/null || true
+    yabai -m space asana --display $secondary_display 2>/dev/null || true
+    yabai -m space spotify --display $secondary_display 2>/dev/null || true
+    yabai -m space slack --display $secondary_display 2>/dev/null || true
     ;;
-  3) # Triple display - spread across all three
+  3) # Triple display - spread across all three using labels
     echo "Setting up triple display workspace..."
-    echo "Moving spaces to secondary: $secondary_display, tertiary: $tertiary_display"
-    # Main display (your external): spaces 1-3 (Dev, Comm, Prod)
-    # Secondary display: spaces 4-6 (WhatsApp, Notion, Calendar)
-    # Tertiary display: spaces 7-9 (Asana, Zen, Spotify)
-    yabai -m space 2 --display $secondary_display 2>/dev/null || true  # Discord
-    yabai -m space 3 --display $secondary_display 2>/dev/null || true  # Telegram
-    yabai -m space 4 --display $secondary_display 2>/dev/null || true  # WhatsApp
-    yabai -m space 7 --display $secondary_display 2>/dev/null || true  # Asana
-    yabai -m space 10 --display $secondary_display 2>/dev/null || true # Slack
+    echo "Moving labeled spaces to secondary: $secondary_display, tertiary: $tertiary_display"
+    # Main display (your external): dev, notion (primary work)
+    # Secondary display: communications and productivity
+    # Tertiary display: calendar, media, and additional tools
+    yabai -m space discord --display $secondary_display 2>/dev/null || true
+    yabai -m space telegram --display $secondary_display 2>/dev/null || true
+    yabai -m space whatsapp --display $secondary_display 2>/dev/null || true
+    yabai -m space asana --display $secondary_display 2>/dev/null || true
+    yabai -m space slack --display $secondary_display 2>/dev/null || true
 
-    yabai -m space 6 --display $tertiary_display 2>/dev/null || true # Notion Calendar
-    yabai -m space 9 --display $tertiary_display 2>/dev/null || true # Spotify
+    yabai -m space calendar --display $tertiary_display 2>/dev/null || true
+    yabai -m space zen --display $tertiary_display 2>/dev/null || true
+    yabai -m space spotify --display $tertiary_display 2>/dev/null || true
     ;;
   esac
 }
@@ -86,18 +87,18 @@ move_existing_windows() {
     done
   }
 
-  # Move each app to its designated space (matching yabairc rules)
-  move_app_windows "Neovide" 1
-  move_app_windows "Discord" 2
-  move_app_windows "Telegram" 3
-  move_app_windows "WhatsApp" 4
-  move_app_windows "‎WhatsApp" 4 # Handle the weird WhatsApp name with invisible char
-  move_app_windows "Notion" 5
-  move_app_windows "Notion Calendar" 6
-  move_app_windows "Asana" 7
-  move_app_windows "Zen" 8
-  move_app_windows "Spotify" 9
-  move_app_windows "Slack" 10
+  # Move each app to its designated labeled space (matching yabairc rules)
+  move_app_windows "Neovide" "dev"
+  move_app_windows "Discord" "discord"
+  move_app_windows "Telegram" "telegram"
+  move_app_windows "WhatsApp" "whatsapp"
+  move_app_windows "‎WhatsApp" "whatsapp" # Handle the weird WhatsApp name with invisible char
+  move_app_windows "Notion" "notion"
+  move_app_windows "Notion Calendar" "calendar"
+  move_app_windows "Asana" "asana"
+  move_app_windows "Zen" "zen"
+  move_app_windows "Spotify" "spotify"
+  move_app_windows "Slack" "slack"
 }
 
 launch_and_arrange_apps() {
@@ -154,7 +155,7 @@ launch_and_arrange_apps() {
   move_existing_windows
 
   # Focus development workspace to start
-  yabai -m space --focus 1
+  yabai -m space --focus dev
 }
 
 get_display_count() {
