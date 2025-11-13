@@ -185,6 +185,10 @@ main() {
     *) setup_spaces 3 ;;
     esac
     launch_and_arrange_apps
+
+    # Ensure sketchybar appears on all displays after setup
+    echo "Configuring sketchybar for all displays..."
+    sketchybar --bar display=all
     ;;
   *)
     echo "Usage: $0 {single|dual|triple|auto}"
@@ -195,6 +199,10 @@ main() {
     exit 1
     ;;
   esac
+
+  # Final sketchybar configuration to ensure it appears on all displays
+  echo "Final sketchybar display configuration..."
+  sketchybar --bar display=all
 
   echo "Workspace setup complete for $DISPLAY_MODE display mode!"
 }

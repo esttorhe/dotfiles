@@ -1,18 +1,12 @@
-# DevPod Start backstage.devpod
-Host backstage.devpod
-  ForwardAgent yes
-  LogLevel error
-  StrictHostKeyChecking no
-  UserKnownHostsFile /dev/null
-  HostKeyAlgorithms rsa-sha2-256,rsa-sha2-512,ssh-rsa
-  ProxyCommand "/Applications/DevPod.app/Contents/MacOS/devpod-cli" ssh --stdio --context default --user node backstage
-  User node
-# DevPod End backstage.devpod
 Host pixeltowers-staging
   HostName {{onepasswordRead "op://PixelTowers/PIXELTOWERS_STAGING/password" }}
   User root
 Host pixeltowers-prod-v1
   HostName {{onepasswordRead "op://PixelTowers/PIXELTOWERS_PROD/password" }}
   User root
+Host ssh.winkoz.com
+  ProxyCommand cloudflared access ssh --hostname %h
+  User esteban
+  IdentityFile ~/.ssh/esteban_babylon
 Host *
 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

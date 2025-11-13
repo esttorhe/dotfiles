@@ -22,6 +22,10 @@ main() {
   echo "Recalculating padding for display change..."
   ~/.config/yabai/scripts/update-padding.sh
 
+  # Ensure sketchybar appears on all displays
+  echo "Updating sketchybar display configuration..."
+  sketchybar --bar display=all
+
   case $display_count in
   1)
     echo "Single display detected - running single display setup"

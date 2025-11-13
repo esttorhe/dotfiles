@@ -187,3 +187,5 @@ Problem-Solving Approach:
 - MAINTAIN code quality and avoid technical debt
 - USE proper debugging to find root causes
 - AVOID shortcuts that break user experience
+- for future, every single time i ask you about stuff, look for the official documentation or validate your assumptions
+  with external sources

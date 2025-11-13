@@ -1,5 +1,6 @@
 [tools]
 "github:FiloSottile/mkcert" = "latest"
+"github:cloudflare/cloudflared" = "latest"
 "github:coder/coder" = "latest"
 "github:helix-editor/helix" = "latest"
 "github:jesseduffield/lazydocker" = "latest"
