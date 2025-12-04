@@ -12,7 +12,7 @@ if [ "${unameOut}" = "Darwin" ]; then
   alias obsidian='SSH_AUTH_SOCK=~/.1password/agent.sock ~/Applications/Obsidian.app/Contents/MacOS/Obsidian &'
   eval $(thefuck --alias)
   alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
-  alias update="brew update && brew upgrade && brew upgrade --cask && brew cleanup -s && mas upgrade && mise self-update"
+  alias update="brew update && brew upgrade && brew upgrade --cask && brew cleanup -s && mas upgrade && mise upgrade && mise self-update"
   # GoLand
   alias goland="$HOME/.jetbrains/goland"
 
