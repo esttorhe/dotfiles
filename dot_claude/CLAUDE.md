@@ -189,3 +189,4 @@ Problem-Solving Approach:
 - AVOID shortcuts that break user experience
 - for future, every single time i ask you about stuff, look for the official documentation or validate your assumptions
   with external sources
+- Don't commit changes until Esteban has confirmed that the fix or feature works as intended
