@@ -98,3 +98,6 @@ sketchybar --add item clock right \
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
+
+##### Set dynamic positioning based on main display type #####
+"$HOME/.config/sketchybar/scripts/update-bar-position.sh"
