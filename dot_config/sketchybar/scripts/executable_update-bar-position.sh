@@ -25,13 +25,12 @@ case "${width}x${height}" in
 esac
 
 if [ "$is_builtin" = "true" ] || [ "$is_macbook_resolution" = "true" ]; then
-  Y_OFFSET=-37
+  Y_OFFSET=-35
   echo "Laptop display at origin (${width}x${height}) - using y_offset: $Y_OFFSET"
 else
-  Y_OFFSET=-37
+  Y_OFFSET=-35
   echo "External display at origin (${width}x${height}) - using y_offset: $Y_OFFSET"
 fi
 
 # Apply the offset
 sketchybar --bar y_offset=$Y_OFFSET
-

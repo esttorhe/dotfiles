@@ -82,7 +82,7 @@ yabai -m rule --add app="^Zen$" space=zen
 yabai -m rule --add app="^Spotify$" space=spotify
 
 # Display-specific configuration signals
-yabai -m signal --add event=display_added action="~/.config/yabai/scripts/yabai-display-setup.sh added"
-yabai -m signal --add event=display_removed action="~/.config/yabai/scripts/yabai-display-setup.sh removed"
+#yabai -m signal --add event=display_added action="~/.config/yabai/scripts/yabai-display-setup.sh added"
+#yabai -m signal --add event=display_removed action="~/.config/yabai/scripts/yabai-display-setup.sh removed"
 
 yabai -m config debug_output on
