@@ -5,6 +5,7 @@
 "github:helix-editor/helix" = "latest"
 "github:jesseduffield/lazydocker" = "latest"
 "github:koekeishiya/yabai" = "latest"
+"github:tuist/guck" = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 
 [settings]
