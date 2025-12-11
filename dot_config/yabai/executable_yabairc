@@ -24,8 +24,7 @@ yabai -m config window_opacity on
 yabai -m config split_ratio 0.50
 yabai -m config split_type auto
 yabai -m config auto_balance on
-# Dynamic top padding - laptop (7px) vs external displays (37px)
-~/.config/yabai/scripts/update-padding.sh
+yabai -m config top_padding 7
 yabai -m config bottom_padding 7
 yabai -m config left_padding 7
 yabai -m config right_padding 7
@@ -80,9 +79,5 @@ yabai -m rule --add app="^Zen$" space=zen
 
 # Music/Media workspace
 yabai -m rule --add app="^Spotify$" space=spotify
-
-# Display-specific configuration signals
-#yabai -m signal --add event=display_added action="~/.config/yabai/scripts/yabai-display-setup.sh added"
-#yabai -m signal --add event=display_removed action="~/.config/yabai/scripts/yabai-display-setup.sh removed"
 
 yabai -m config debug_output on
