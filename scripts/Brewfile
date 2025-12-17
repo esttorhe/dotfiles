@@ -216,6 +216,7 @@ brew "oven-sh/bun/bun"
 brew "supabase/tap/supabase"
 brew "xcodesorg/made/xcodes"
 brew "zenjob/zenpie/zenpie"
+brew 'reattach-to-user-namespace'
 cask "1password-cli"
 cask "amethyst"
 cask "calibre"
