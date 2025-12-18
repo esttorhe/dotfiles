@@ -217,6 +217,7 @@ brew "supabase/tap/supabase"
 brew "xcodesorg/made/xcodes"
 brew "zenjob/zenpie/zenpie"
 brew 'reattach-to-user-namespace'
+brew 'joshmedeski/sesh/sesh'
 cask "1password-cli"
 cask "amethyst"
 cask "calibre"

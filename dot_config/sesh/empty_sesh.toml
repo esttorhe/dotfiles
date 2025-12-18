@@ -1,0 +1,18 @@
+# open the file manager
+[[session]]
+name = "Downloads 📥"
+path = "~/Downloads"
+startup_command = "yazi"
+
+# open a file
+[[session]]
+name = "chezmoi"
+path = "/Users/esteban.torres/.local/share/chezmoi"
+startup_command = "vi ."
+
+[default_session]
+startup_command = "nvim -c ':Telescope find_files'"
+# run a script to startup a node project
+#[[session]]
+#path = "~/c/joshmedeski.com"
+#startup_script = "~/.config/sesh/scripts/node_dev"
