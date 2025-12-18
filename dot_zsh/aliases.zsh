@@ -123,7 +123,7 @@ alias gc="git commit"
 alias gd="git diff"
 alias gco="git checkout"
 alias gc="git commit --amend"
-alias gum="gco main && git pufo main"
+alias gumain="gco main && git pufo main"
 
 ##########################################################################
 # Claude 

@@ -60,6 +60,26 @@ bind -n M-Right select-pane -R
 bind -n M-Up select-pane -U
 bind -n M-Down select-pane -D
 
+# === Session Management with Sesh ===
+# Sesh quick connect
+bind-key "k" display-popup -E -w 40% "sesh connect \"$(
+  sesh list -i | gum filter --limit 1 --placeholder 'Pick a sesh' --prompt='⚡'
+)\""
+
+# Sesh manager
+bind-key "j" run-shell "sesh connect \"$(
+  sesh list -i | fzf-tmux -p 55%,60% \
+    --no-sort --border-label ' sesh ' --prompt '⚡  ' \
+    --header '  ^a all ^t tmux ^x zoxide ^g config ^k tmux kill ^f find' \
+    --bind 'tab:down,btab:up' \
+    --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list -i)' \
+    --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -it)' \
+    --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -ic)' \
+    --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -iz)' \
+    --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+    --bind 'ctrl-k:execute(tmux kill-session -t {})+change-prompt(⚡  )+reload(sesh list)'
+)\""
+
 # Active monitoring
 setw -g monitor-activity on
 set -g visual-activity on
@@ -86,11 +106,22 @@ set -g allow-passthrough on
 
 set -ga update-environment TERM
 set -ga update-environment TERM_PROGRAM
+set -ga update-environment OPEN_WEATHER_API_KEY
+
+# Set API keys for plugins
+set-environment -g OPEN_WEATHER_API_KEY "{{onepasswordRead "op://Private/OPENWEATHER_API/password"}}"
 
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'catppuccin/tmux#v2.1.3' # See https://github.com/catppuccin/tmux/tags for additional tags
 set -g @plugin 'alberti42/tmux-fzf-links'
+set -g @plugin 'jaclu/tmux-menus'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'alexchaichan/tmux-spotify-tui'
+set -g @plugin 'tmux-plugins/tmux-battery'
+set -g @plugin 'tmux-plugins/tmux-cpu'
+set -g @plugin 'vascomfnunes/tmux-clima'
 
 # Catppuccin configuration - must be set BEFORE running catppuccin.tmux
 set -g @catppuccin_flavor 'mocha'
@@ -104,11 +135,19 @@ set -g @catppuccin_pane_active_border_style "fg=#{@thm_lavender}"
 set -g status-right-length 100
 set -g status-left-length 100
 set -g status-left ""
+set -g status-right '#{actual_song}'
 set -g status-right "#{E:@catppuccin_status_application}"
 set -agF status-right "#{E:@catppuccin_status_cpu}"
+set -agF status-right "#{E:@catppuccin_status_load}"
 set -ag status-right "#{E:@catppuccin_status_session}"
 set -ag status-right "#{E:@catppuccin_status_uptime}"
+set -agF status-right "#{E:@catppuccin_status_clima}"
 set -agF status-right "#{E:@catppuccin_status_battery}"
+
+# === floating scratch terminal ===
+# Toggle floating scratch terminal with prefix+p
+# If in floating session: detach. Otherwise: open popup with floating session.
+bind p if-shell -F '#{==:#S,floating}' { detach-client } { display-popup -d "#{pane_current_path}" -xC -yC -w70% -h70% -E "env TERM=xterm-256color tmux -u new -A -s floating" }
 
 # === tmux-fzf-links ===
 set-option -g @fzf-links-key 'f'
@@ -129,5 +168,16 @@ set-option -g @fzf-links-hide-bottom-bar off
 # Load catppuccin
 run ~/.tmux/plugins/tmux/catppuccin.tmux
 
+# Last saved environment is automatically restored when tmux is started.
+set -g @continuum-restore 'on'
+
+# === tmux-clima ===
+set -g @clima_unit metric
+#set -g @clima_location "Berlin"
+set -g @clima_use_nerd_font 1
+
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
+
+bind-key x kill-pane # skip "kill-pane 1? (y/n)" prompt
+set -g detach-on-destroy off  # don't exit from tmux when closing a session

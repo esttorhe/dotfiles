@@ -63,6 +63,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # Cloudflare Zero PixelTowers
 export INFISICAL_CUSTOM_HEADERS="CF-Access-Client-Id={{onepasswordRead "op://Private/CF-Access-Client-Id/password"}} CF-Access-Client-Secret={{onepasswordRead "op://Private/CF-Access-Client-Secret/password"}}"
 
+export OPEN_WEATHER_API_KEY="{{onepasswordRead "op://Private/OPENWEATHER_API/password"}}"
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
