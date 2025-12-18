@@ -1,10 +1,13 @@
 [tools]
 "github:FiloSottile/mkcert" = "latest"
+"github:Rigellute/spotify-tui" = "latest"
+"github:charmbracelet/gum" = "latest"
 "github:cloudflare/cloudflared" = "latest"
 "github:coder/coder" = "latest"
 "github:helix-editor/helix" = "latest"
 "github:jesseduffield/lazydocker" = "latest"
 "github:koekeishiya/yabai" = "latest"
+"github:sxyazi/yazi" = "latest"
 "github:tuist/guck" = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 
