@@ -12,14 +12,11 @@ set -g history-limit 10000
 set -g prefix C-x
 unbind C-b
 
-# binds prefix l to clear the screen
-bind C-l send-keys 'C-l'
+bind C-l send-keys 'C-l' # Send C-l (clear screen) to the terminal
 
-# reload config without killing server
-bind R source-file ~/.tmux.conf \; display-message "  Config reloaded..".
+bind R source-file ~/.tmux.conf \; display-message "  Config reloaded..". # Reload tmux config
 
-# use send-prefix to pass C-a through to application
-bind C-a send-prefix
+bind C-a send-prefix # Pass C-a through to application
 
 # shorten command delay
 set -sg escape-time 2
@@ -30,43 +27,34 @@ unbind %
 unbind '"'
 #bind - split-window -v
 
-# Make the current window the first window
-bind T swap-window -t 1
+bind T swap-window -t 1 # Make the current window the first window
 
-# map Vi movement keys as pane movement keys
-bind h select-pane -L
-bind j select-pane -D
-bind k select-pane -U
-bind l select-pane -R
+bind h select-pane -L # Select pane to the left (Vi-style)
+bind j select-pane -D # Select pane below (Vi-style)
+bind k select-pane -U # Select pane above (Vi-style)
+bind l select-pane -R # Select pane to the right (Vi-style)
 
-# and use C-h and C-l to cycle thru windows
-bind -r C-h select-window -t :-
-bind -r C-l select-window -t :+
+bind -r C-h select-window -t :- # Cycle to previous window
+bind -r C-l select-window -t :+ # Cycle to next window
 
-# resize panes using PREFIX H, J, K, L
-bind H resize-pane -L 5
-bind J resize-pane -D 5
-bind K resize-pane -U 5
-bind L resize-pane -R 5
+bind H resize-pane -L 5 # Resize pane left by 5
+bind J resize-pane -D 5 # Resize pane down by 5
+bind K resize-pane -U 5 # Resize pane up by 5
+bind L resize-pane -R 5 # Resize pane right by 5
 
-# explicitly disable mouse control
-# toggle mouse
-bind m run "cut -c3- ~./.tmux/tmux.conf.funcs | sh -s _toggle_mouse"
+bind m run "cut -c3- ~./.tmux/tmux.conf.funcs | sh -s _toggle_mouse" # Toggle mouse mode on/off
 set -g mouse on
 
-# Pane switching with Alt+arrow
-bind -n M-Left select-pane -L
-bind -n M-Right select-pane -R
-bind -n M-Up select-pane -U
-bind -n M-Down select-pane -D
+bind -n M-Left select-pane -L # Select pane left (Alt+Left, no prefix)
+bind -n M-Right select-pane -R # Select pane right (Alt+Right, no prefix)
+bind -n M-Up select-pane -U # Select pane above (Alt+Up, no prefix)
+bind -n M-Down select-pane -D # Select pane below (Alt+Down, no prefix)
 
 # === Session Management with Sesh ===
-# Sesh quick connect
 bind-key "k" display-popup -E -w 40% "sesh connect \"$(
   sesh list -i | gum filter --limit 1 --placeholder 'Pick a sesh' --prompt='⚡'
-)\""
+)\"" # Sesh quick connect popup
 
-# Sesh manager
 bind-key "j" run-shell "sesh connect \"$(
   sesh list -i | fzf-tmux -p 55%,60% \
     --no-sort --border-label ' sesh ' --prompt '⚡  ' \
@@ -78,7 +66,7 @@ bind-key "j" run-shell "sesh connect \"$(
     --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -iz)' \
     --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
     --bind 'ctrl-k:execute(tmux kill-session -t {})+change-prompt(⚡  )+reload(sesh list)'
-)\""
+)\"" # Sesh session manager with fzf
 
 # Active monitoring
 setw -g monitor-activity on
@@ -87,8 +75,7 @@ set -g visual-activity on
 # Highlighting Current Window Using Specified Colour
 #set-window-option -g window-status-current-bg yellow
 
-# Split into dev configuration
-bind D source ~/.config/tmux/tmux_dev
+bind D source ~/.config/tmux/tmux_dev # Load dev pane layout
 
 # Creates a new session (and a new window group)
 new-session -s main
@@ -145,9 +132,7 @@ set -agF status-right "#{E:@catppuccin_status_clima}"
 set -agF status-right "#{E:@catppuccin_status_battery}"
 
 # === floating scratch terminal ===
-# Toggle floating scratch terminal with prefix+p
-# If in floating session: detach. Otherwise: open popup with floating session.
-bind p if-shell -F '#{==:#S,floating}' { detach-client } { display-popup -d "#{pane_current_path}" -xC -yC -w70% -h70% -E "env TERM=xterm-256color tmux -u new -A -s floating" }
+bind p if-shell -F '#{==:#S,floating}' { detach-client } { display-popup -d "#{pane_current_path}" -xC -yC -w70% -h70% -E "env TERM=xterm-256color tmux -u new -A -s floating" } # Toggle floating scratch terminal
 
 # === tmux-fzf-links ===
 set-option -g @fzf-links-key 'f'
