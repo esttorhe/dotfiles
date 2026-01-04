@@ -218,6 +218,7 @@ brew "xcodesorg/made/xcodes"
 brew "zenjob/zenpie/zenpie"
 brew 'reattach-to-user-namespace'
 brew 'joshmedeski/sesh/sesh'
+brew 'fortune'
 cask "1password-cli"
 cask "amethyst"
 cask "calibre"

@@ -144,4 +144,9 @@ alias telegram-stop='pkill -f telegram_listener.py'
 ##########################################################################
 alias chemaf="chezmoi apply --force"
 
+##########################################################################
+# TMUX Habits - fortune
+##########################################################################
+alias tmux-habits='$HOME/scripts/tmux-fortune-generator && source ~/.zshrc'
+
 # vim: ft=muttrc

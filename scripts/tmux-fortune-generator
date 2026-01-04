@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+TMUX_CONF="${1:-$HOME/.tmux.conf}"
+FORTUNE_DIR="${2:-$HOME/.local/habits}"
+FORTUNE_FILE="$FORTUNE_DIR/tmux-keys"
+
+mkdir -p "$FORTUNE_DIR"
+
+# Common command descriptions
+declare -A CMD_DESC=(
+  ["new-window"]="Create new window"
+  ["split-window -h"]="Split pane horizontally"
+  ["split-window -v"]="Split pane vertically"
+  ["split-window"]="Split pane"
+  ["select-pane -L"]="Move to left pane"
+  ["select-pane -R"]="Move to right pane"
+  ["select-pane -U"]="Move to pane above"
+  ["select-pane -D"]="Move to pane below"
+  ["resize-pane -L"]="Resize pane left"
+  ["resize-pane -R"]="Resize pane right"
+  ["resize-pane -U"]="Resize pane up"
+  ["resize-pane -D"]="Resize pane down"
+  ["next-window"]="Next window"
+  ["previous-window"]="Previous window"
+  ["last-window"]="Last active window"
+  ["kill-pane"]="Kill current pane"
+  ["kill-window"]="Kill current window"
+  ["detach-client"]="Detach from session"
+  ["copy-mode"]="Enter copy mode"
+  ["paste-buffer"]="Paste from buffer"
+  ["choose-tree"]="Choose session/window interactively"
+  ["choose-window"]="Choose window interactively"
+  ["choose-session"]="Choose session interactively"
+  ["list-keys"]="List all keybindings"
+  ["rename-window"]="Rename current window"
+  ["rename-session"]="Rename current session"
+  ["source-file"]="Reload config"
+  ["display-panes"]="Show pane numbers"
+  ["clock-mode"]="Show clock"
+  ["rotate-window"]="Rotate panes"
+  ["swap-pane"]="Swap panes"
+  ["break-pane"]="Break pane to new window"
+  ["join-pane"]="Join pane from another window"
+  ["select-layout"]="Change pane layout"
+  ["resize-pane -Z"]="Toggle pane zoom"
+  ["set-window-option synchronize-panes"]="Toggle synchronized panes"
+)
+
+describe_command() {
+  local cmd="$1"
+  local comment="$2"
+
+  # Use comment if provided
+  [[ -n "$comment" ]] && {
+    echo "$comment"
+    return
+  }
+
+  # Check exact matches first
+  for pattern in "${!CMD_DESC[@]}"; do
+    if [[ "$cmd" == "$pattern"* ]]; then
+      echo "${CMD_DESC[$pattern]}"
+      return
+    fi
+  done
+
+  # Fallback: clean up command for display
+  echo "$cmd" | sed 's/\\;//g' | cut -d' ' -f1-3
+}
+
+format_key() {
+  local key="$1"
+  local no_prefix="$2"
+
+  if [[ "$no_prefix" == "true" ]]; then
+    echo "$key (no prefix)"
+  else
+    echo "prefix + $key"
+  fi
+}
+
+echo "Parsing $TMUX_CONF..."
+
+# Temp file for fortune entries
+tmp=$(mktemp)
+trap "rm -f $tmp" EXIT
+
+# Parse tmux.conf
+while IFS= read -r line || [[ -n "$line" ]]; do
+  # Skip empty lines and pure comments
+  [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+
+  # Extract inline comment if present
+  comment=""
+  if [[ "$line" =~ \#[[:space:]]*(.+)$ ]]; then
+    comment="${BASH_REMATCH[1]}"
+  fi
+
+  # Match bind/bind-key commands
+  if [[ "$line" =~ ^[[:space:]]*(unbind|bind-key|bind)[[:space:]]+ ]]; then
+    # Skip unbind commands
+    [[ "$line" =~ ^[[:space:]]*unbind ]] && continue
+
+    # Remove the bind/bind-key prefix
+    rest="${line#*bind-key }"
+    rest="${rest#*bind }"
+
+    # Parse flags
+    no_prefix="false"
+    repeat=""
+    key_table=""
+
+    while [[ "$rest" =~ ^-[nrT] ]]; do
+      if [[ "$rest" =~ ^-n ]]; then
+        no_prefix="true"
+        rest="${rest#-n }"
+        rest="${rest#-n}"
+      elif [[ "$rest" =~ ^-r ]]; then
+        repeat="(repeatable)"
+        rest="${rest#-r }"
+        rest="${rest#-r}"
+      elif [[ "$rest" =~ ^-T[[:space:]]+([^[:space:]]+) ]]; then
+        key_table="${BASH_REMATCH[1]}"
+        rest="${rest#-T $key_table }"
+      fi
+      rest="${rest#[[:space:]]}"
+    done
+
+    # Extract key and command
+    read -r key cmd <<<"$rest"
+
+    # Clean up key and cmd
+    key="${key//\"/}"
+    key="${key//\'/}"
+    cmd="${cmd%%#*}"                     # Remove inline comment from cmd
+    cmd="${cmd%"${cmd##*[![:space:]]}"}" # Trim trailing whitespace
+
+    [[ -z "$key" || -z "$cmd" ]] && continue
+
+    # Skip if it's in copy-mode table (too noisy)
+    [[ "$key_table" == "copy-mode"* ]] && continue
+
+    # Generate description
+    desc=$(describe_command "$cmd" "$comment")
+    formatted_key=$(format_key "$key" "$no_prefix")
+
+    # Add table info if not root
+    [[ -n "$key_table" && "$key_table" != "root" ]] && formatted_key="[$key_table] $formatted_key"
+
+    # Write fortune entry
+    echo "$formatted_key — $desc $repeat" >>"$tmp"
+    echo "%" >>"$tmp"
+  fi
+done <"$TMUX_CONF"
+
+# Remove trailing % (macOS compatible)
+sed '$d' "$tmp" >"$FORTUNE_FILE"
+
+# Generate strfile
+strfile "$FORTUNE_FILE" "${FORTUNE_FILE}.dat" >/dev/null
+
+count=$(grep -c "^%" "$tmp" || echo "0")
+echo "Generated $count fortunes in $FORTUNE_FILE"
+echo ""
+echo "Test with: fortune $FORTUNE_FILE"
+echo "Add to shell rc: fortune $FORTUNE_FILE"
