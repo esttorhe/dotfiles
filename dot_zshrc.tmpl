@@ -26,7 +26,6 @@ antidote load
 configs=($HOME/.zsh/*.zsh)
 for file in ${configs:#*/completions.zsh}
 do
-  echo "🐉 Sourcing $file"
   source "$file"
 done
 
