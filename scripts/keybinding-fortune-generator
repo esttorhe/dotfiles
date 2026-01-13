@@ -1,0 +1,306 @@
+#!/usr/bin/env bash
+# ABOUTME: Extracts keybindings from tmux and skhd configs and generates fortune files.
+# ABOUTME: Used to display random keybinding tips as habit reinforcement.
+set -euo pipefail
+
+TMUX_CONF="${TMUX_CONF:-$HOME/.tmux.conf}"
+SKHD_CONF="${SKHD_CONF:-$HOME/.config/skhd/skhdrc}"
+FORTUNE_DIR="${FORTUNE_DIR:-$HOME/.local/habits}"
+TMUX_FORTUNE="$FORTUNE_DIR/tmux-keys"
+SKHD_FORTUNE="$FORTUNE_DIR/skhd-keys"
+
+mkdir -p "$FORTUNE_DIR"
+
+# tmux command descriptions
+declare -A TMUX_CMD_DESC=(
+  ["new-window"]="Create new window"
+  ["split-window -h"]="Split pane horizontally"
+  ["split-window -v"]="Split pane vertically"
+  ["split-window"]="Split pane"
+  ["select-pane -L"]="Move to left pane"
+  ["select-pane -R"]="Move to right pane"
+  ["select-pane -U"]="Move to pane above"
+  ["select-pane -D"]="Move to pane below"
+  ["resize-pane -L"]="Resize pane left"
+  ["resize-pane -R"]="Resize pane right"
+  ["resize-pane -U"]="Resize pane up"
+  ["resize-pane -D"]="Resize pane down"
+  ["next-window"]="Next window"
+  ["previous-window"]="Previous window"
+  ["last-window"]="Last active window"
+  ["kill-pane"]="Kill current pane"
+  ["kill-window"]="Kill current window"
+  ["detach-client"]="Detach from session"
+  ["copy-mode"]="Enter copy mode"
+  ["paste-buffer"]="Paste from buffer"
+  ["choose-tree"]="Choose session/window interactively"
+  ["choose-window"]="Choose window interactively"
+  ["choose-session"]="Choose session interactively"
+  ["list-keys"]="List all keybindings"
+  ["rename-window"]="Rename current window"
+  ["rename-session"]="Rename current session"
+  ["source-file"]="Reload config"
+  ["display-panes"]="Show pane numbers"
+  ["clock-mode"]="Show clock"
+  ["rotate-window"]="Rotate panes"
+  ["swap-pane"]="Swap panes"
+  ["break-pane"]="Break pane to new window"
+  ["join-pane"]="Join pane from another window"
+  ["select-layout"]="Change pane layout"
+  ["resize-pane -Z"]="Toggle pane zoom"
+  ["set-window-option synchronize-panes"]="Toggle synchronized panes"
+)
+
+# skhd/yabai command descriptions
+declare -A SKHD_CMD_DESC=(
+  ["window --focus south"]="Focus window below"
+  ["window --focus north"]="Focus window above"
+  ["window --focus west"]="Focus window left"
+  ["window --focus east"]="Focus window right"
+  ["display --focus east"]="Focus display right"
+  ["display --focus west"]="Focus display left"
+  ["space --rotate"]="Rotate layout"
+  ["space --mirror y-axis"]="Flip layout vertically"
+  ["space --mirror x-axis"]="Flip layout horizontally"
+  ["window --toggle float"]="Toggle window float"
+  ["window --toggle zoom-fullscreen"]="Maximize window"
+  ["space --balance"]="Balance window sizes"
+  ["window --swap south"]="Swap with window below"
+  ["window --swap north"]="Swap with window above"
+  ["window --swap west"]="Swap with window left"
+  ["window --swap east"]="Swap with window right"
+  ["window --space prev"]="Move window to prev space"
+  ["window --space next"]="Move window to next space"
+  ["window --space"]="Move window to space"
+  ["space --focus"]="Focus space"
+  ["--stop-service"]="Stop yabai"
+  ["--start-service"]="Start yabai"
+  ["--restart-service"]="Restart yabai"
+)
+
+describe_tmux_command() {
+  local cmd="$1"
+  local comment="$2"
+
+  # Use comment if provided
+  [[ -n "$comment" ]] && {
+    echo "$comment"
+    return
+  }
+
+  # Check exact matches first
+  for pattern in "${!TMUX_CMD_DESC[@]}"; do
+    if [[ "$cmd" == "$pattern"* ]]; then
+      echo "${TMUX_CMD_DESC[$pattern]}"
+      return
+    fi
+  done
+
+  # Fallback: clean up command for display
+  echo "$cmd" | sed 's/\\;//g' | cut -d' ' -f1-3
+}
+
+describe_skhd_command() {
+  local cmd="$1"
+  local comment="$2"
+
+  # Use comment if provided (from preceding line)
+  [[ -n "$comment" ]] && {
+    echo "$comment"
+    return
+  }
+
+  # Check pattern matches
+  for pattern in "${!SKHD_CMD_DESC[@]}"; do
+    if [[ "$cmd" == *"$pattern"* ]]; then
+      echo "${SKHD_CMD_DESC[$pattern]}"
+      return
+    fi
+  done
+
+  # Fallback: extract meaningful part of command
+  if [[ "$cmd" == *"yabai"* ]]; then
+    echo "$cmd" | sed 's/yabai -m //' | cut -d';' -f1
+  else
+    echo "$cmd" | cut -d';' -f1 | head -c 50
+  fi
+}
+
+format_key() {
+  local key="$1"
+  local no_prefix="$2"
+
+  if [[ "$no_prefix" == "true" ]]; then
+    echo "$key (no prefix)"
+  else
+    echo "prefix + $key"
+  fi
+}
+
+format_skhd_key() {
+  local key="$1"
+  # Convert skhd format to readable format
+  # e.g., "shift + alt - j" -> "shift+alt+j"
+  key="${key//+/+}"
+  key="${key// - /+}"
+  key="${key// /}"
+  echo "$key"
+}
+
+# Temp files for fortune entries
+tmp_tmux=$(mktemp)
+tmp_skhd=$(mktemp)
+trap "rm -f $tmp_tmux $tmp_skhd" EXIT
+
+# =============================================================================
+# Parse tmux.conf
+# =============================================================================
+if [[ -f "$TMUX_CONF" ]]; then
+  echo "Parsing tmux config: $TMUX_CONF..."
+
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    # Skip empty lines and pure comments
+    [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+
+    # Extract inline comment if present
+    comment=""
+    if [[ "$line" =~ \#[[:space:]]*(.+)$ ]]; then
+      comment="${BASH_REMATCH[1]}"
+    fi
+
+    # Match bind/bind-key commands
+    if [[ "$line" =~ ^[[:space:]]*(unbind|bind-key|bind)[[:space:]]+ ]]; then
+      # Skip unbind commands
+      [[ "$line" =~ ^[[:space:]]*unbind ]] && continue
+
+      # Remove the bind/bind-key prefix
+      rest="${line#*bind-key }"
+      rest="${rest#*bind }"
+
+      # Parse flags
+      no_prefix="false"
+      repeat=""
+      key_table=""
+
+      while [[ "$rest" =~ ^-[nrT] ]]; do
+        if [[ "$rest" =~ ^-n ]]; then
+          no_prefix="true"
+          rest="${rest#-n }"
+          rest="${rest#-n}"
+        elif [[ "$rest" =~ ^-r ]]; then
+          repeat="(repeatable)"
+          rest="${rest#-r }"
+          rest="${rest#-r}"
+        elif [[ "$rest" =~ ^-T[[:space:]]+([^[:space:]]+) ]]; then
+          key_table="${BASH_REMATCH[1]}"
+          rest="${rest#-T $key_table }"
+        fi
+        rest="${rest#[[:space:]]}"
+      done
+
+      # Extract key and command
+      read -r key cmd <<<"$rest"
+
+      # Clean up key and cmd
+      key="${key//\"/}"
+      key="${key//\'/}"
+      cmd="${cmd%%#*}"                     # Remove inline comment from cmd
+      cmd="${cmd%"${cmd##*[![:space:]]}"}" # Trim trailing whitespace
+
+      [[ -z "$key" || -z "$cmd" ]] && continue
+
+      # Skip if it's in copy-mode table (too noisy)
+      [[ "$key_table" == "copy-mode"* ]] && continue
+
+      # Generate description
+      desc=$(describe_tmux_command "$cmd" "$comment")
+      formatted_key=$(format_key "$key" "$no_prefix")
+
+      # Add table info if not root
+      [[ -n "$key_table" && "$key_table" != "root" ]] && formatted_key="[$key_table] $formatted_key"
+
+      # Write fortune entry
+      echo "[tmux] $formatted_key — $desc $repeat" >>"$tmp_tmux"
+      echo "%" >>"$tmp_tmux"
+    fi
+  done <"$TMUX_CONF"
+
+  # Remove trailing % and write fortune file
+  if [[ -s "$tmp_tmux" ]]; then
+    sed '$d' "$tmp_tmux" >"$TMUX_FORTUNE"
+    strfile "$TMUX_FORTUNE" "${TMUX_FORTUNE}.dat" >/dev/null
+    count=$(grep -c "^%" "$tmp_tmux" || echo "0")
+    echo "Generated $count tmux fortunes in $TMUX_FORTUNE"
+  else
+    echo "No tmux keybindings found."
+  fi
+else
+  echo "tmux config not found: $TMUX_CONF (skipping)"
+fi
+
+# =============================================================================
+# Parse skhdrc
+# =============================================================================
+if [[ -f "$SKHD_CONF" ]]; then
+  echo ""
+  echo "Parsing skhd config: $SKHD_CONF..."
+
+  prev_comment=""
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    # Skip empty lines
+    [[ -z "$line" ]] && {
+      prev_comment=""
+      continue
+    }
+
+    # Capture comment lines for next keybinding
+    if [[ "$line" =~ ^[[:space:]]*#[[:space:]]*(.+)$ ]]; then
+      prev_comment="${BASH_REMATCH[1]}"
+      continue
+    fi
+
+    # Match keybinding lines: "modifier - key : command"
+    if [[ "$line" =~ ^([^:]+):[[:space:]]*(.+)$ ]]; then
+      key_part="${BASH_REMATCH[1]}"
+      cmd="${BASH_REMATCH[2]}"
+
+      # Clean up whitespace
+      key_part="${key_part%"${key_part##*[![:space:]]}"}"
+      cmd="${cmd%"${cmd##*[![:space:]]}"}"
+
+      [[ -z "$key_part" || -z "$cmd" ]] && {
+        prev_comment=""
+        continue
+      }
+
+      # Format the key for display
+      formatted_key=$(format_skhd_key "$key_part")
+
+      # Generate description
+      desc=$(describe_skhd_command "$cmd" "$prev_comment")
+
+      # Write fortune entry
+      echo "[skhd] $formatted_key — $desc" >>"$tmp_skhd"
+      echo "%" >>"$tmp_skhd"
+
+      prev_comment=""
+    fi
+  done <"$SKHD_CONF"
+
+  # Remove trailing % and write fortune file
+  if [[ -s "$tmp_skhd" ]]; then
+    sed '$d' "$tmp_skhd" >"$SKHD_FORTUNE"
+    strfile "$SKHD_FORTUNE" "${SKHD_FORTUNE}.dat" >/dev/null
+    count=$(grep -c "^%" "$tmp_skhd" || echo "0")
+    echo "Generated $count skhd fortunes in $SKHD_FORTUNE"
+  else
+    echo "No skhd keybindings found."
+  fi
+else
+  echo ""
+  echo "skhd config not found: $SKHD_CONF (skipping)"
+fi
+
+echo ""
+echo "Fortune files generated in: $FORTUNE_DIR"
+echo "Test with: fortune $FORTUNE_DIR"
