@@ -109,6 +109,18 @@ bindkey -M vicmd "^V" visual-mode
 # ctrl-w removed word backwards
 bindkey '^w' backward-kill-word
 
+# Ctrl+L: Soft clear (preserve scrollback) and show tmux keybinding habit reminder
+function clear-screen-with-fortune() {
+  local fortune_output
+  fortune_output=$(fortune ~/.local/habits/tmux-keys)
+  zle -I
+  printf '\033[H\033[2J'
+  print -r -- "$fortune_output"
+  print ""
+}
+zle -N clear-screen-with-fortune
+bindkey '^L' clear-screen-with-fortune
+
 function zle-line-init zle-keymap-select {
   VIM_PROMPT="%{$fg_bold[green]%} [% VI MODE]%  %{$reset_color%}"
   NORMAL_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]% %{$reset_color%}"
