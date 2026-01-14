@@ -112,7 +112,7 @@ bindkey '^w' backward-kill-word
 # Ctrl+L: Soft clear (preserve scrollback) and show tmux keybinding habit reminder
 function clear-screen-with-fortune() {
   local fortune_output
-  fortune_output=$(fortune ~/.local/habits/tmux-keys)
+  fortune_output=$(fortune ~/.local/habits)
   zle -I
   printf '\033[H\033[2J'
   print -r -- "$fortune_output"
