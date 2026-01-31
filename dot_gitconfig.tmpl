@@ -7,25 +7,19 @@
 
 [gpg]
   format = ssh
-
-{{- if eq .chezmoi.os "darwin" -}}
+{{ if eq .chezmoi.os "linux" }}
 ########################################################################
-
 [gpg "ssh"]
   program = "/opt/1Password/op-ssh-sign"
-{{- else if eq .chezmoi.os "linux" -}}
+{{ else if eq .chezmoi.os "darwin" }}
 ########################################################################
-{{- end -}}
-
 [gpg "ssh"]
   program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+{{ end }}
 
 [commit]
   gpgsign = true
 
-[gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-  
 [github]
   user = esttorhe
 

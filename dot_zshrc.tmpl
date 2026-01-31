@@ -67,6 +67,10 @@ export OPEN_WEATHER_API_KEY="{{onepasswordRead "op://Private/OPENWEATHER_API/pas
 # Tmux key bindings & skhd reminder using fortune - https://www.judy.co.uk/blog/using-fortune-to-reinforce-habits/
 fortune ~/.local/habits
 
+# Only install on Linux
+{{- if eq .chezmoi.os "linux" -}}
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+{{- end -}}
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"

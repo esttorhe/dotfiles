@@ -23,15 +23,14 @@ export RIPGREP_CONFIG_PATH="$HOME/.config/ripgreprc"
 ###################################################
 export PATH="$HOME/.bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
-
-{{- if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.os "linux" }}
 ###################################################
 # i3blocks contrib
 ###################################################
 export PATH="$HOME/workspace/src/github.com/vivien/i3blocks-contrib/**/:$PATH"
-{{- end -}}
+{{ end }}
 
-{{- if eq .chezmoi.os "darwin" -}}
+{{ if eq .chezmoi.os "darwin" }}
 # Only run this if on Mac
 # Mac, adjust for Python version
 if [ -d "$HOME/Library/Python/3.6/bin/" ] ; then
@@ -45,10 +44,10 @@ fi
 # Specify your defaults in this environment variable
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export PATH="/opt/homebrew/bin:$PATH"
-{{- else if eq .chezmoi.os "linux" -}}
+{{ else if eq .chezmoi.os "linux" }}
 # Configures z plugin
 . ~/.zsh/z.sh
-{{- end -}}
+{{ end }}
 
 #prompt pure
 
@@ -210,6 +209,10 @@ eval "$(starship init zsh)"
 # Android SDK
 ##############################################################################
 export ANDROID_HOME="$HOME/Library/Android/sdk" 
+
+{{- if eq .chezmoi.os "linux" -}}
+export PATH=$PATH:/usr/local/go/bin
+{{- end -}}
 
 ##############################################################################
 # guck

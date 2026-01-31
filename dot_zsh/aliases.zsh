@@ -3,8 +3,9 @@
 ##################################################################
 # Read the running OS
 unameOut="$(uname -s)"
-
+{{- if eq .chezmoi.os "darwin" -}}
 alias rm="trash"
+{{- end -}}
 alias vim="nvim"
 alias vi="nvim"
 
@@ -142,7 +143,8 @@ alias telegram-stop='pkill -f telegram_listener.py'
 ##########################################################################
 # Chezmoi
 ##########################################################################
-alias chemaf="chezmoi apply --force"
+alias chema="chezmoi apply"
+alias cmm="chezmoi diff -f git | grep -- ^--- | sed -e 's/^--- a\///' | xargs -r chezmoi merge"
 
 ##########################################################################
 # Keybinding Habits - fortune
