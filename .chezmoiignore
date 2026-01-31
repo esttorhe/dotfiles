@@ -3,8 +3,8 @@ git/
 xresources/
 home_infra.md
 
+{{- if ne .chezmoi.os "linux" -}}
 # Only install on Linux
-{{ if ne .chezmoi.os "linux" }}
 .config/hypr
 .local/omarchy
-{{ end }}
+{{- end -}}

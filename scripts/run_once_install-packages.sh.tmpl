@@ -1,4 +1,6 @@
+{{- if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
 echo 'Installing Homebrew packages...'
 brew bundle install
+{{- end -}}
