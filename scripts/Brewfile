@@ -222,6 +222,7 @@ brew 'fortune'
 brew 'WeasyPrint'
 cask "1password-cli"
 cask "amethyst"
+cask 'bluebubbles'
 cask "calibre"
 cask "claude"
 cask "daisydisk"
