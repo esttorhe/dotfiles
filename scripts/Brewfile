@@ -220,9 +220,11 @@ brew 'reattach-to-user-namespace'
 brew 'joshmedeski/sesh/sesh'
 brew 'fortune'
 brew 'WeasyPrint'
+brew 'steipete/tap/remindctl'
+brew 'steipete/tap/peekaboo'
 cask "1password-cli"
 cask "amethyst"
-cask 'bluebubbles'
+#cask 'bluebubbles'
 cask "calibre"
 cask "claude"
 cask "daisydisk"
@@ -247,12 +249,8 @@ cask "wezterm"
 cask "whatsapp"
 cask "yacreader"
 cask "zulu@17"
-mas "Amphetamine", id: 937984704
 mas "AusweisApp", id: 948660805
 mas "DigiDoc4", id: 1370791134
-mas "Evernote", id: 406056744
-mas "iMovie", id: 408981434
-mas "Okta Verify", id: 490179405
 mas "Tailscale", id: 1475387142
 mas "TestFlight", id: 899247664
 mas "The Unarchiver", id: 425424353
