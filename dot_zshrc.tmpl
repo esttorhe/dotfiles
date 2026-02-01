@@ -74,6 +74,8 @@ fortune ~/.local/habits
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 {{- end -}}
 
+export PATH="$(npm prefix -g)/bin:$PATH"
+
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

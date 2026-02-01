@@ -6,5 +6,5 @@ home_infra.md
 {{- if ne .chezmoi.os "linux" -}}
 # Only install on Linux
 .config/hypr
-.local/omarchy
+.local/share/omarchy
 {{- end -}}
