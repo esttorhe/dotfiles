@@ -3,9 +3,9 @@
 ##################################################################
 # Read the running OS
 unameOut="$(uname -s)"
-{{- if eq .chezmoi.os "darwin" -}}
+{{ if eq .chezmoi.os "darwin" }}
 alias rm="trash"
-{{- end -}}
+{{ end }}
 alias vim="nvim"
 alias vi="nvim"
 

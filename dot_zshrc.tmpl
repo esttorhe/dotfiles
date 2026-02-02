@@ -12,11 +12,9 @@ check_and_source() {
   fi
 }
 
-autoload -Uz compinit && compinit
-
-{{- if eq .chezmoi.os "darwin" -}}
+{{ if eq .chezmoi.os "darwin" }}
 eval "$(/opt/homebrew/bin/brew shellenv)"
-{{- end -}}
+{{ end }}
 eval "$(atuin init zsh)"
 
 check_and_source "$HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh"
@@ -35,9 +33,9 @@ done
 
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
 
-{{- if eq .chezmoi.os "darwin" -}}
+{{ if eq .chezmoi.os "darwin" }}
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
-{{- end -}}
+{{ end }}
 
 # Amazon Q post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
