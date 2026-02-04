@@ -39,6 +39,6 @@ export CRUN_NFS=1
 export DOCKER_ENABLE_DEPRECATED_PULL_SCHEMA_1_IMAGE=true
 
 # 1Password
-export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+{{ if eq .chezmoi.os "linux" }}export SSH_AUTH_SOCK=~/.1password/agent.sock{{else if eq .chezmoi.os "darwin" }}export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock{{ end }}
 
 # vim: ft=muttrc
