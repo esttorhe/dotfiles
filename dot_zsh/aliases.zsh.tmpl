@@ -1,11 +1,10 @@
 ##################################################################
 # Aliases
 ##################################################################
-# Read the running OS
-{{ if eq .chezmoi.os "darwin" }}alias rm="trash"{{ end }}
 alias vim="nvim"
 alias vi="nvim"
 {{ if eq .chezmoi.os "darwin" }}
+alias rm="trash"
 alias obsidian='SSH_AUTH_SOCK=~/.1password/agent.sock ~/Applications/Obsidian.app/Contents/MacOS/Obsidian &'
 eval $(thefuck --alias)
 alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
