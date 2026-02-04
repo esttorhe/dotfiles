@@ -2,27 +2,28 @@
 # Aliases
 ##################################################################
 # Read the running OS
-unameOut="$(uname -s)"
-{{ if eq .chezmoi.os "darwin" }}
-alias rm="trash"
-{{ end }}
+{{ if eq .chezmoi.os "darwin" }}alias rm="trash"{{ end }}
 alias vim="nvim"
 alias vi="nvim"
+{{ if eq .chezmoi.os "darwin" }}
+alias obsidian='SSH_AUTH_SOCK=~/.1password/agent.sock ~/Applications/Obsidian.app/Contents/MacOS/Obsidian &'
+eval $(thefuck --alias)
+alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
+alias update="brew update && brew upgrade && brew upgrade --cask && brew cleanup -s && mas upgrade && mise upgrade --bump && mise self-update"
 
-if [ "${unameOut}" = "Darwin" ]; then
-  alias obsidian='SSH_AUTH_SOCK=~/.1password/agent.sock ~/Applications/Obsidian.app/Contents/MacOS/Obsidian &'
-  eval $(thefuck --alias)
-  alias flushcache='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder'
-  alias update="brew update && brew upgrade && brew upgrade --cask && brew cleanup -s && mas upgrade && mise upgrade --bump && mise self-update"
-  # GoLand
-  alias goland="$HOME/.jetbrains/goland"
+# GoLand
+alias goland="$HOME/.jetbrains/goland"
 
-  function brew.info {
-    grep desc $(brew --prefix)/Library/Formula/*.rb | perl -ne 'm{^.*/(.*?)\.rb.*?\"(.*)"$} and print "$1|$2\n"' | column -t -s '|' | fzf --reverse
-  }
-else
-  alias update="sudo apt update && sudo apt upgrade --fix-missing --fix-broken && sudo apt autoclean && sudo apt autoremove && sudo snap refresh && sudo restic self-update"
-fi
+function brew.info {
+  grep desc $(brew --prefix)/Library/Formula/*.rb | perl -ne 'm{^.*/(.*?)\.rb.*?\"(.*)"$} and print "$1|$2\n"' | column -t -s '|' | fzf --reverse
+}
+{{ else if eq .chezmoi.os "linux" }}
+{{ if eq .chezmoi.osRelease.id "arch" }} # I'm specifically targeting omarchy. For regular arch use 'sudo yay -Suy'
+alias update="omarchy-update"
+{{ else if eq .chezmoi.osRelease.id "debian" }}
+alias update="sudo apt update && sudo apt upgrade --fix-missing --fix-broken && sudo apt autoclean && sudo apt autoremove && sudo snap refresh && sudo restic self-update"
+{{ end }}
+{{ end }}
 
 alias be="bundle exec"
 alias gu="gem update --no-document && gem cleanup"
