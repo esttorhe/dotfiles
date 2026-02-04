@@ -68,12 +68,15 @@ export OPEN_WEATHER_API_KEY="{{onepasswordRead "op://Private/OPENWEATHER_API/pas
 fortune ~/.local/habits
 
 # Only install on Linux
-{{- if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.os "linux" }}
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
-{{- end -}}
+{{ end }}
 
 export PATH="$(npm prefix -g)/bin:$PATH"
 
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# OpenClaw Completion
+source <(openclaw completion --shell zsh)
