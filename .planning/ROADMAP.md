@@ -8,7 +8,7 @@
 
 | # | Phase | Goal | Requirements | Status |
 |---|-------|------|--------------|--------|
-| 1 | Config Structure | Create fish config files in chezmoi | CONF-01, CONF-02 | ○ Pending |
+| 1 | Config Structure | Create fish config files in chezmoi | CONF-01, CONF-02 | ✓ Complete |
 | 2 | Environment & Secrets | Set up PATH, variables, 1Password | ENV-01-04, SEC-01-03 | ○ Pending |
 | 3 | Tool Integrations | Initialize shell tools | TOOL-01-05 | ○ Pending |
 | 4 | Abbreviations | Convert aliases to abbreviations | ABBR-01-06 | ○ Pending |
@@ -24,7 +24,7 @@
 **Plans:** 1 plan
 
 Plans:
-- [ ] 01-01-PLAN.md — Create fish config directory and base config.fish.tmpl
+- [x] 01-01-PLAN.md — Create fish config directory and base config.fish.tmpl
 
 **Success Criteria:**
 1. `dot_config/private_fish/` directory exists in chezmoi

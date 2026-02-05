@@ -9,8 +9,8 @@ Requirements for working baseline. Each maps to roadmap phases.
 
 ### Config Structure
 
-- [ ] **CONF-01**: Create `dot_config/private_fish/` directory structure for chezmoi
-- [ ] **CONF-02**: Create `config.fish.tmpl` as main entry point
+- [x] **CONF-01**: Create `dot_config/private_fish/` directory structure for chezmoi
+- [x] **CONF-02**: Create `config.fish.tmpl` as main entry point
 
 ### Abbreviations
 
@@ -30,7 +30,7 @@ Requirements for working baseline. Each maps to roadmap phases.
 
 ### Tool Integrations
 
-- [ ] **TOOL-01**: Starship prompt init
+- [x] **TOOL-01**: Starship prompt init
 - [ ] **TOOL-02**: Atuin history init
 - [ ] **TOOL-03**: Mise version manager init
 - [ ] **TOOL-04**: fzf integration
@@ -73,8 +73,8 @@ Deferred to future. Add back as needed.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONF-01 | Phase 1 | Pending |
-| CONF-02 | Phase 1 | Pending |
+| CONF-01 | Phase 1 | Complete |
+| CONF-02 | Phase 1 | Complete |
 | ENV-01 | Phase 2 | Pending |
 | ENV-02 | Phase 2 | Pending |
 | ENV-03 | Phase 2 | Pending |
@@ -82,7 +82,7 @@ Deferred to future. Add back as needed.
 | SEC-01 | Phase 2 | Pending |
 | SEC-02 | Phase 2 | Pending |
 | SEC-03 | Phase 2 | Pending |
-| TOOL-01 | Phase 3 | Pending |
+| TOOL-01 | Phase 1 | Complete |
 | TOOL-02 | Phase 3 | Pending |
 | TOOL-03 | Phase 3 | Pending |
 | TOOL-04 | Phase 3 | Pending |
