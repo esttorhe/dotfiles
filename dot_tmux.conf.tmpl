@@ -159,16 +159,19 @@ set -g status-right "#[fg=$SURFACE,bg=$BG]$LEFT_SEP#[fg=$FG,bg=$SURFACE] #S #[fg
 # Disable automatic rename for custom format
 set -g automatic-rename off
 
-# Icon lookup based on pane_current_command
+# Icon lookup based on pane_current_command (fallback:  shell icon)
 ICON="\
-#{?#{==:#{pane_current_command},nvim},,\
-#{?#{==:#{pane_current_command},vim},,\
-#{?#{==:#{pane_current_command},lazygit},,\
+#{?#{==:#{pane_current_command},nvim},,\
+#{?#{==:#{pane_current_command},vim},,\
+#{?#{==:#{pane_current_command},lazygit},,\
 #{?#{==:#{pane_current_command},lazydocker},󰡨,\
-#{?#{==:#{pane_current_command},yazi},,\
+#{?#{==:#{pane_current_command},yazi},,\
 #{?#{==:#{pane_current_command},htop},󰍛,\
 #{?#{==:#{pane_current_command},btop},󰍛,\
-#{?#{m:*claude*,#{pane_current_command}},󰚩,}}}}}}}}"
+#{?#{==:#{pane_current_command},node},,\
+#{?#{==:#{pane_current_command},python},,\
+#{?#{==:#{pane_current_command},go},,\
+#{?#{m:*claude*,#{pane_current_command}},󰚩,}}}}}}}}}}}"
 
 # Inactive windows
 set -g window-status-format "#[fg=$FG,bg=$BG] #I $ICON #{b:pane_current_path} "
