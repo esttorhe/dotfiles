@@ -161,3 +161,59 @@ end
 # ============================================
 # Abbreviations (Phase 4)
 # ============================================
+
+# Editor abbreviations (ABBR-01)
+abbr -a vim nvim
+abbr -a vi nvim
+
+# Git abbreviations (ABBR-02)
+abbr -a gst 'git status'
+abbr -a ga 'git add'
+abbr -a gb 'git branch'
+abbr -a gp 'git push'
+abbr -a gcmsg 'git commit -m'
+abbr -a grbi 'git rebase -i'
+abbr -a grbc 'git rebase --continue'
+abbr -a grba 'git rebase --abort'
+abbr -a gc 'git commit'
+abbr -a gd 'git diff'
+abbr -a gco 'git checkout'
+abbr -a gca 'git commit --amend'
+
+# Tool abbreviations (ABBR-03)
+abbr -a la 'eza -abghHliS --git --icons'
+abbr -a cat bat
+abbr -a lg lazygit
+abbr -a ld lazydocker
+abbr -a be 'bundle exec'
+abbr -a gotr 'go test -run'
+
+# OS-specific abbreviations (ABBR-04)
+{{ if eq .chezmoi.os "darwin" }}
+# macOS: use trash instead of rm for safety
+abbr -a rm trash
+# macOS: flush DNS cache
+abbr -a flushcache 'sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
+# macOS: update everything
+abbr -a update 'brew update && brew upgrade && brew upgrade --cask && brew cleanup -s && mas upgrade && mise upgrade --bump && mise self-update'
+{{ else if eq .chezmoi.os "linux" }}
+{{ if eq .chezmoi.osRelease.id "arch" }}
+abbr -a update 'sudo omarchy-update'
+{{ else if eq .chezmoi.osRelease.id "debian" }}
+abbr -a update 'sudo apt update && sudo apt upgrade --fix-missing --fix-broken && sudo apt autoclean && sudo apt autoremove && sudo snap refresh && sudo restic self-update'
+{{ end }}
+# Linux: pbcopy equivalent
+abbr -a pbcopy 'xclip -selection clipboard'
+{{ end }}
+
+# Docker abbreviations (ABBR-05)
+abbr -a dls 'docker ps'
+abbr -a drm 'docker rm -f'
+
+# Chezmoi abbreviations (ABBR-06)
+abbr -a chema 'chezmoi apply'
+abbr -a cmm "chezmoi diff -f git | grep -- ^--- | sed -e 's/^--- a\///' | xargs -r chezmoi merge"
+
+# Misc abbreviations
+abbr -a zsource 'source ~/.config/fish/config.fish'
+abbr -a claudio 'claude --dangerously-skip-permissions'
