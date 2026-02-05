@@ -31,10 +31,10 @@ Requirements for working baseline. Each maps to roadmap phases.
 ### Tool Integrations
 
 - [x] **TOOL-01**: Starship prompt init
-- [ ] **TOOL-02**: Atuin history init
-- [ ] **TOOL-03**: Mise version manager init
-- [ ] **TOOL-04**: fzf integration
-- [ ] **TOOL-05**: direnv hook
+- [x] **TOOL-02**: Atuin history init
+- [x] **TOOL-03**: Mise version manager init
+- [x] **TOOL-04**: fzf integration
+- [x] **TOOL-05**: direnv hook
 
 ### Secrets
 
@@ -83,10 +83,10 @@ Deferred to future. Add back as needed.
 | SEC-02 | Phase 2 | Complete |
 | SEC-03 | Phase 2 | Complete |
 | TOOL-01 | Phase 1 | Complete |
-| TOOL-02 | Phase 3 | Pending |
-| TOOL-03 | Phase 3 | Pending |
-| TOOL-04 | Phase 3 | Pending |
-| TOOL-05 | Phase 3 | Pending |
+| TOOL-02 | Phase 3 | Complete |
+| TOOL-03 | Phase 3 | Complete |
+| TOOL-04 | Phase 3 | Complete |
+| TOOL-05 | Phase 3 | Complete |
 | ABBR-01 | Phase 4 | Pending |
 | ABBR-02 | Phase 4 | Pending |
 | ABBR-03 | Phase 4 | Pending |

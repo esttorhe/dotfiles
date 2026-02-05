@@ -2,17 +2,17 @@
 
 ## Current Position
 
-Phase: 2 — Environment & Secrets
+Phase: 3 — Tool Integrations
 Plan: Complete
-Status: Phase 2 verified
-Last activity: 2025-02-05 — Phase 2 complete, environment vars, PATH, and 1Password secrets configured
+Status: Phase 3 verified
+Last activity: 2025-02-05 — Phase 3 complete, tool integrations added (atuin, mise, fzf, direnv)
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2025-02-05)
 
 **Core value:** Working fish config preserving zsh functionality
-**Current focus:** Ready for Phase 3 - Tool Integrations
+**Current focus:** Ready for Phase 4 - Abbreviations
 
 ## Accumulated Context
 
@@ -22,6 +22,7 @@ See: .planning/PROJECT.md (updated 2025-02-05)
 - Starship stays (works with fish out of box)
 - Use `private_fish` prefix for chezmoi permissions
 - Use `fish_add_path -g` for PATH management (cleaner than manual manipulation)
+- Use `type -q` checks for graceful tool fallbacks
 
 ### Notes
 - User new to fish - keep patterns familiar where possible
@@ -29,6 +30,7 @@ See: .planning/PROJECT.md (updated 2025-02-05)
 - 4 phases total: structure → env → tools → abbreviations
 - Phase 1 required fix: starship init was missing initially
 - Phase 2: All verifications passed (env vars, PATH, 1Password SSH, secrets)
+- Phase 3: All tools initialize correctly with fallback checks
 
 ## Completed Phases
 
@@ -42,3 +44,9 @@ See: .planning/PROJECT.md (updated 2025-02-05)
 - PATH: ~/.local/bin, ~/.cargo/bin, homebrew, etc.
 - 1Password SSH_AUTH_SOCK (OS-specific)
 - Secrets: INFISICAL_CUSTOM_HEADERS, OPEN_WEATHER_API_KEY
+
+### Phase 3: Tool Integrations ✓
+- Atuin: shell history with sync
+- Mise: version manager for dev tools
+- fzf: fuzzy finder with keybindings
+- direnv: automatic .envrc loading

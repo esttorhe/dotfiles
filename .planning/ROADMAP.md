@@ -10,7 +10,7 @@
 |---|-------|------|--------------|--------|
 | 1 | Config Structure | Create fish config files in chezmoi | CONF-01, CONF-02 | ✓ Complete |
 | 2 | Environment & Secrets | Set up PATH, variables, 1Password | ENV-01-04, SEC-01-03 | ✓ Complete |
-| 3 | Tool Integrations | Initialize shell tools | TOOL-01-05 | ○ Pending |
+| 3 | Tool Integrations | Initialize shell tools | TOOL-01-05 | ✓ Complete |
 | 4 | Abbreviations | Convert aliases to abbreviations | ABBR-01-06 | ○ Pending |
 
 ---
@@ -71,6 +71,11 @@ Plans:
 
 **Requirements:** TOOL-01, TOOL-02, TOOL-03, TOOL-04, TOOL-05
 
+**Plans:** 1 plan
+
+Plans:
+- [x] 03-01-PLAN.md — Add atuin, mise, fzf, and direnv initializations
+
 **Success Criteria:**
 1. Starship prompt displays correctly
 2. `atuin` history search works (Ctrl+R or up arrow)
@@ -79,11 +84,12 @@ Plans:
 5. direnv auto-loads `.envrc` files
 
 **Notes:**
-- Starship: `starship init fish | source`
+- Starship: `starship init fish | source` (already done in Phase 1)
 - Atuin: `atuin init fish | source`
 - Mise: `mise activate fish | source`
-- fzf: source fzf fish bindings
+- fzf: `fzf --fish | source`
 - direnv: `direnv hook fish | source`
+- All tools use `type -q` check for graceful fallback
 
 ---
 
