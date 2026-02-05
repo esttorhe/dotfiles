@@ -61,6 +61,7 @@ Plans:
 - Fish syntax: `set -gx VAR value` (not `export`)
 - OS detection: use chezmoi `{{ if eq .chezmoi.os "darwin" }}`
 - Fish also has `fish_add_path` for cleaner PATH management
+- Plan 02-01 (wave 1): environment/PATH, Plan 02-02 (wave 2): secrets
 
 ---
 
