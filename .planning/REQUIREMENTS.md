@@ -14,12 +14,12 @@ Requirements for working baseline. Each maps to roadmap phases.
 
 ### Abbreviations
 
-- [ ] **ABBR-01**: Core editor abbreviations (vim, vi → nvim)
-- [ ] **ABBR-02**: Git abbreviations (gst, ga, gb, gp, gco, gd, etc.)
-- [ ] **ABBR-03**: Tool abbreviations (la → eza, cat → bat, lg → lazygit, ld → lazydocker)
-- [ ] **ABBR-04**: OS-specific abbreviations (update, rm → trash on macOS)
-- [ ] **ABBR-05**: Docker abbreviations (dls, drm)
-- [ ] **ABBR-06**: Chezmoi abbreviations (chema, cmm)
+- [x] **ABBR-01**: Core editor abbreviations (vim, vi → nvim)
+- [x] **ABBR-02**: Git abbreviations (gst, ga, gb, gp, gco, gd, etc.)
+- [x] **ABBR-03**: Tool abbreviations (la → eza, cat → bat, lg → lazygit, ld → lazydocker)
+- [x] **ABBR-04**: OS-specific abbreviations (update, rm → trash on macOS)
+- [x] **ABBR-05**: Docker abbreviations (dls, drm)
+- [x] **ABBR-06**: Chezmoi abbreviations (chema, cmm)
 
 ### Environment
 
@@ -87,12 +87,12 @@ Deferred to future. Add back as needed.
 | TOOL-03 | Phase 3 | Complete |
 | TOOL-04 | Phase 3 | Complete |
 | TOOL-05 | Phase 3 | Complete |
-| ABBR-01 | Phase 4 | Pending |
-| ABBR-02 | Phase 4 | Pending |
-| ABBR-03 | Phase 4 | Pending |
-| ABBR-04 | Phase 4 | Pending |
-| ABBR-05 | Phase 4 | Pending |
-| ABBR-06 | Phase 4 | Pending |
+| ABBR-01 | Phase 4 | Complete |
+| ABBR-02 | Phase 4 | Complete |
+| ABBR-03 | Phase 4 | Complete |
+| ABBR-04 | Phase 4 | Complete |
+| ABBR-05 | Phase 4 | Complete |
+| ABBR-06 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 20 total

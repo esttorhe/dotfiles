@@ -2,17 +2,17 @@
 
 ## Current Position
 
-Phase: 3 — Tool Integrations
+Phase: 4 — Abbreviations
 Plan: Complete
-Status: Phase 3 verified
-Last activity: 2025-02-05 — Phase 3 complete, tool integrations added (atuin, mise, fzf, direnv)
+Status: MILESTONE COMPLETE
+Last activity: 2025-02-05 — All 4 phases complete, fish shell migration done
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2025-02-05)
 
 **Core value:** Working fish config preserving zsh functionality
-**Current focus:** Ready for Phase 4 - Abbreviations
+**Current focus:** v1.0 milestone complete - ready for use
 
 ## Accumulated Context
 
@@ -23,14 +23,13 @@ See: .planning/PROJECT.md (updated 2025-02-05)
 - Use `private_fish` prefix for chezmoi permissions
 - Use `fish_add_path -g` for PATH management (cleaner than manual manipulation)
 - Use `type -q` checks for graceful tool fallbacks
+- Complex functions (transfer, sbr, brew.info) deferred to v2
 
 ### Notes
 - User new to fish - keep patterns familiar where possible
 - Testing on `fish` branch before committing to switch
 - 4 phases total: structure → env → tools → abbreviations
-- Phase 1 required fix: starship init was missing initially
-- Phase 2: All verifications passed (env vars, PATH, 1Password SSH, secrets)
-- Phase 3: All tools initialize correctly with fallback checks
+- All verifications passed
 
 ## Completed Phases
 
@@ -50,3 +49,17 @@ See: .planning/PROJECT.md (updated 2025-02-05)
 - Mise: version manager for dev tools
 - fzf: fuzzy finder with keybindings
 - direnv: automatic .envrc loading
+
+### Phase 4: Abbreviations ✓
+- 29 abbreviations converted from zsh aliases
+- Editor, Git, Tools, OS-specific, Docker, Chezmoi categories
+- All requirements ABBR-01 through ABBR-06 satisfied
+
+## Milestone Complete
+
+**v1.0 Working Baseline** — All 20 requirements satisfied
+- Config Structure: 2/2 complete
+- Environment: 4/4 complete
+- Secrets: 3/3 complete
+- Tool Integrations: 5/5 complete
+- Abbreviations: 6/6 complete

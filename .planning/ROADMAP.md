@@ -11,7 +11,7 @@
 | 1 | Config Structure | Create fish config files in chezmoi | CONF-01, CONF-02 | ✓ Complete |
 | 2 | Environment & Secrets | Set up PATH, variables, 1Password | ENV-01-04, SEC-01-03 | ✓ Complete |
 | 3 | Tool Integrations | Initialize shell tools | TOOL-01-05 | ✓ Complete |
-| 4 | Abbreviations | Convert aliases to abbreviations | ABBR-01-06 | ○ Pending |
+| 4 | Abbreviations | Convert aliases to abbreviations | ABBR-01-06 | ✓ Complete |
 
 ---
 
@@ -99,6 +99,11 @@ Plans:
 
 **Requirements:** ABBR-01, ABBR-02, ABBR-03, ABBR-04, ABBR-05, ABBR-06
 
+**Plans:** 1 plan
+
+Plans:
+- [x] 04-01-PLAN.md — Convert all zsh aliases to fish abbreviations
+
 **Success Criteria:**
 1. Typing `vim` expands to `nvim` in command line
 2. Git abbreviations work (gst → git status, etc.)
@@ -108,10 +113,10 @@ Plans:
 6. `cat` expands to `bat`
 
 **Notes:**
-- Fish abbreviations: `abbr -a gst git status`
+- Fish abbreviations: `abbr -a gst 'git status'`
 - Abbreviations expand as you type (visible in history as full command)
-- Can also use `alias` for things that shouldn't expand visibly
 - OS-specific: wrap in chezmoi conditionals
+- Complex functions (transfer, sbr, brew.info) deferred to v2
 
 ---
 
