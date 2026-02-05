@@ -4,7 +4,10 @@
 # Use fish shell
 command = /opt/homebrew/bin/fish
 
-# Font features for JetBrains Mono ligatures
+# Font: FiraCode Nerd Font (required for tmux window icons)
+font-family = "FiraCode Nerd Font"
+
+# Font ligatures
 # ss01: != and ===
 font-feature = "ss01"
 # ss02: <= and >=
@@ -45,6 +48,10 @@ keybind = super+6=text:\x186
 keybind = super+7=text:\x187
 keybind = super+8=text:\x188
 keybind = super+9=text:\x189
+
+# tmux tab navigation
+keybind = super+shift+left_bracket=text:\x18p
+keybind = super+shift+right_bracket=text:\x18n
 
 # Dracula Pro Van Helsing color palette (matches tmux theme)
 palette = 0=#22212C
