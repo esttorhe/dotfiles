@@ -39,7 +39,7 @@ yabai -m config menubar_opacity 1.0
 # App-specific rules for window management
 yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Todoist$" manage=off layer=above
-yabai -m rule --add app="^WezTerm$" manage=on sticky=on layer=above opacity=1.0
+yabai -m rule --add app="^Ghostty$" manage=on sticky=on layer=above opacity=1.0
 
 # Critical: 1Password authentication and security windows must be unmanaged
 yabai -m rule --add app="^1Password.*$" manage=off layer=above
@@ -48,36 +48,5 @@ yabai -m rule --add app="^TouchID.*$" manage=off layer=above
 yabai -m rule --add title=".*1Password.*" manage=off layer=above
 yabai -m rule --add title="Touch ID" manage=off layer=above
 yabai -m rule --add title=".*authentication.*" manage=off layer=above
-
-# Space labeling based on assigned applications
-yabai -m space 1 --label dev
-yabai -m space 2 --label discord
-yabai -m space 3 --label telegram
-yabai -m space 4 --label whatsapp
-yabai -m space 5 --label notion
-yabai -m space 6 --label calendar
-yabai -m space 7 --label asana
-yabai -m space 8 --label zen
-yabai -m space 9 --label spotify
-yabai -m space 10 --label slack
-
-# Automatic app placement rules using labeled spaces
-# Development workspace
-yabai -m rule --add app="^Neovide$" space=dev
-
-# Communications
-yabai -m rule --add app="^Discord$" space=discord
-yabai -m rule --add app="^Telegram$" space=telegram
-yabai -m rule --add app="^WhatsApp$" space=whatsapp
-yabai -m rule --add app="^Slack$" space=slack
-
-# Productivity workspace
-yabai -m rule --add app="^Notion$" space=notion
-yabai -m rule --add app="^Notion Calendar$" space=calendar
-yabai -m rule --add app="^Asana$" space=asana
-yabai -m rule --add app="^Zen$" space=zen
-
-# Music/Media workspace
-yabai -m rule --add app="^Spotify$" space=spotify
 
 yabai -m config debug_output on
