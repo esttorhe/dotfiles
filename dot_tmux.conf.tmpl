@@ -50,6 +50,8 @@ bind j select-pane -D
 bind k select-pane -U
 bind l select-pane -R
 
+bind p previous-window
+bind n next-window
 bind -r C-h select-window -t :-
 bind -r C-l select-window -t :+
 
@@ -86,9 +88,6 @@ bind-key "j" run-shell "sesh connect \"$(
     --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
     --bind 'ctrl-k:execute(tmux kill-session -t {})+change-prompt(⚡  )+reload(sesh list)'
 )\""
-
-# Floating scratch terminal
-bind p if-shell -F '#{==:#S,floating}' { detach-client } { display-popup -d "#{pane_current_path}" -xC -yC -w70% -h70% -E "env TERM=xterm-256color tmux -u new -A -s floating" }
 
 # Quick pane kill (skip confirmation)
 bind-key x kill-pane
