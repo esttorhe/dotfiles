@@ -1,0 +1,22 @@
+# ABOUTME: Fish shell configuration managed by chezmoi
+# ABOUTME: Main entry point - sources environment, tools, and abbreviations
+
+# chezmoi:template:left-delimiter="{{" right-delimiter="}}"
+
+# Only run in interactive mode
+status is-interactive; or exit
+
+# OS detection for conditional config
+set -l os "{{ .chezmoi.os }}"
+
+# ============================================
+# Environment variables (Phase 2)
+# ============================================
+
+# ============================================
+# Tool integrations (Phase 3)
+# ============================================
+
+# ============================================
+# Abbreviations (Phase 4)
+# ============================================
