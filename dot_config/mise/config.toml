@@ -11,7 +11,6 @@
 "github:sxyazi/yazi" = "latest"
 "github:tuist/guck" = "latest"
 node = "latest"
-"npm:@anthropic-ai/claude-code" = "latest"
 "npm:openclaw" = "latest"
 
 [settings]
