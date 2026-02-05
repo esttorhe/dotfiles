@@ -21,6 +21,11 @@
 
 **Requirements:** CONF-01, CONF-02
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 01-01-PLAN.md — Create fish config directory and base config.fish.tmpl
+
 **Success Criteria:**
 1. `dot_config/private_fish/` directory exists in chezmoi
 2. `config.fish.tmpl` created with basic structure and chezmoi templating
