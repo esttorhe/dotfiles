@@ -1,0 +1,33 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# ABOUTME: Sets fish as the default shell on macOS.
+# ABOUTME: Adds fish to /etc/shells if needed and runs chsh.
+
+set -e
+
+FISH_PATH="/opt/homebrew/bin/fish"
+
+# Check if fish is installed
+if [[ ! -x "$FISH_PATH" ]]; then
+    echo "Fish shell not found at $FISH_PATH. Please install fish first (brew install fish)."
+    exit 1
+fi
+
+# Check if fish is already in /etc/shells
+if ! grep -q "^${FISH_PATH}$" /etc/shells; then
+    echo "Adding fish to /etc/shells (requires sudo)..."
+    echo "$FISH_PATH" | sudo tee -a /etc/shells > /dev/null
+fi
+
+# Check if fish is already the default shell
+if [[ "$SHELL" == "$FISH_PATH" ]]; then
+    echo "Fish is already the default shell."
+    exit 0
+fi
+
+# Change default shell to fish
+echo "Setting fish as the default shell..."
+chsh -s "$FISH_PATH"
+
+echo "Fish is now your default shell. Please log out and back in for changes to take effect."
+{{- end -}}
