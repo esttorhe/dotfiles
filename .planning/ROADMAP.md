@@ -9,7 +9,7 @@
 | # | Phase | Goal | Requirements | Status |
 |---|-------|------|--------------|--------|
 | 1 | Config Structure | Create fish config files in chezmoi | CONF-01, CONF-02 | ✓ Complete |
-| 2 | Environment & Secrets | Set up PATH, variables, 1Password | ENV-01-04, SEC-01-03 | ○ Pending |
+| 2 | Environment & Secrets | Set up PATH, variables, 1Password | ENV-01-04, SEC-01-03 | ✓ Complete |
 | 3 | Tool Integrations | Initialize shell tools | TOOL-01-05 | ○ Pending |
 | 4 | Abbreviations | Convert aliases to abbreviations | ABBR-01-06 | ○ Pending |
 
@@ -47,8 +47,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Add PATH configuration and environment variables
-- [ ] 02-02-PLAN.md — Configure 1Password SSH agent and chezmoi-templated secrets
+- [x] 02-01-PLAN.md — Add PATH configuration and environment variables
+- [x] 02-02-PLAN.md — Configure 1Password SSH agent and chezmoi-templated secrets
 
 **Success Criteria:**
 1. `echo $PATH` includes ~/.local/bin, ~/.bin, cargo, go paths

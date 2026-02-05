@@ -13,6 +13,124 @@ set -l os "{{ .chezmoi.os }}"
 # Environment variables (Phase 2)
 # ============================================
 
+# Core environment
+set -gx EDITOR vi
+set -gx LANG en_US.UTF-8
+set -gx LC_ALL en_US.UTF-8
+set -gx TERM xterm-256color
+
+# Go configuration
+set -gx GOPATH ~/workspace
+set -gx GO111MODULE on
+
+# Docker settings
+set -gx CRUN_NFS 1
+set -gx DOCKER_ENABLE_DEPRECATED_PULL_SCHEMA_1_IMAGE true
+
+# Tool configurations
+set -gx RIPGREP_CONFIG_PATH "$HOME/.config/ripgreprc"
+set -gx GPG_TTY (tty)
+
+# Homebrew (macOS only)
+{{ if eq .chezmoi.os "darwin" }}
+set -gx HOMEBREW_EDITOR vi
+set -gx HOMEBREW_CASK_OPTS "--appdir=/Applications"
+{{ end }}
+
+# pyenv
+set -gx PYENV_ROOT "$HOME/.pyenv"
+
+# Android SDK (macOS only)
+{{ if eq .chezmoi.os "darwin" }}
+set -gx ANDROID_HOME "$HOME/Library/Android/sdk"
+{{ end }}
+
+# pnpm
+{{ if eq .chezmoi.os "darwin" }}
+set -gx PNPM_HOME "/Users/esteban.torres/Library/pnpm"
+{{ else }}
+set -gx PNPM_HOME "$HOME/.local/share/pnpm"
+{{ end }}
+
+# bun
+set -gx BUN_INSTALL "$HOME/.bun"
+
+# NVM
+set -gx NVM_DIR "$HOME/.nvm"
+
+# SDKMAN
+set -gx SDKMAN_DIR "$HOME/.sdkman"
+
+# ============================================
+# PATH configuration
+# ============================================
+
+# User bin directories (highest priority)
+fish_add_path -g "$HOME/.local/bin"
+fish_add_path -g "$HOME/.bin"
+
+# Homebrew (macOS)
+{{ if eq .chezmoi.os "darwin" }}
+fish_add_path -g /opt/homebrew/bin
+fish_add_path -g /opt/homebrew/sbin
+{{ end }}
+
+# Linuxbrew (Linux)
+{{ if eq .chezmoi.os "linux" }}
+fish_add_path -g /home/linuxbrew/.linuxbrew/bin
+fish_add_path -g /home/linuxbrew/.linuxbrew/sbin
+{{ end }}
+
+# Cargo (Rust)
+fish_add_path -g "$HOME/.cargo/bin"
+
+# Go
+fish_add_path -g "$GOPATH/bin"
+{{ if eq .chezmoi.os "linux" }}
+fish_add_path -g /usr/local/go/bin
+{{ end }}
+
+# pyenv
+if test -d "$PYENV_ROOT/bin"
+    fish_add_path -g "$PYENV_ROOT/bin"
+end
+
+# pnpm
+fish_add_path -g "$PNPM_HOME"
+
+# bun
+fish_add_path -g "$BUN_INSTALL/bin"
+
+# Docker
+fish_add_path -g "$HOME/.docker/bin"
+
+# Android SDK (macOS)
+{{ if eq .chezmoi.os "darwin" }}
+fish_add_path -g "$ANDROID_HOME/platform-tools"
+fish_add_path -g "$ANDROID_HOME/tools"
+{{ end }}
+
+# System paths
+fish_add_path -g /usr/local/bin
+fish_add_path -g /usr/local/sbin
+
+# ============================================
+# Secrets and 1Password integration
+# ============================================
+
+# 1Password SSH Agent
+{{ if eq .chezmoi.os "darwin" }}
+set -gx SSH_AUTH_SOCK "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+{{ else if eq .chezmoi.os "linux" }}
+set -gx SSH_AUTH_SOCK "$HOME/.1password/agent.sock"
+{{ end }}
+
+# Cloudflare Zero Trust headers (for Infisical and other internal tools)
+set -gx INFISICAL_CUSTOM_HEADERS "CF-Access-Client-Id={{ onepasswordRead "op://Private/CF-Access-Client-Id/password" }} CF-Access-Client-Secret={{ onepasswordRead "op://Private/CF-Access-Client-Secret/password" }}"
+
+# OpenWeather API key
+set -gx OPEN_WEATHER_API_KEY "{{ onepasswordRead "op://Private/OPENWEATHER_API/password" }}"
+
 # ============================================
 # Tool integrations (Phase 3)
 # ============================================

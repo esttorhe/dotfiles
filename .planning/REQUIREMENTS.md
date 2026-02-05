@@ -23,10 +23,10 @@ Requirements for working baseline. Each maps to roadmap phases.
 
 ### Environment
 
-- [ ] **ENV-01**: PATH setup (~/.local/bin, ~/.bin, cargo, go, etc.)
-- [ ] **ENV-02**: Core variables (EDITOR, LANG, LC_ALL, TERM)
-- [ ] **ENV-03**: OS-specific PATH additions (homebrew on macOS, linuxbrew on Linux)
-- [ ] **ENV-04**: Tool-specific variables (GOPATH, PYENV_ROOT, ANDROID_HOME, etc.)
+- [x] **ENV-01**: PATH setup (~/.local/bin, ~/.bin, cargo, go, etc.)
+- [x] **ENV-02**: Core variables (EDITOR, LANG, LC_ALL, TERM)
+- [x] **ENV-03**: OS-specific PATH additions (homebrew on macOS, linuxbrew on Linux)
+- [x] **ENV-04**: Tool-specific variables (GOPATH, PYENV_ROOT, ANDROID_HOME, etc.)
 
 ### Tool Integrations
 
@@ -38,9 +38,9 @@ Requirements for working baseline. Each maps to roadmap phases.
 
 ### Secrets
 
-- [ ] **SEC-01**: 1Password SSH_AUTH_SOCK (OS-specific paths)
-- [ ] **SEC-02**: Cloudflare headers via chezmoi/1Password
-- [ ] **SEC-03**: OpenWeather API key via chezmoi/1Password
+- [x] **SEC-01**: 1Password SSH_AUTH_SOCK (OS-specific paths)
+- [x] **SEC-02**: Cloudflare headers via chezmoi/1Password
+- [x] **SEC-03**: OpenWeather API key via chezmoi/1Password
 
 ## v2 Requirements
 
@@ -75,13 +75,13 @@ Deferred to future. Add back as needed.
 |-------------|-------|--------|
 | CONF-01 | Phase 1 | Complete |
 | CONF-02 | Phase 1 | Complete |
-| ENV-01 | Phase 2 | Pending |
-| ENV-02 | Phase 2 | Pending |
-| ENV-03 | Phase 2 | Pending |
-| ENV-04 | Phase 2 | Pending |
-| SEC-01 | Phase 2 | Pending |
-| SEC-02 | Phase 2 | Pending |
-| SEC-03 | Phase 2 | Pending |
+| ENV-01 | Phase 2 | Complete |
+| ENV-02 | Phase 2 | Complete |
+| ENV-03 | Phase 2 | Complete |
+| ENV-04 | Phase 2 | Complete |
+| SEC-01 | Phase 2 | Complete |
+| SEC-02 | Phase 2 | Complete |
+| SEC-03 | Phase 2 | Complete |
 | TOOL-01 | Phase 1 | Complete |
 | TOOL-02 | Phase 3 | Pending |
 | TOOL-03 | Phase 3 | Pending |
