@@ -1,0 +1,21 @@
+# ABOUTME: Git abbreviations for fish shell
+# ABOUTME: Sourced automatically by fish from conf.d/
+
+abbr -a gst 'git status'
+abbr -a ga 'git add'
+abbr -a gaa 'git add --all'
+abbr -a gb 'git branch'
+abbr -a gp 'git push'
+abbr -a gcmsg 'git commit -m'
+abbr -a grbi 'git rebase -i'
+abbr -a grbc 'git rebase --continue'
+abbr -a grba 'git rebase --abort'
+abbr -a gc 'git commit'
+abbr -a gd 'git diff'
+abbr -a gds 'git diff --staged'
+abbr -a gco 'git checkout'
+abbr -a gca 'git commit --amend'
+abbr -a gumain 'git checkout main && git pull --ff-only origin main'
+abbr -a gl 'git pull'
+abbr -a gf 'git fetch'
+abbr -a glog 'git log --oneline --decorate --graph'

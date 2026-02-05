@@ -1,0 +1,51 @@
+# ABOUTME: PATH configuration for fish shell
+# ABOUTME: Sourced automatically by fish from conf.d/
+
+# User bin directories (highest priority)
+fish_add_path -g "$HOME/.local/bin"
+fish_add_path -g "$HOME/.bin"
+
+# Homebrew (macOS)
+{{ if eq .chezmoi.os "darwin" -}}
+fish_add_path -g /opt/homebrew/bin
+fish_add_path -g /opt/homebrew/sbin
+{{- end }}
+
+# Linuxbrew (Linux)
+{{ if eq .chezmoi.os "linux" -}}
+fish_add_path -g /home/linuxbrew/.linuxbrew/bin
+fish_add_path -g /home/linuxbrew/.linuxbrew/sbin
+{{- end }}
+
+# Cargo (Rust)
+fish_add_path -g "$HOME/.cargo/bin"
+
+# Go
+fish_add_path -g "$GOPATH/bin"
+{{ if eq .chezmoi.os "linux" -}}
+fish_add_path -g /usr/local/go/bin
+{{- end }}
+
+# pyenv
+if test -d "$PYENV_ROOT/bin"
+    fish_add_path -g "$PYENV_ROOT/bin"
+end
+
+# pnpm
+fish_add_path -g "$PNPM_HOME"
+
+# bun
+fish_add_path -g "$BUN_INSTALL/bin"
+
+# Docker
+fish_add_path -g "$HOME/.docker/bin"
+
+# Android SDK (macOS)
+{{ if eq .chezmoi.os "darwin" -}}
+fish_add_path -g "$ANDROID_HOME/platform-tools"
+fish_add_path -g "$ANDROID_HOME/tools"
+{{- end }}
+
+# System paths
+fish_add_path -g /usr/local/bin
+fish_add_path -g /usr/local/sbin

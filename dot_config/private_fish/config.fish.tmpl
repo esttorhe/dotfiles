@@ -1,138 +1,14 @@
-# ABOUTME: Fish shell configuration managed by chezmoi
-# ABOUTME: Main entry point - sources environment, tools, and abbreviations
-
-# chezmoi:template:left-delimiter="{{" right-delimiter="}}"
+# ABOUTME: Fish shell configuration - minimal entry point
+# ABOUTME: Environment, PATH, abbreviations loaded from conf.d/; functions from functions/
 
 # Only run in interactive mode
 status is-interactive; or exit
 
-# OS detection for conditional config
-set -l os "{{ .chezmoi.os }}"
+# Disable greeting
+set fish_greeting ""
 
 # ============================================
-# Environment variables (Phase 2)
-# ============================================
-
-# Core environment
-set -gx EDITOR vi
-set -gx LANG en_US.UTF-8
-set -gx LC_ALL en_US.UTF-8
-set -gx TERM xterm-256color
-
-# Go configuration
-set -gx GOPATH ~/workspace
-set -gx GO111MODULE on
-
-# Docker settings
-set -gx CRUN_NFS 1
-set -gx DOCKER_ENABLE_DEPRECATED_PULL_SCHEMA_1_IMAGE true
-
-# Tool configurations
-set -gx RIPGREP_CONFIG_PATH "$HOME/.config/ripgreprc"
-set -gx GPG_TTY (tty)
-
-# Homebrew (macOS only)
-{{ if eq .chezmoi.os "darwin" }}
-set -gx HOMEBREW_EDITOR vi
-set -gx HOMEBREW_CASK_OPTS "--appdir=/Applications"
-{{ end }}
-
-# pyenv
-set -gx PYENV_ROOT "$HOME/.pyenv"
-
-# Android SDK (macOS only)
-{{ if eq .chezmoi.os "darwin" }}
-set -gx ANDROID_HOME "$HOME/Library/Android/sdk"
-{{ end }}
-
-# pnpm
-{{ if eq .chezmoi.os "darwin" }}
-set -gx PNPM_HOME "/Users/esteban.torres/Library/pnpm"
-{{ else }}
-set -gx PNPM_HOME "$HOME/.local/share/pnpm"
-{{ end }}
-
-# bun
-set -gx BUN_INSTALL "$HOME/.bun"
-
-# NVM
-set -gx NVM_DIR "$HOME/.nvm"
-
-# SDKMAN
-set -gx SDKMAN_DIR "$HOME/.sdkman"
-
-# ============================================
-# PATH configuration
-# ============================================
-
-# User bin directories (highest priority)
-fish_add_path -g "$HOME/.local/bin"
-fish_add_path -g "$HOME/.bin"
-
-# Homebrew (macOS)
-{{ if eq .chezmoi.os "darwin" }}
-fish_add_path -g /opt/homebrew/bin
-fish_add_path -g /opt/homebrew/sbin
-{{ end }}
-
-# Linuxbrew (Linux)
-{{ if eq .chezmoi.os "linux" }}
-fish_add_path -g /home/linuxbrew/.linuxbrew/bin
-fish_add_path -g /home/linuxbrew/.linuxbrew/sbin
-{{ end }}
-
-# Cargo (Rust)
-fish_add_path -g "$HOME/.cargo/bin"
-
-# Go
-fish_add_path -g "$GOPATH/bin"
-{{ if eq .chezmoi.os "linux" }}
-fish_add_path -g /usr/local/go/bin
-{{ end }}
-
-# pyenv
-if test -d "$PYENV_ROOT/bin"
-    fish_add_path -g "$PYENV_ROOT/bin"
-end
-
-# pnpm
-fish_add_path -g "$PNPM_HOME"
-
-# bun
-fish_add_path -g "$BUN_INSTALL/bin"
-
-# Docker
-fish_add_path -g "$HOME/.docker/bin"
-
-# Android SDK (macOS)
-{{ if eq .chezmoi.os "darwin" }}
-fish_add_path -g "$ANDROID_HOME/platform-tools"
-fish_add_path -g "$ANDROID_HOME/tools"
-{{ end }}
-
-# System paths
-fish_add_path -g /usr/local/bin
-fish_add_path -g /usr/local/sbin
-
-# ============================================
-# Secrets and 1Password integration
-# ============================================
-
-# 1Password SSH Agent
-{{ if eq .chezmoi.os "darwin" }}
-set -gx SSH_AUTH_SOCK "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-{{ else if eq .chezmoi.os "linux" }}
-set -gx SSH_AUTH_SOCK "$HOME/.1password/agent.sock"
-{{ end }}
-
-# Cloudflare Zero Trust headers (for Infisical and other internal tools)
-set -gx INFISICAL_CUSTOM_HEADERS "CF-Access-Client-Id={{ onepasswordRead "op://Private/CF-Access-Client-Id/password" }} CF-Access-Client-Secret={{ onepasswordRead "op://Private/CF-Access-Client-Secret/password" }}"
-
-# OpenWeather API key
-set -gx OPEN_WEATHER_API_KEY "{{ onepasswordRead "op://Private/OPENWEATHER_API/password" }}"
-
-# ============================================
-# Tool integrations (Phase 3)
+# Tool integrations
 # ============================================
 
 # Starship prompt
@@ -159,69 +35,6 @@ if type -q direnv
 end
 
 # ============================================
-# Abbreviations (Phase 4)
-# ============================================
-
-# Editor abbreviations (ABBR-01)
-abbr -a vim nvim
-abbr -a vi nvim
-
-# Git abbreviations (ABBR-02)
-abbr -a gst 'git status'
-abbr -a ga 'git add'
-abbr -a gb 'git branch'
-abbr -a gp 'git push'
-abbr -a gcmsg 'git commit -m'
-abbr -a grbi 'git rebase -i'
-abbr -a grbc 'git rebase --continue'
-abbr -a grba 'git rebase --abort'
-abbr -a gc 'git commit'
-abbr -a gd 'git diff'
-abbr -a gco 'git checkout'
-abbr -a gca 'git commit --amend'
-
-# Tool abbreviations (ABBR-03)
-abbr -a la 'eza -abghHliS --git --icons'
-abbr -a cat bat
-abbr -a lg lazygit
-abbr -a ld lazydocker
-abbr -a be 'bundle exec'
-abbr -a gotr 'go test -run'
-
-# OS-specific abbreviations (ABBR-04)
-{{ if eq .chezmoi.os "darwin" }}
-# macOS: use trash instead of rm for safety
-abbr -a rm trash
-# macOS: flush DNS cache
-abbr -a flushcache 'sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
-# macOS: update everything
-abbr -a update 'brew update && brew upgrade && brew upgrade --cask && brew cleanup -s && mas upgrade && mise upgrade --bump && mise self-update'
-{{ else if eq .chezmoi.os "linux" }}
-{{ if eq .chezmoi.osRelease.id "arch" }}
-abbr -a update 'sudo omarchy-update'
-{{ else if eq .chezmoi.osRelease.id "debian" }}
-abbr -a update 'sudo apt update && sudo apt upgrade --fix-missing --fix-broken && sudo apt autoclean && sudo apt autoremove && sudo snap refresh && sudo restic self-update'
-{{ end }}
-# Linux: pbcopy equivalent
-abbr -a pbcopy 'xclip -selection clipboard'
-{{ end }}
-
-# Docker abbreviations (ABBR-05)
-abbr -a dls 'docker ps'
-abbr -a drm 'docker rm -f'
-
-# Chezmoi abbreviations (ABBR-06)
-abbr -a chema 'chezmoi apply'
-abbr -a cmm "chezmoi diff -f git | grep -- ^--- | sed -e 's/^--- a\///' | xargs -r chezmoi merge"
-
-# Git workflow abbreviations
-abbr -a gumain 'git checkout main && git pull --ff-only origin main'
-abbr -a rmorig 'rm -rf **/**.orig'
-
-# Misc abbreviations
-abbr -a claudio 'claude --dangerously-skip-permissions'
-
-# ============================================
 # Completions
 # ============================================
 
@@ -236,33 +49,7 @@ if test -f "$BUN_INSTALL/_bun"
 end
 
 # ============================================
-# Functions (aliases)
-# ============================================
-
-# Regenerate keybinding habits and reload config
-function make-commands-habits
-    $HOME/scripts/keybinding-fortune-generator
-    source ~/.config/fish/config.fish
-end
-
-{{ if eq .chezmoi.os "darwin" }}
-# Launch Obsidian with 1Password SSH agent
-function obsidian
-    SSH_AUTH_SOCK=~/.1password/agent.sock ~/Applications/Obsidian.app/Contents/MacOS/Obsidian &
-end
-{{ end }}
-
-# Clear screen and show fortune
-function clear_with_fortune
-    printf '\033[H\033[2J'
-    if type -q fortune; and test -d "$HOME/.local/habits"
-        fortune "$HOME/.local/habits"
-        echo
-    end
-end
-
-# ============================================
-# Shell startup & keybindings
+# Shell startup
 # ============================================
 
 # Fortune/habits reminder on shell start
@@ -271,5 +58,9 @@ if type -q fortune; and test -d "$HOME/.local/habits"
     echo
 end
 
+# ============================================
 # Keybindings
+# ============================================
+
+# Ctrl+L: Clear screen and show fortune
 bind \cl clear_with_fortune

@@ -1,0 +1,22 @@
+# ABOUTME: OS-specific abbreviations for fish shell
+# ABOUTME: Sourced automatically by fish from conf.d/
+
+{{ if eq .chezmoi.os "darwin" -}}
+# macOS: use trash instead of rm for safety
+abbr -a rm trash
+
+# macOS: flush DNS cache
+abbr -a flushcache 'sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
+
+# macOS: update everything
+abbr -a update 'brew update && brew upgrade && brew upgrade --cask && brew cleanup -s && mas upgrade && mise upgrade --bump && mise self-update'
+{{ else if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+abbr -a update 'sudo omarchy-update'
+{{ else if eq .chezmoi.osRelease.id "debian" -}}
+abbr -a update 'sudo apt update && sudo apt upgrade --fix-missing --fix-broken && sudo apt autoclean && sudo apt autoremove && sudo snap refresh && sudo restic self-update'
+{{- end }}
+
+# Linux: pbcopy equivalent
+abbr -a pbcopy 'xclip -selection clipboard'
+{{- end }}
