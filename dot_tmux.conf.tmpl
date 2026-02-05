@@ -159,29 +159,15 @@ set -g status-right "#[fg=$SURFACE,bg=$BG]$LEFT_SEP#[fg=$FG,bg=$SURFACE] #S #[fg
 # Disable automatic rename for custom format
 set -g automatic-rename off
 
-# Icon lookup based on pane_current_command
-ICON="\
-#{?#{==:#{pane_current_command},nvim},,\
-#{?#{==:#{pane_current_command},vim},,\
-#{?#{==:#{pane_current_command},bob},,\
-#{?#{==:#{pane_current_command},lazygit},,\
-#{?#{==:#{pane_current_command},lg},,\
-#{?#{==:#{pane_current_command},lazydocker},󰡨,\
-#{?#{==:#{pane_current_command},ldo},󰡨,\
-#{?#{==:#{pane_current_command},yazi},,\
-#{?#{==:#{pane_current_command},htop},󰍛,\
-#{?#{==:#{pane_current_command},btop},󰍛,\
-#{?#{==:#{pane_current_command},node},,\
-#{?#{==:#{pane_current_command},python},,\
-#{?#{==:#{pane_current_command},go},,\
-#{?#{m:*claude*,#{pane_current_command}},󰚩,}}}}}}}}}}}}}}"
+# Icon conditionals - must be inlined in format strings
+# Icons: nvim, lazygit, 󰡨lazydocker, yazi, 󰍛htop/btop, node, python, go, 󰚩claude
 
-# Inactive windows
-set -g window-status-format "#[fg=$FG,bg=$BG] #I $ICON #{b:pane_current_path} "
+# Inactive windows with icon
+set -g window-status-format "#[fg=$FG,bg=$BG] #I #{?#{==:#{pane_current_command},nvim},,#{?#{==:#{pane_current_command},vim},,#{?#{==:#{pane_current_command},lazygit},,#{?#{==:#{pane_current_command},lazydocker},󰡨,#{?#{==:#{pane_current_command},yazi},,#{?#{==:#{pane_current_command},htop},󰍛,#{?#{==:#{pane_current_command},btop},󰍛,#{?#{==:#{pane_current_command},node},,#{?#{==:#{pane_current_command},python},,#{?#{==:#{pane_current_command},go},,#{?#{m:*claude*,#{pane_current_command}},󰚩,}}}}}}}}}}} #{b:pane_current_path} "
 set -g window-status-separator ""
 
-# Active window with powerline style
-set -g window-status-current-format "#[fg=$PURPLE,bg=$BG]$RIGHT_SEP#[fg=$BG,bg=$PURPLE,bold] #I $ICON #{b:pane_current_path} #[fg=$PURPLE,bg=$BG]$RIGHT_SEP"
+# Active window with powerline style and icon
+set -g window-status-current-format "#[fg=$PURPLE,bg=$BG]$RIGHT_SEP#[fg=$BG,bg=$PURPLE,bold] #I #{?#{==:#{pane_current_command},nvim},,#{?#{==:#{pane_current_command},vim},,#{?#{==:#{pane_current_command},lazygit},,#{?#{==:#{pane_current_command},lazydocker},󰡨,#{?#{==:#{pane_current_command},yazi},,#{?#{==:#{pane_current_command},htop},󰍛,#{?#{==:#{pane_current_command},btop},󰍛,#{?#{==:#{pane_current_command},node},,#{?#{==:#{pane_current_command},python},,#{?#{==:#{pane_current_command},go},,#{?#{m:*claude*,#{pane_current_command}},󰚩,}}}}}}}}}}} #{b:pane_current_path} #[fg=$PURPLE,bg=$BG]$RIGHT_SEP"
 
 # Pane borders
 set -g pane-border-style "fg=$SURFACE"
