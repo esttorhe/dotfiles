@@ -219,6 +219,7 @@ brew "zenjob/zenpie/zenpie"
 brew 'reattach-to-user-namespace'
 brew 'joshmedeski/sesh/sesh'
 brew 'fortune'
+brew 'fish'
 brew 'WeasyPrint'
 brew 'steipete/tap/remindctl'
 brew 'steipete/tap/peekaboo'
@@ -230,6 +231,7 @@ cask "claude"
 cask "daisydisk"
 cask "discord"
 cask "font-symbols-only-nerd-font"
+cask "ghostty"
 cask "handbrake-app"
 cask "imageoptim"
 cask "keybase"
