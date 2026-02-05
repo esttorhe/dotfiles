@@ -34,6 +34,11 @@ if type -q direnv
     direnv hook fish | source
 end
 
+# zoxide
+if type -q zoxide
+    zoxide init fish | source
+end
+
 # ============================================
 # Completions
 # ============================================
@@ -61,6 +66,9 @@ end
 # ============================================
 # Keybindings
 # ============================================
+
+# Vi mode
+set -g fish_key_bindings fish_vi_key_bindings
 
 # Ctrl+L: Clear screen and show fortune
 bind \cl clear_with_fortune
