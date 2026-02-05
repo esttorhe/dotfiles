@@ -1,0 +1,70 @@
+# ABOUTME: Ghostty terminal configuration
+# ABOUTME: Uses fish shell, font ligatures, and passes keybindings to tmux
+
+# Use fish shell
+command = /opt/homebrew/bin/fish
+
+# Font features for JetBrains Mono ligatures
+# ss01: != and ===
+font-feature = "ss01"
+# ss02: <= and >=
+font-feature = "ss02"
+# ss03: -> and ~>
+font-feature = "ss03"
+# ss04: <> and </>
+font-feature = "ss04"
+# liga: //, ..., ||
+font-feature = "liga"
+
+# Font size
+font-size = 18
+
+# Disable title bar text
+title = " "
+
+# Clear default keybindings, keep essentials
+keybind = clear
+keybind = super+c=copy_to_clipboard
+keybind = super+v=paste_from_clipboard
+keybind = super+shift+,=reload_config
+
+# tmux keybindings (prefix is Ctrl+X = \x18)
+keybind = super+o=text:\x18o
+keybind = super+t=text:\x18t
+keybind = super+w=text:\x18W
+keybind = super+e=text:\x18e
+keybind = super+shift+e=text:\x18E
+keybind = super+q=text:\x18Q
+keybind = super+s=text:\x18S
+keybind = super+1=text:\x181
+keybind = super+2=text:\x182
+keybind = super+3=text:\x183
+keybind = super+4=text:\x184
+keybind = super+5=text:\x185
+keybind = super+6=text:\x186
+keybind = super+7=text:\x187
+keybind = super+8=text:\x188
+keybind = super+9=text:\x189
+
+# Catppuccin Mocha color palette (matches tmux theme)
+palette = 0=#45475a
+palette = 1=#f38ba8
+palette = 2=#a6e3a1
+palette = 3=#f9e2af
+palette = 4=#89b4fa
+palette = 5=#f5c2e7
+palette = 6=#94e2d5
+palette = 7=#bac2de
+palette = 8=#585b70
+palette = 9=#f38ba8
+palette = 10=#a6e3a1
+palette = 11=#f9e2af
+palette = 12=#89b4fa
+palette = 13=#f5c2e7
+palette = 14=#94e2d5
+palette = 15=#a6adc8
+background = #1e1e2e
+foreground = #cdd6f4
+cursor-color = #f5e0dc
+selection-background = #45475a
+selection-foreground = #cdd6f4
