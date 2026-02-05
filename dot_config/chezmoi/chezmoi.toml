@@ -1,5 +1,8 @@
 encryption = "age"
 
+[onepassword]
+    prompt = false
+
 [diff]
   pager = "diff-so-fancy"
 
