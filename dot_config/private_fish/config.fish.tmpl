@@ -254,12 +254,11 @@ end
 
 # Clear screen and show fortune
 function clear_with_fortune
-    printf '\033[2J\033[H'
+    printf '\033[H\033[2J'
     if type -q fortune; and test -d "$HOME/.local/habits"
         fortune "$HOME/.local/habits"
         echo
     end
-    commandline -f repaint
 end
 
 # ============================================
