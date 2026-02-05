@@ -1,4 +1,7 @@
-# Set the default shell to ZSH
+# ABOUTME: Tmux configuration with Dracula Pro theme
+# ABOUTME: Vim-aware bindings, icon-based window names, powerline status bar
+
+# Set the default shell
 set-option -g default-shell $SHELL
 
 # make tmux display things in 256 colors
@@ -8,52 +11,68 @@ set -g default-terminal "xterm-screen-256color"
 set -g history-limit 10000
 
 # set Ctrl-x as the default prefix key combination
-# and unbind C-b to free it up
 set -g prefix C-x
 unbind C-b
-
-bind C-l send-keys 'C-l' # Send C-l (clear screen) to the terminal
-
-bind R source-file ~/.tmux.conf \; display-message "  Config reloaded..". # Reload tmux config
-
-bind C-a send-prefix # Pass C-a through to application
 
 # shorten command delay
 set -sg escape-time 2
 
-# use PREFIX | to split window horizontally and PREFIX - to split vertically
+# ============================================================================
+# Vim detection for smart bindings
+# ============================================================================
+
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?|bob)(diff)?$'"
+
+# ============================================================================
+# Key bindings
+# ============================================================================
+
+bind C-l send-keys 'C-l'
+bind R source-file ~/.tmux.conf \; display-message "  Config reloaded.."
+bind C-a send-prefix
+
+# Window/pane management
 unbind %
-#bind \ split-window -h
 unbind '"'
-#bind - split-window -v
+bind t new-window -c "#{pane_current_path}"
+bind e split-window -h -c "#{pane_current_path}"
+bind E split-window -v -c "#{pane_current_path}"
+bind T swap-window -t 1
 
-bind T swap-window -t 1 # Make the current window the first window
+# Vim-aware save/close/quit bindings
+bind S if-shell "$is_vim" "send-keys :w Enter" ""
+bind W if-shell "$is_vim" "send-keys :bd Enter" "kill-pane"
+bind Q if-shell "$is_vim" "send-keys :qa! Enter" "confirm-before -p 'Kill window? (y/n)' kill-window"
 
-bind h select-pane -L # Select pane to the left (Vi-style)
-bind j select-pane -D # Select pane below (Vi-style)
-bind k select-pane -U # Select pane above (Vi-style)
-bind l select-pane -R # Select pane to the right (Vi-style)
+# Vi-style pane navigation
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
 
-bind -r C-h select-window -t :- # Cycle to previous window
-bind -r C-l select-window -t :+ # Cycle to next window
+bind -r C-h select-window -t :-
+bind -r C-l select-window -t :+
 
-bind H resize-pane -L 5 # Resize pane left by 5
-bind J resize-pane -D 5 # Resize pane down by 5
-bind K resize-pane -U 5 # Resize pane up by 5
-bind L resize-pane -R 5 # Resize pane right by 5
+# Pane resizing
+bind H resize-pane -L 5
+bind J resize-pane -D 5
+bind K resize-pane -U 5
+bind L resize-pane -R 5
 
-bind m run "cut -c3- ~./.tmux/tmux.conf.funcs | sh -s _toggle_mouse" # Toggle mouse mode on/off
+# Mouse support
+bind m run "cut -c3- ~/.tmux/tmux.conf.funcs | sh -s _toggle_mouse"
 set -g mouse on
 
-bind -n M-Left select-pane -L # Select pane left (Alt+Left, no prefix)
-bind -n M-Right select-pane -R # Select pane right (Alt+Right, no prefix)
-bind -n M-Up select-pane -U # Select pane above (Alt+Up, no prefix)
-bind -n M-Down select-pane -D # Select pane below (Alt+Down, no prefix)
+# Alt+arrow pane navigation (no prefix)
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R
+bind -n M-Up select-pane -U
+bind -n M-Down select-pane -D
 
 # === Session Management with Sesh ===
-bind-key "k" display-popup -E -w 40% "sesh connect \"$(
+bind-key "o" display-popup -E -w 40% "sesh connect \"$(
   sesh list -i | gum filter --limit 1 --placeholder 'Pick a sesh' --prompt='⚡'
-)\"" # Sesh quick connect popup
+)\""
 
 bind-key "j" run-shell "sesh connect \"$(
   sesh list -i | fzf-tmux -p 55%,60% \
@@ -66,27 +85,30 @@ bind-key "j" run-shell "sesh connect \"$(
     --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -iz)' \
     --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
     --bind 'ctrl-k:execute(tmux kill-session -t {})+change-prompt(⚡  )+reload(sesh list)'
-)\"" # Sesh session manager with fzf
+)\""
 
-# Active monitoring
+# Floating scratch terminal
+bind p if-shell -F '#{==:#S,floating}' { detach-client } { display-popup -d "#{pane_current_path}" -xC -yC -w70% -h70% -E "env TERM=xterm-256color tmux -u new -A -s floating" }
+
+# Quick pane kill (skip confirmation)
+bind-key x kill-pane
+
+# Load dev layout
+bind D source ~/.config/tmux/tmux_dev
+
+# Activity monitoring
 setw -g monitor-activity on
 set -g visual-activity on
 
-# Highlighting Current Window Using Specified Colour
-#set-window-option -g window-status-current-bg yellow
+# Start window numbering at 1
+set -g base-index 1
+set -g pane-base-index 1
 
-bind D source ~/.config/tmux/tmux_dev # Load dev pane layout
+# Don't exit tmux when closing a session
+set -g detach-on-destroy off
 
 # Creates a new session (and a new window group)
 new-session -s main
-
-# others
-set -g @tmux-nerd-font-window-name-show-name true
-set -g @tmux-nerd-font-window-name-shell-icon ""
-
-set-option -g status-interval 5
-set-option -g automatic-rename on
-set-option -g automatic-rename-format '#{b:pane_current_command}'
 
 # yazi image preview
 set -g allow-passthrough on
@@ -98,71 +120,102 @@ set -ga update-environment OPEN_WEATHER_API_KEY
 # Set API keys for plugins
 set-environment -g OPEN_WEATHER_API_KEY "{{onepasswordRead "op://Private/OPENWEATHER_API/password"}}"
 
-# List of plugins
+# ============================================================================
+# Dracula Pro Van Helsing Theme
+# ============================================================================
+
+# Colors
+BG="#0B0D0F"
+FG="#F8F8F2"
+GREEN="#8AFF80"
+PURPLE="#9580FF"
+PINK="#FF80BF"
+CYAN="#80FFEA"
+YELLOW="#FFFF80"
+ORANGE="#FFAA99"
+SURFACE="#414D58"
+
+# Powerline separators
+RIGHT_SEP=""
+LEFT_SEP=""
+
+# General status bar settings
+set -g status-position top
+set -g status-style "bg=$BG,fg=$FG"
+set -g status-interval 5
+set -g status-left-length 100
+set -g status-right-length 100
+
+# Left side: home icon with powerline separator
+set -g status-left "#[fg=$BG,bg=$GREEN,bold] 󰀶 #[fg=$GREEN,bg=$BG]$RIGHT_SEP"
+
+# Right side: session, time
+set -g status-right "#[fg=$SURFACE,bg=$BG]$LEFT_SEP#[fg=$FG,bg=$SURFACE] #S #[fg=$PURPLE,bg=$SURFACE]$LEFT_SEP#[fg=$BG,bg=$PURPLE,bold]  %H:%M "
+
+# ============================================================================
+# Icon-based window naming
+# ============================================================================
+
+# Disable automatic rename for custom format
+set -g automatic-rename off
+
+# Icon lookup based on pane_current_command
+ICON="\
+#{?#{==:#{pane_current_command},nvim},,\
+#{?#{==:#{pane_current_command},vim},,\
+#{?#{==:#{pane_current_command},bob},,\
+#{?#{==:#{pane_current_command},lazygit},,\
+#{?#{==:#{pane_current_command},lg},,\
+#{?#{==:#{pane_current_command},lazydocker},󰡨,\
+#{?#{==:#{pane_current_command},ldo},󰡨,\
+#{?#{==:#{pane_current_command},yazi},,\
+#{?#{==:#{pane_current_command},htop},󰍛,\
+#{?#{==:#{pane_current_command},btop},󰍛,\
+#{?#{==:#{pane_current_command},node},,\
+#{?#{==:#{pane_current_command},python},,\
+#{?#{==:#{pane_current_command},go},,\
+#{?#{m:*claude*,#{pane_current_command}},󰚩,}}}}}}}}}}}}}}"
+
+# Inactive windows
+set -g window-status-format "#[fg=$FG,bg=$BG] #I $ICON #{b:pane_current_path} "
+set -g window-status-separator ""
+
+# Active window with powerline style
+set -g window-status-current-format "#[fg=$PURPLE,bg=$BG]$RIGHT_SEP#[fg=$BG,bg=$PURPLE,bold] #I $ICON #{b:pane_current_path} #[fg=$PURPLE,bg=$BG]$RIGHT_SEP"
+
+# Pane borders
+set -g pane-border-style "fg=$SURFACE"
+set -g pane-active-border-style "fg=$PURPLE"
+
+# Message and command styling
+set -g message-style "bg=$PURPLE,fg=$BG"
+set -g message-command-style "bg=$PURPLE,fg=$BG"
+
+# ============================================================================
+# Plugins
+# ============================================================================
+
 set -g @plugin 'tmux-plugins/tpm'
-set -g @plugin 'catppuccin/tmux#v2.1.3' # See https://github.com/catppuccin/tmux/tags for additional tags
+set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'alberti42/tmux-fzf-links'
 set -g @plugin 'jaclu/tmux-menus'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
-set -g @plugin 'alexchaichan/tmux-spotify-tui'
-set -g @plugin 'tmux-plugins/tmux-battery'
-set -g @plugin 'tmux-plugins/tmux-cpu'
-set -g @plugin 'vascomfnunes/tmux-clima'
-
-# Catppuccin configuration - must be set BEFORE running catppuccin.tmux
-set -g @catppuccin_flavor 'mocha'
-set -g @catppuccin_window_status_style 'rounded'
-
-# Pane border styling (uses catppuccin theme colors)
-set -g @catppuccin_pane_border_style "fg=#{@thm_surface_0}"
-set -g @catppuccin_pane_active_border_style "fg=#{@thm_lavender}"
-
-# Make the status line pretty and add some modules
-set -g status-right-length 100
-set -g status-left-length 100
-set -g status-left ""
-set -g status-right '#{actual_song}'
-set -g status-right "#{E:@catppuccin_status_application}"
-set -agF status-right "#{E:@catppuccin_status_cpu}"
-set -agF status-right "#{E:@catppuccin_status_load}"
-set -ag status-right "#{E:@catppuccin_status_session}"
-set -ag status-right "#{E:@catppuccin_status_uptime}"
-set -agF status-right "#{E:@catppuccin_status_clima}"
-set -agF status-right "#{E:@catppuccin_status_battery}"
-
-# === floating scratch terminal ===
-bind p if-shell -F '#{==:#S,floating}' { detach-client } { display-popup -d "#{pane_current_path}" -xC -yC -w70% -h70% -E "env TERM=xterm-256color tmux -u new -A -s floating" } # Toggle floating scratch terminal
-
-# === tmux-fzf-links ===
-set-option -g @fzf-links-key 'f'
-# set-option -g @fzf-links-history-lines "0"
-set-option -g @fzf-links-editor-open-cmd "tmux new-window -n 'vi' /opt/homebrew/bin/nvim +%line '%file'"
-set-option -g @fzf-links-fzf-path "fzf"
-set-option -g @fzf-links-fzf-display-options "-w 100% --maxnum-displayed 20 --multi --track --no-preview"
-# set-option -g @fzf-links-loglevel-tmux "WARNING"
-# set-option -g @fzf-links-loglevel-file "DEBUG"
-# set-option -g @fzf-links-log-filename "~/log.txt"
-set-option -g @fzf-links-python "python3"
-# set-option -g @fzf-links-python-path "~/.virtualenvs/my_special_venv/lib/python3.11/site-packages"
-# set-option -g @fzf-links-user-schemes-path "~/.tmux/plugins/tmux-fzf-links/user_schemes/user_schemes.py"
-set-option -g @fzf-links-use-colors on
-# set-option -g @fzf-links-ls-colors-filename "~/.cache/tmux-fzf-links/cached_ls_colors.txt"
-set-option -g @fzf-links-hide-bottom-bar off
-
-# Load catppuccin
-run ~/.tmux/plugins/tmux/catppuccin.tmux
 
 # Last saved environment is automatically restored when tmux is started.
 set -g @continuum-restore 'on'
 
-# === tmux-clima ===
-set -g @clima_unit metric
-#set -g @clima_location "Berlin"
-set -g @clima_use_nerd_font 1
+# === tmux-fzf-links ===
+set-option -g @fzf-links-key 'f'
+set-option -g @fzf-links-editor-open-cmd "tmux new-window -n 'vi' /opt/homebrew/bin/nvim +%line '%file'"
+set-option -g @fzf-links-fzf-path "fzf"
+set-option -g @fzf-links-fzf-display-options "-w 100% --maxnum-displayed 20 --multi --track --no-preview"
+set-option -g @fzf-links-python "python3"
+set-option -g @fzf-links-use-colors on
+set-option -g @fzf-links-hide-bottom-bar off
+
+# alt +u (original shortcut) does not work well on mac
+set -g @tpm-clean 'u'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
-
-bind-key x kill-pane # skip "kill-pane 1? (y/n)" prompt
-set -g detach-on-destroy off  # don't exit from tmux when closing a session
