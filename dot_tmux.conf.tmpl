@@ -159,7 +159,7 @@ set -g status-right "#[fg=$SURFACE,bg=$BG]$LEFT_SEP#[fg=$FG,bg=$SURFACE] #S #[fg
 # Disable automatic rename for custom format
 set -g automatic-rename off
 
-# Icon lookup based on pane_current_command (fallback:  shell icon)
+# Icon lookup based on pane_current_command (claude detected via pane_title)
 ICON="\
 #{?#{==:#{pane_current_command},nvim},,\
 #{?#{==:#{pane_current_command},vim},,\
@@ -168,10 +168,10 @@ ICON="\
 #{?#{==:#{pane_current_command},yazi},,\
 #{?#{==:#{pane_current_command},htop},󰍛,\
 #{?#{==:#{pane_current_command},btop},󰍛,\
+#{?#{m:*Claude*,#{pane_title}},󰚩,\
 #{?#{==:#{pane_current_command},node},,\
 #{?#{==:#{pane_current_command},python},,\
-#{?#{==:#{pane_current_command},go},,\
-#{?#{m:*claude*,#{pane_current_command}},󰚩,}}}}}}}}}}}"
+#{?#{==:#{pane_current_command},go},,}}}}}}}}}}}"
 
 # Inactive windows
 set -g window-status-format "#[fg=$FG,bg=$BG] #I $ICON #{b:pane_current_path} "
