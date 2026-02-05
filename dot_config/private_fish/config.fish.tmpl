@@ -219,14 +219,7 @@ abbr -a gumain 'git checkout main && git pull --ff-only origin main'
 abbr -a rmorig 'rm -rf **/**.orig'
 
 # Misc abbreviations
-abbr -a zsource 'source ~/.config/fish/config.fish'
 abbr -a claudio 'claude --dangerously-skip-permissions'
-abbr -a make-commands-habits '$HOME/scripts/keybinding-fortune-generator && source ~/.config/fish/config.fish'
-
-{{ if eq .chezmoi.os "darwin" }}
-# macOS: Obsidian with 1Password SSH agent
-abbr -a obsidian 'SSH_AUTH_SOCK=~/.1password/agent.sock ~/Applications/Obsidian.app/Contents/MacOS/Obsidian &'
-{{ end }}
 
 # ============================================
 # Completions
@@ -243,6 +236,33 @@ if test -f "$BUN_INSTALL/_bun"
 end
 
 # ============================================
+# Functions (aliases)
+# ============================================
+
+# Regenerate keybinding habits and reload config
+function make-commands-habits
+    $HOME/scripts/keybinding-fortune-generator
+    source ~/.config/fish/config.fish
+end
+
+{{ if eq .chezmoi.os "darwin" }}
+# Launch Obsidian with 1Password SSH agent
+function obsidian
+    SSH_AUTH_SOCK=~/.1password/agent.sock ~/Applications/Obsidian.app/Contents/MacOS/Obsidian &
+end
+{{ end }}
+
+# Clear screen and show fortune
+function clear_with_fortune
+    printf '\033[2J\033[H'
+    if type -q fortune; and test -d "$HOME/.local/habits"
+        fortune "$HOME/.local/habits"
+        echo
+    end
+    commandline -f repaint
+end
+
+# ============================================
 # Shell startup & keybindings
 # ============================================
 
@@ -252,18 +272,5 @@ if type -q fortune; and test -d "$HOME/.local/habits"
     echo
 end
 
-# Custom clear function with fortune (bound to Ctrl+L)
-function clear_with_fortune
-    printf '\033[2J\033[H'  # Clear screen and move cursor to top
-    if type -q fortune; and test -d "$HOME/.local/habits"
-        fortune "$HOME/.local/habits"
-        echo
-    end
-    commandline -f repaint
-end
-
 # Keybindings
-function fish_user_key_bindings
-    # Ctrl+L: Clear screen and show fortune
-    bind \cl clear_with_fortune
-end
+bind \cl clear_with_fortune
