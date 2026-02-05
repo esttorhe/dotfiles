@@ -44,6 +44,12 @@ Plans:
 
 **Requirements:** ENV-01, ENV-02, ENV-03, ENV-04, SEC-01, SEC-02, SEC-03
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Add PATH configuration and environment variables
+- [ ] 02-02-PLAN.md — Configure 1Password SSH agent and chezmoi-templated secrets
+
 **Success Criteria:**
 1. `echo $PATH` includes ~/.local/bin, ~/.bin, cargo, go paths
 2. `echo $EDITOR` returns "vi"
@@ -54,7 +60,7 @@ Plans:
 **Notes:**
 - Fish syntax: `set -gx VAR value` (not `export`)
 - OS detection: use chezmoi `{{ if eq .chezmoi.os "darwin" }}`
-- Fish also has `set -gxp` to prepend to PATH
+- Fish also has `fish_add_path` for cleaner PATH management
 
 ---
 
