@@ -138,6 +138,26 @@ set -gx OPEN_WEATHER_API_KEY "{{ onepasswordRead "op://Private/OPENWEATHER_API/p
 # Starship prompt
 starship init fish | source
 
+# Atuin shell history
+if type -q atuin
+    atuin init fish | source
+end
+
+# Mise version manager
+if type -q mise
+    mise activate fish | source
+end
+
+# fzf keybindings
+if type -q fzf
+    fzf --fish | source
+end
+
+# direnv
+if type -q direnv
+    direnv hook fish | source
+end
+
 # ============================================
 # Abbreviations (Phase 4)
 # ============================================
