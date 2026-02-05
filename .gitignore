@@ -17,3 +17,6 @@ $HOME/.local/share/clipster/history
 tmux/tmux.symfolder/plugins/
 
 result
+
+# gsd planning
+.planning/
