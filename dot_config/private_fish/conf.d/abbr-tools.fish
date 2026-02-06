@@ -6,7 +6,7 @@ abbr -a vim nvim
 abbr -a vi nvim
 
 # Modern replacements
-abbr -a la 'eza -abghHliS --git --icons'
+abbr -a la 'eza -abghHliS --git --icons=always'
 abbr -a cat bat
 abbr -a lg lazygit
 abbr -a ld lazydocker
