@@ -223,6 +223,8 @@ brew 'fish'
 brew 'WeasyPrint'
 brew 'steipete/tap/remindctl'
 brew 'steipete/tap/peekaboo'
+brew 'android-commandlinetools' # android sdk
+brew 'gradle'
 cask "1password-cli"
 cask "amethyst"
 #cask 'bluebubbles'
