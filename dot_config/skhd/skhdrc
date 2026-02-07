@@ -43,8 +43,8 @@ ctrl + alt - q : yabai --stop-service
 ctrl + alt - s : yabai --start-service
 ctrl + alt - r : yabai --restart-service
 
-# WezTerm toggle - simple working approach
-ctrl + alt - z : ~/.config/yabai/scripts/toggle-wezterm.sh
+# Ghostty toggle - show/hide terminal
+ctrl + alt - z : ~/.config/yabai/scripts/toggle-ghostty.sh
 
 # chezmoi apply --force
 ctrl + alt - c : echo "Applying chezmoi --force" && chezmoi apply
