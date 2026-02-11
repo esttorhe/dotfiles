@@ -41,4 +41,4 @@ vim.keymap.set("n", "<D-q>", "<cmd>qa<cr><esc>", { desc = "Close Neovide" })
 vim.keymap.set("i", "<D-v>", '<esc>"+p<esc>A', { desc = "Paste" })
 vim.keymap.set("n", "<D-v>", '"+p', { desc = "Paste" })
 
-vim.keymap.set("n", "<leader>P", "<cmd>:NeovimProjectDiscover<cr><esc>", { desc = "List registered projects" })
+vim.keymap.set("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Open Lazy" })

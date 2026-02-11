@@ -97,7 +97,7 @@ bind D source ~/.config/tmux/tmux_dev
 
 # Activity monitoring
 setw -g monitor-activity on
-set -g visual-activity on
+set -g visual-activity off
 
 # Start window numbering at 1
 set -g base-index 1
@@ -135,8 +135,8 @@ ORANGE="#FFAA99"
 SURFACE="#414D58"
 
 # Powerline separators
-RIGHT_SEP=""
-LEFT_SEP=""
+RIGHT_SEP=""
+LEFT_SEP=""
 
 # General status bar settings
 set -g status-position top
@@ -158,30 +158,37 @@ set -g status-right "#[fg=$SURFACE,bg=$BG]$LEFT_SEP#[fg=$FG,bg=$SURFACE] #S #[fg
 # Disable automatic rename for custom format
 set -g automatic-rename off
 
-# Icon lookup based on pane_current_command (claude detected via pane_title)
+# Icon lookup based on pane_current_command (claude detected via pane_title ✳ symbol)
 ICON="\
 #{?#{==:#{pane_current_command},nvim},,\
 #{?#{==:#{pane_current_command},vim},,\
+#{?#{==:#{pane_current_command},bob},,\
 #{?#{==:#{pane_current_command},lazygit},,\
+#{?#{==:#{pane_current_command},lg},,\
 #{?#{==:#{pane_current_command},lazydocker},󰡨,\
+#{?#{==:#{pane_current_command},ldo},󰡨,\
 #{?#{==:#{pane_current_command},yazi},,\
 #{?#{==:#{pane_current_command},htop},󰍛,\
 #{?#{==:#{pane_current_command},btop},󰍛,\
-#{?#{m:*Claude*,#{pane_title}},󰚩,\
+#{?#{m:*✳*,#{pane_title}},󰚩,\
 #{?#{==:#{pane_current_command},node},,\
 #{?#{==:#{pane_current_command},python},,\
-#{?#{==:#{pane_current_command},go},,}}}}}}}}}}}"
+#{?#{==:#{pane_current_command},go},,}}}}}}}}}}}}}}"
 
 # Inactive windows
 set -g window-status-format "#[fg=$FG,bg=$BG] #I $ICON #{b:pane_current_path} "
 set -g window-status-separator ""
 
 # Active window with powerline style
-set -g window-status-current-format "#[fg=$PURPLE,bg=$BG]$RIGHT_SEP#[fg=$BG,bg=$PURPLE,bold] #I $ICON #{b:pane_current_path} #[fg=$PURPLE,bg=$BG]$RIGHT_SEP"
+set -g window-status-current-format "#[fg=$PURPLE,bg=$BG]#[fg=$BG,bg=$PURPLE,bold]$RIGHT_SEP #I $ICON #{b:pane_current_path} #[fg=$PURPLE,bg=$BG]$RIGHT_SEP"
 
 # Pane borders
 set -g pane-border-style "fg=$SURFACE"
 set -g pane-active-border-style "fg=$PURPLE"
+
+# Window activity styling (keep colors consistent with theme)
+set -g window-status-activity-style "fg=$CYAN,bg=$BG"
+set -g window-status-bell-style "fg=$YELLOW,bg=$BG"
 
 # Message and command styling
 set -g message-style "bg=$PURPLE,fg=$BG"
