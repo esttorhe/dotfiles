@@ -1,56 +1,44 @@
--- lua/plugins/copilot.lua
+-- ABOUTME: GitHub Copilot integration with Tab accept pattern
+-- ABOUTME: Tab accepts Copilot suggestions, falls back to blink menu navigation
+
 return {
   "github/copilot.vim",
-  lazy = false, -- Load immediately rather than on keystroke
+  lazy = false,
   config = function()
-    -- Basic configuration
-    vim.g.copilot_no_tab_map = true -- Disable the tab mapping
-    vim.g.copilot_assume_mapped = true
-    vim.g.copilot_tab_fallback = ""
+    -- Accept Copilot suggestion with Tab (Arthur's pattern)
+    vim.keymap.set("i", "<Tab>", function()
+      -- Check if Copilot has a suggestion
+      if vim.fn["copilot#GetDisplayedSuggestion"]().text ~= "" then
+        return vim.fn["copilot#Accept"]("")
+      else
+        -- If no Copilot suggestion, check if blink menu is open
+        local blink_ok, blink = pcall(require, "blink.cmp")
+        if blink_ok and blink.is_visible() then
+          blink.select_next()
+          return ""
+        end
 
-    -- Filetypes configuration - enable/disable for specific filetypes
+        -- Otherwise, normal tab
+        return "\t"
+      end
+    end, { expr = true, replace_keycodes = false, silent = true })
+
+    -- Enable Copilot for all filetypes
     vim.g.copilot_filetypes = {
-      ["*"] = true, -- Enable for all filetypes by default
-      ["markdown"] = false, -- Disable for markdown
-      ["text"] = false, -- Disable for text files
-      ["help"] = false, -- Disable for help files
-      ["gitcommit"] = false, -- Disable for git commit messages
+      ["*"] = true,
+      ["markdown"] = false,
+      ["text"] = false,
+      ["help"] = false,
+      ["gitcommit"] = false,
       ["TelescopePrompt"] = false,
       ["DressingInput"] = false,
     }
 
-    -- Custom keymappings for accepting suggestions
-    vim.keymap.set("i", "<C-j>", 'copilot#Accept("<CR>")', {
-      silent = true,
-      expr = true,
-      script = true,
-      replace_keycodes = false,
-    })
-
     -- Additional keymappings for navigating suggestions
-    vim.keymap.set("i", "<C-l>", 'copilot#Accept("<Right>")', {
-      silent = true,
-      expr = true,
-      script = true,
-      replace_keycodes = false,
-    })
-    vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)", { silent = true })
-    vim.keymap.set("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true })
-    vim.keymap.set("i", "<M-\\>", "<Plug>(copilot-suggest)", { silent = true })
-    vim.keymap.set("i", "<C-\\>", "<Cmd>Copilot panel<CR>", { silent = true })
-
-    -- Setup autocommands for Copilot
-    vim.api.nvim_create_augroup("copilot_settings", { clear = true })
-
-    -- Auto-enable when entering insert mode
-    vim.api.nvim_create_autocmd("InsertEnter", {
-      group = "copilot_settings",
-      callback = function()
-        if vim.g.copilot_enabled == false then
-          vim.cmd("Copilot enable")
-        end
-      end,
-    })
+    vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)", { silent = true, desc = "Copilot next" })
+    vim.keymap.set("i", "<M-[>", "<Plug>(copilot-previous)", { silent = true, desc = "Copilot previous" })
+    vim.keymap.set("i", "<M-\\>", "<Plug>(copilot-suggest)", { silent = true, desc = "Copilot suggest" })
+    vim.keymap.set("i", "<C-\\>", "<Cmd>Copilot panel<CR>", { silent = true, desc = "Copilot panel" })
 
     -- Create a command to toggle Copilot
     vim.api.nvim_create_user_command("CopilotToggle", function()
