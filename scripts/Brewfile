@@ -223,6 +223,7 @@ cask "amethyst"
 #cask 'bluebubbles'
 cask "calibre"
 cask "claude"
+cask "claude-code"
 cask "daisydisk"
 cask "discord"
 cask "font-symbols-only-nerd-font"
