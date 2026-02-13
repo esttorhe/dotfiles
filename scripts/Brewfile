@@ -210,7 +210,7 @@ brew "infisical/get-cli/infisical"
 brew "kreuzwerker/taps/m1-terraform-provider-helper"
 brew "oven-sh/bun/bun"
 brew "supabase/tap/supabase"
-brew 'reattach-to-user-namespace'
+#brew 'reattach-to-user-namespace'
 brew 'asmvik/formulae/skhd'
 brew 'fortune'
 brew 'fish'
