@@ -1,11 +1,9 @@
 tap "hashicorp/tap"
 tap "infisical/get-cli"
 tap "kreuzwerker/taps"
-tap "lindell/multi-gitter"
 tap "oven-sh/bun"
 tap "supabase/tap"
 tap "xcodesorg/made"
-tap "zenjob/zenpie", "git@github.com:zenjob/zenpie.git"
 brew "act"
 brew "adns"
 brew "age"
@@ -178,7 +176,6 @@ brew "openapi-generator"
 brew "openjdk@11"
 brew "openssh"
 brew "openvino"
-brew "packer"
 brew "pam-reattach"
 brew "pcre"
 brew "pdsh"
@@ -211,19 +208,15 @@ brew "z"
 brew "zlib"
 brew "infisical/get-cli/infisical"
 brew "kreuzwerker/taps/m1-terraform-provider-helper"
-brew "lindell/multi-gitter/multi-gitter"
 brew "oven-sh/bun/bun"
 brew "supabase/tap/supabase"
-brew "xcodesorg/made/xcodes"
-brew "zenjob/zenpie/zenpie"
 brew 'reattach-to-user-namespace'
-brew 'joshmedeski/sesh/sesh'
+brew 'asmvik/formulae/skhd'
 brew 'fortune'
 brew 'fish'
 brew 'WeasyPrint'
 brew 'steipete/tap/remindctl'
 brew 'steipete/tap/peekaboo'
-brew 'android-commandlinetools' # android sdk
 brew 'gradle'
 cask "1password-cli"
 cask "amethyst"
