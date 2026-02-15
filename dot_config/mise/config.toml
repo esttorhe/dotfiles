@@ -12,6 +12,7 @@
 "github:tuist/guck" = "latest"
 node = "latest"
 "npm:openclaw" = "latest"
+"github:wesm/msgvault" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = []
