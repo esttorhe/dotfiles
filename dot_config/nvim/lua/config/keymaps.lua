@@ -42,3 +42,17 @@ vim.keymap.set("i", "<D-v>", '<esc>"+p<esc>A', { desc = "Paste" })
 vim.keymap.set("n", "<D-v>", '"+p', { desc = "Paste" })
 
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Open Lazy" })
+
+-- Ctrl+click go-to-definition (terminal Neovim via Ghostty/tmux)
+vim.keymap.set("n", "<C-LeftMouse>", "<LeftMouse><cmd>lua vim.lsp.buf.definition()<CR>", {
+  desc = "Go to definition",
+  silent = true,
+})
+
+-- Cmd+click go-to-definition (Neovide)
+if vim.g.neovide then
+  vim.keymap.set("n", "<D-LeftMouse>", "<LeftMouse><cmd>lua vim.lsp.buf.definition()<CR>", {
+    desc = "Go to definition",
+    silent = true,
+  })
+end
