@@ -22,8 +22,16 @@ vim.wo.wrap = true
 vim.wo.linebreak = true
 vim.wo.list = false
 
-vim.opt.list = false
-vim.opt.listchars = "tab:>·,trail:~,extends:>,precedes:<,space:␣,eol:¬"
+vim.opt.list = true
+vim.opt.listchars = {
+  tab = "→ ",      -- Show tabs as →
+  space = "·",     -- Show spaces as ·
+  trail = "•",     -- Show trailing spaces as •
+  eol = "↲",       -- Show end of line as ↲
+  extends = "⟩",   -- Show when line continues beyond screen
+  precedes = "⟨",  -- Show when line starts before screen
+  nbsp = "␣",      -- Show non-breaking spaces
+}
 
 vim.opt.colorcolumn = "79,119"
 
