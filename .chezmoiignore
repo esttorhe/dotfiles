@@ -8,3 +8,13 @@ home_infra.md
 .config/hypr
 .local/share/omarchy
 {{- end -}}
+
+{{- if eq .chezmoi.os "darwin" -}}
+# macOS uses ~/Library/Application Support/lazygit/
+.config/lazygit
+{{- end -}}
+
+{{- if ne .chezmoi.os "darwin" -}}
+# Linux uses ~/.config/lazygit/
+Library/Application Support/lazygit
+{{- end -}}

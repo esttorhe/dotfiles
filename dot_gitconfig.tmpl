@@ -36,26 +36,44 @@
 [core]
 	excludesfile = ~/.gitignore_global
   editor = nvim # Need to move this to per OS level path
-  pager = delta
+  pager = diffnav
 [interactive]
   diffFilter = delta --color-only
 [delta]
-  features = side-by-side line-numbers decorations
-  whitespace-error-style = 22 reverse
-  plus-color = syntax "#003800"
-  minus-color = syntax "#3f0001"
   syntax-theme = Dracula
-  colorMoved = default
-[delta "decorations"]
-  commit-decoration-style = bold yellow box ul
-  file-style = bold yellow ul
+  dark = true
+  tabs = 2
+
+  # diffnav handles file headers; let delta omit them
+  file-style = omit
   file-decoration-style = none
-  hunk-header-decoration-style = cyan box ul
-[delta "line-numbers"]
-  line-numbers-left-style = cyan
-  line-numbers-right-style = cyan
-  line-numbers-minus-style = 124
+
+  # Line number formatting for side-by-side view
+  line-numbers-left-format = "{nm:>4} "
+  line-numbers-right-format = "│ {np:>4} "
+  line-numbers-left-style = cyan dim
+  line-numbers-right-style = cyan dim
+  line-numbers-zero-style = white dim
   line-numbers-plus-style = 28
+  line-numbers-minus-style = 124
+
+  # Wrap symbols for long lines
+  wrap-left-symbol = " "
+  wrap-right-symbol = " "
+  wrap-right-prefix-symbol = " "
+
+  # Diff colors (green for additions, red for deletions)
+  plus-style = syntax "#003800"
+  plus-emph-style = syntax "#004d00"
+  minus-style = syntax "#3f0001"
+  minus-emph-style = syntax "#5c0002"
+  whitespace-error-style = 22 reverse
+
+  # Hunk header styling
+  hunk-label = "  󰡏 "
+  hunk-header-style = "#868E99"
+  hunk-header-file-style = "#868E99" dim
+  hunk-header-decoration-style = "#6272a4" ol ul
 [mergetool "opendiff"]
   trustExitCode = false
 [diff "plist"]

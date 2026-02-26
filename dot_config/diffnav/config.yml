@@ -1,0 +1,12 @@
+# ABOUTME: Configuration for diffnav, a TUI git diff viewer.
+# ABOUTME: Sets up side-by-side view, nerd font icons, and file tree defaults.
+ui:
+  hideHeader: false
+  hideFooter: false
+  showFileTree: true
+  fileTreeWidth: 30
+  searchTreeWidth: 50
+  colorFileNames: true
+  showDiffStats: true
+  sideBySide: true
+  icons: nerd-fonts-full

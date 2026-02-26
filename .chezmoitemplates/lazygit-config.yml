@@ -1,3 +1,5 @@
+# ABOUTME: Shared lazygit configuration template.
+# ABOUTME: Deployed to ~/Library/Application Support/lazygit/ on macOS, ~/.config/lazygit/ on Linux.
 gui:
   border: rounded
   theme:
@@ -19,6 +21,11 @@ gui:
       - "#ffbd5e"
     defaultFgColor:
       - "#ffffff"
+git:
+  pagers:
+    # Override global delta config (which omits file headers for diffnav)
+    # to restore full delta display inside lazygit
+    - pager: "delta --paging=never --syntax-theme=Dracula --line-numbers --side-by-side --file-style='bold yellow ul' --file-decoration-style=none --hunk-header-decoration-style='cyan box ul' --line-numbers-left-style=cyan --line-numbers-right-style=cyan --line-numbers-minus-style=124 --line-numbers-plus-style=28 --commit-decoration-style='bold yellow box ul'"
 customCommands:
   - key: "<c-r>"
     command: "gh pr create --fill --web"
