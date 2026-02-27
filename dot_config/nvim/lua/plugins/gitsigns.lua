@@ -22,7 +22,6 @@ return {
       },
       current_line_blame_formatter = "<author>, <author_time:%R> • <summary>",
       word_diff = true,
-      show_deleted = false,
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
 
