@@ -2,7 +2,7 @@
 -- ABOUTME: Supports line and block comments with operator-pending mappings
 return {
   "numToStr/Comment.nvim",
-  lazy = false,
+  event = "VeryLazy",
   config = function()
     require("Comment").setup({
       -- Add a space between comment and the line

@@ -3,7 +3,8 @@
 
 return {
   "rmagatti/auto-session",
-  lazy = false,
+  lazy = true,
+  event = "VimEnter",
   opts = {
     auto_session_root_dir = vim.fn.getcwd() .. "/.nvim/",
     auto_save = false,

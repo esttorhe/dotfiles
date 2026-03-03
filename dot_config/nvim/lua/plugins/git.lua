@@ -2,6 +2,10 @@ return {
   -- LazyGit integration
   {
     "kdheepak/lazygit.nvim",
+    cmd = "LazyGit",
+    keys = {
+      { "<leader>gg", ":LazyGit<CR>", silent = true, desc = "LazyGit" },
+    },
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { silent = true, desc = "LazyGit" })
@@ -64,6 +68,11 @@ return {
   -- Fugitive for Git commands
   {
     "tpope/vim-fugitive",
+    cmd = "Git",
+    keys = {
+      { "<leader>gf", ":Git<CR>", desc = "Git status (Fugitive)" },
+      { "<leader>gc", ":Git commit<CR>", desc = "Git commit" },
+    },
     config = function()
       vim.keymap.set("n", "<leader>gf", ":Git<CR>", { desc = "Git status (Fugitive)" })
       vim.keymap.set("n", "<leader>gc", ":Git commit<CR>", { desc = "Git commit" })
@@ -73,6 +82,11 @@ return {
   -- DiffView for diffs and merge resolution
   {
     "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    keys = {
+      { "<leader>gv", ":DiffviewOpen<CR>", desc = "DiffviewOpen" },
+      { "<leader>gh", ":DiffviewFileHistory %<CR>", desc = "Current File History" },
+    },
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require("diffview").setup({

@@ -3,7 +3,7 @@
 
 return {
   "github/copilot.vim",
-  lazy = false,
+  event = "InsertEnter",
   config = function()
     -- Accept Copilot suggestion with Tab (Arthur's pattern)
     vim.keymap.set("i", "<Tab>", function()

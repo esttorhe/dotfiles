@@ -2,6 +2,7 @@
 -- ABOUTME: Uses default keymaps for choosing ours/theirs/both/none
 return {
   "akinsho/git-conflict.nvim",
+  event = "BufReadPre",
   version = "*",
   config = function()
     require("git-conflict").setup({
