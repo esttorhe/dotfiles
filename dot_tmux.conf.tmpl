@@ -66,6 +66,10 @@ bind L resize-pane -R 5
 bind m run "cut -c3- ~/.tmux/tmux.conf.funcs | sh -s _toggle_mouse"
 set -g mouse on
 
+# Copy selection to clipboard without leaving copy mode (stay at scroll position)
+set -g mode-keys vi
+bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe "pbcopy"
+
 # Alt+arrow pane navigation (no prefix)
 bind -n M-Left select-pane -L
 bind -n M-Right select-pane -R
