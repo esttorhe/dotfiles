@@ -1,4 +1,27 @@
-{{- $email := promptStringOnce . "email" "Email address" -}}
+{{- $email := promptStringOnce . "email" "GitHub email address (e.g. me+github@estebantorr.es)" -}}
+{{- $opPersonal := promptStringOnce . "op_account_personal" "1Password personal account sign-in address" -}}
+{{- $opWork := promptStringOnce . "op_account_work" "1Password work account sign-in address" -}}
+
+encryption = "age"
 
 [data]
     email = {{ $email | quote }}
+    op_account_personal = {{ $opPersonal | quote }}
+    op_account_work = {{ $opWork | quote }}
+
+[onepassword]
+    prompt = false
+
+[diff]
+    pager = "diff-so-fancy"
+
+[merge]
+    command = "bash"
+    args = [
+        "-c",
+        "cp {{ "{{" }} .Target {{ "}}" }} {{ "{{" }} .Target {{ "}}" }}.base && code --new-window --wait --merge {{ "{{" }} .Destination {{ "}}" }} {{ "{{" }} .Target {{ "}}" }} {{ "{{" }} .Target {{ "}}" }}.base {{ "{{" }} .Source {{ "}}" }}",
+    ]
+
+[age]
+    identity = "~/.config/age/key.txt"
+    recipient = "age19c2gfd538whr4jnh44h9f6k5q83xw2l925nuj6gc2k97cnzqqv5qtclajq"

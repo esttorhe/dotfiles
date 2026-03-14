@@ -3,7 +3,7 @@
 [user]
   signingkey = ssh-ed25519 {{onepasswordRead "op://Private/GIT_SIGNIN_KEY/password" }}
 	name = Esteban Torres
-  email = "me+github@estebantorr.es"
+  email = "{{ .email }}"
 
 [gpg]
   format = ssh
