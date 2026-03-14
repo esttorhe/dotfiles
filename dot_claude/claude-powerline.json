@@ -15,11 +15,11 @@
           },
           "git": {
             "enabled": true,
-            "showSha": true,
+            "showSha": false,
             "showWorkingTree": true,
             "showOperation": true,
-            "showTag": true,
-            "showTimeSinceCommit": true,
+            "showTag": false,
+            "showTimeSinceCommit": false,
             "showStashCount": true,
             "showUpstream": true,
             "showRepoName": true
@@ -41,7 +41,7 @@
       {
         "segments": {
           "block": {
-            "enabled": true,
+            "enabled": false,
             "type": "weighted",
             "burnType": "tokens"
           },
@@ -49,7 +49,7 @@
             "enabled": true
           },
           "metrics": {
-            "enabled": true,
+            "enabled": false,
             "showResponseTime": true,
             "showLastResponseTime": true,
             "showDuration": true,
