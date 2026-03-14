@@ -21,7 +21,7 @@
             "showTag": false,
             "showTimeSinceCommit": false,
             "showStashCount": true,
-            "showUpstream": true,
+            "showUpstream": false,
             "showRepoName": true
           },
           "model": {
