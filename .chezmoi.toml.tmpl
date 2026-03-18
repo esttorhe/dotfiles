@@ -1,4 +1,5 @@
-{{- $email := promptStringOnce . "email" "GitHub email address (e.g. me+github@estebantorr.es)" -}}
+{{- $email := promptStringOnce . "email" "GitHub email address" -}}
+{{- $pixeltowersEmail := promptStringOnce . "pixeltowers_email" "Pixeltowers email address" -}}
 {{- $opPersonal := promptStringOnce . "op_account_personal" "1Password personal account sign-in address" -}}
 {{- $opWork := promptStringOnce . "op_account_work" "1Password work account sign-in address" -}}
 
@@ -6,6 +7,7 @@ encryption = "age"
 
 [data]
     email = {{ $email | quote }}
+    pixeltowers_email = {{ $pixeltowersEmail | quote }}
     op_account_personal = {{ $opPersonal | quote }}
     op_account_work = {{ $opWork | quote }}
 
