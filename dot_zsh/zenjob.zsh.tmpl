@@ -1,8 +1,0 @@
-{{- $op := lookPath "op" -}}
-{{- if $op -}}
-{{- output "op" "read" "op://Private/zenjob aliases/notes" -}}
-{{- else -}}
-echo "ERROR: 1Password CLI (op) not found"
-{{- end -}}
-
-source <(zenpie completion zsh)

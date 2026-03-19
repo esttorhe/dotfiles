@@ -17,6 +17,7 @@ node = "latest"
 uv = "latest"
 "github:pranshuparmar/witr" = "latest"
 go = "latest"
+"go:github.com/joshmedeski/sesh/v2" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = []
