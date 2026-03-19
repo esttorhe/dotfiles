@@ -2,8 +2,8 @@
 # ABOUTME: Vim-aware bindings, icon-based window names, powerline status bar
 
 # Set the default shell
-set-option -g default-shell $SHELL
-set-option -g default-command $SHELL
+set-option -g default-shell {{ lookPath "fish" }}
+set-option -g default-command {{ lookPath "fish" }}
 
 # make tmux display things in 256 colors
 set -g default-terminal "xterm-screen-256color"
