@@ -10,6 +10,10 @@ name = "chezmoi"
 path = "/Users/esteban.torres/.local/share/chezmoi"
 startup_command = "vi ."
 
+[[session]]
+name = "pixeltowers"
+path = "~/workspace/src/github.com/pixeltowers/"
+
 [default_session]
 startup_command = "nvim -c ':Telescope find_files'"
 # run a script to startup a node project
