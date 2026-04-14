@@ -190,3 +190,13 @@ Problem-Solving Approach:
 - for future, every single time i ask you about stuff, look for the official documentation or validate your assumptions
   with external sources
 - Don't commit changes until Esteban has confirmed that the fix or feature works as intended
+
+# NEVER GUESS — ALWAYS VERIFY
+
+- NEVER guess API response shapes, endpoint paths, library APIs, or framework behavior
+- ALWAYS verify against official documentation, source code, or actual API responses BEFORE writing any integration code
+- When building a client that connects to an API: read the actual API source code or docs, make a test request, verify the response shape — THEN write the types
+- When using a library or framework feature: read the official docs or check an existing working reference implementation — NEVER invent patterns from memory
+- When Esteban provides a reference codebase: READ IT THOROUGHLY before writing anything — copy the exact patterns that work
+- If unsure about behavior: check source code, run a test, or ask — NEVER ship code based on assumptions
+- This is a HARD RULE with ZERO exceptions. Every guess creates bugs that waste time.
