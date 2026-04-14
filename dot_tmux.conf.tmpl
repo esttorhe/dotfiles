@@ -122,7 +122,7 @@ set -ga update-environment TERM_PROGRAM
 set -ga update-environment OPEN_WEATHER_API_KEY
 
 # Set API keys for plugins
-set-environment -g OPEN_WEATHER_API_KEY "{{onepasswordRead "op://Private/OPENWEATHER_API/password"}}"
+set-environment -g OPEN_WEATHER_API_KEY "{{onepasswordRead "op://Private/OPENWEATHER_API/password" .op_account_personal}}"
 
 # ============================================================================
 # Dracula Pro Van Helsing Theme

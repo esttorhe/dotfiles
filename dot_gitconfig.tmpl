@@ -1,7 +1,7 @@
 ########################################################################
 
 [user]
-  signingkey = ssh-ed25519 {{onepasswordRead "op://Private/GIT_SIGNIN_KEY/password" }}
+  signingkey = ssh-ed25519 {{onepasswordRead "op://Private/GIT_SIGNIN_KEY/password" .op_account_personal }}
 	name = Esteban Torres
   email = "{{ .email }}"
 

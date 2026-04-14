@@ -60,9 +60,9 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Cloudflare Zero PixelTowers
-export INFISICAL_CUSTOM_HEADERS="CF-Access-Client-Id={{onepasswordRead "op://Private/CF-Access-Client-Id/password"}} CF-Access-Client-Secret={{onepasswordRead "op://Private/CF-Access-Client-Secret/password"}}"
+export INFISICAL_CUSTOM_HEADERS="CF-Access-Client-Id={{onepasswordRead "op://Private/CF-Access-Client-Id/password" .op_account_personal}} CF-Access-Client-Secret={{onepasswordRead "op://Private/CF-Access-Client-Secret/password" .op_account_personal}}"
 
-export OPEN_WEATHER_API_KEY="{{onepasswordRead "op://Private/OPENWEATHER_API/password"}}"
+export OPEN_WEATHER_API_KEY="{{onepasswordRead "op://Private/OPENWEATHER_API/password" .op_account_personal}}"
 
 # Tmux key bindings & skhd reminder using fortune - https://www.judy.co.uk/blog/using-fortune-to-reinforce-habits/
 fortune ~/.local/habits
