@@ -21,7 +21,16 @@ return {
       vim.api.nvim_set_hl(0, "RainbowDelimiterViolet", { fg = "#c099ff" })
 
       -- Configure rainbow-delimiters to use these highlights
-      vim.g.rainbow_delimiters = { highlight = highlight }
+      vim.g.rainbow_delimiters = {
+        highlight = highlight,
+        -- Skip non-file buffers (notifications, floating windows, terminals, etc.)
+        -- In Neovim 0.12+, get_lang returns the filetype itself for unknown languages
+        -- instead of nil, causing rainbow-delimiters to crash on special buffers
+        -- where no treesitter parser exists.
+        condition = function(bufnr)
+          return vim.bo[bufnr].buftype == ""
+        end,
+      }
     end
 
     -- Setup highlights initially
