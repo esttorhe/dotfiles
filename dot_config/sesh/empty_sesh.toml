@@ -15,7 +15,6 @@ name = "pixeltowers"
 path = "~/workspace/src/github.com/pixeltowers/"
 
 [default_session]
-startup_command = "nvim -c ':Telescope find_files'"
 # run a script to startup a node project
 #[[session]]
 #path = "~/c/joshmedeski.com"
