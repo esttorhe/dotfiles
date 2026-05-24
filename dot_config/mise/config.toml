@@ -19,6 +19,8 @@ uv = "latest"
 go = "latest"
 "go:github.com/joshmedeski/sesh/v2" = "latest"
 "npm:@doist/todoist-cli" = "latest"
+"github:anomalyco/opencode" = "latest"
+"github:colbymchenry/codegraph" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = []
