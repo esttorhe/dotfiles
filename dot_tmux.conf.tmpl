@@ -121,8 +121,8 @@ set -ga update-environment TERM
 set -ga update-environment TERM_PROGRAM
 set -ga update-environment OPEN_WEATHER_API_KEY
 
-# Set API keys for plugins
-set-environment -g OPEN_WEATHER_API_KEY "{{onepasswordRead "op://Private/OPENWEATHER_API/password" .op_account_personal}}"
+# API keys for plugins - fetched from 1Password at tmux start, lives only in server env
+run-shell 'val="$(op read --account {{ .op_account_personal }} "op://Private/xuprl4ialvvzu4mnuje7xhkyxq/password" 2>/dev/null)"; [ -n "$val" ] && tmux set-environment -g OPEN_WEATHER_API_KEY "$val"'
 
 # ============================================================================
 # Dracula Pro Van Helsing Theme
