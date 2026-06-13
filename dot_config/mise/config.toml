@@ -21,6 +21,7 @@ go = "latest"
 "npm:@doist/todoist-cli" = "latest"
 "github:anomalyco/opencode" = "latest"
 "github:colbymchenry/codegraph" = "latest"
+"github:gastownhall/beads" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = []
