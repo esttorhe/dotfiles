@@ -111,18 +111,21 @@ set -g pane-base-index 1
 # Don't exit tmux when closing a session
 set -g detach-on-destroy off
 
-# Creates a new session (and a new window group)
-new-session -s main
-
 # yazi image preview
 set -g allow-passthrough on
 
 set -ga update-environment TERM
 set -ga update-environment TERM_PROGRAM
 set -ga update-environment OPEN_WEATHER_API_KEY
+set -ga update-environment GITHUB_TOKEN
 
-# API keys for plugins - fetched from 1Password at tmux start, lives only in server env
+# Secrets fetched once into the server env before any session spawns, so
+# restored panes inherit via update-environment instead of re-prompting Touch ID.
 run-shell 'val="$(op read --account {{ .op_account_personal }} "op://Private/xuprl4ialvvzu4mnuje7xhkyxq/password" 2>/dev/null)"; [ -n "$val" ] && tmux set-environment -g OPEN_WEATHER_API_KEY "$val"'
+run-shell 'val="$(op read --account {{ .op_account_work }} "op://Engineering/kyl6ugf3ylddze7zc5akxfgzxm/token" 2>/dev/null)"; [ -n "$val" ] && tmux set-environment -g GITHUB_TOKEN "$val"'
+
+# Creates a new session (and a new window group)
+new-session -s main
 
 # ============================================================================
 # Dracula Pro Van Helsing Theme
