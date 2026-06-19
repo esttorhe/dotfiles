@@ -1,6 +1,10 @@
 osx/personal_variables.symlink
 .DS_Store
 
+# Ignore headroom runtime store — holds compressed session content, never commit (public repo)
+headroom_memory.db
+headroom_memory.db-*
+
 # Ignore vi plugins and configs
 plugged/
 
