@@ -22,6 +22,9 @@ go = "latest"
 "github:anomalyco/opencode" = "latest"
 "github:colbymchenry/codegraph" = "latest"
 "github:gastownhall/beads" = "latest"
+"github:ajeetdsouza/zoxide" = "latest"
+"npm:impeccable" = "latest"
+"pipx:headroom-ai" = { version = "latest", extras = "all,mcp" }
 
 [settings]
 idiomatic_version_file_enable_tools = []
