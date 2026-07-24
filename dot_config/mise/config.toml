@@ -25,6 +25,7 @@ go = "latest"
 "github:ajeetdsouza/zoxide" = "latest"
 "npm:impeccable" = "latest"
 "pipx:headroom-ai" = { version = "latest", extras = "all,mcp" }
+"npm:Doist/todoist-cli" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = []
