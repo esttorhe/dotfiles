@@ -23,6 +23,23 @@
     <key>ProcessType</key>
     <string>Background</string>
 
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HEADROOM_MODE</key><string>token</string>
+        <key>HEADROOM_SAVINGS_PROFILE</key><string>agent-90</string>
+        <key>HEADROOM_SAVINGS_TARGET</key><string>0.90</string>
+        <key>HEADROOM_TARGET_RATIO</key><string>0.10</string>
+        <key>HEADROOM_ACCURACY_GUARD</key><string>strict</string>
+        <key>HEADROOM_COMPRESS_USER_MESSAGES</key><string>1</string>
+        <key>HEADROOM_COMPRESS_SYSTEM_MESSAGES</key><string>1</string>
+        <key>HEADROOM_FORCE_KOMPRESS</key><string>1</string>
+        <key>HEADROOM_PROTECT_RECENT</key><string>2</string>
+        <key>HEADROOM_PROTECT_ANALYSIS_CONTEXT</key><string>1</string>
+        <key>HEADROOM_MIN_TOKENS</key><string>120</string>
+        <key>HEADROOM_MAX_ITEMS</key><string>8</string>
+        <key>HEADROOM_SMART_CRUSHER_COMPACTION</key><string>0</string>
+    </dict>
+
     <key>StandardOutPath</key>
     <string>/Users/esteban.torres/.local/share/headroom-proxy.log</string>
 
