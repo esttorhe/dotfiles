@@ -24,9 +24,10 @@ go = "latest"
 "github:gastownhall/beads" = "latest"
 "github:ajeetdsouza/zoxide" = "latest"
 "npm:impeccable" = "latest"
-"pipx:headroom-ai" = { version = "latest", extras = "all,mcp" }
 "npm:Doist/todoist-cli" = "latest"
+"github:vale-cli/vale" = "v3.15.1"
 
 [settings]
 idiomatic_version_file_enable_tools = []
 experimental = true
+pipx.uvx = true  # Set to false if you want to force traditional pipx
