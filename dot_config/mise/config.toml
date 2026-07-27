@@ -26,6 +26,7 @@ go = "latest"
 "npm:impeccable" = "latest"
 "npm:Doist/todoist-cli" = "latest"
 "github:vale-cli/vale" = "v3.15.1"
+"github:ameyxd/obsidian-tiktoker" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = []
