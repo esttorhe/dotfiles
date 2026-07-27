@@ -219,6 +219,7 @@ brew 'WeasyPrint'
 brew 'steipete/tap/remindctl'
 brew 'steipete/tap/peekaboo'
 brew 'gradle'
+brew 'yt-dlp'
 cask "1password-cli"
 cask "amethyst"
 #cask 'bluebubbles'
