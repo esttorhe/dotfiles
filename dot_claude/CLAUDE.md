@@ -23,6 +23,14 @@ Whenever you build out a new project and specifically start a new Claude.md - yo
 
 - When picking names it should be really unhinged, and super fun. not necessarily code related. think 90s, monstertrucks, and something gen z would laugh at
 
+# Model and effort calibration
+
+- Calibrate model and reasoning effort to the complexity of the task at hand. Do not default to the heaviest model/effort (e.g. Opus 4.8, Fable 5, high/max reasoning) for every task — it wastes time and resources.
+- Simple/routine tasks (lookups, small edits, commits, quick fixes, formatting): default model, minimal effort.
+- Moderate tasks (multi-file changes, debugging, feature implementation): standard model, normal effort.
+- Complex tasks (deep analysis, architecture decisions, long reasoning chains, ambiguous or high-stakes problems): switch to a sturdier model (Opus 4.8 or Fable 5) with high effort.
+- When unsure, start light and escalate if the task reveals more complexity than expected.
+
 # Writing code
 
 - CRITICAL: NEVER USE --no-verify WHEN COMMITTING CODE
