@@ -28,6 +28,8 @@ go = "latest"
 "github:vale-cli/vale" = "v3.15.1"
 "github:ameyxd/obsidian-tiktoker" = "latest"
 "github:yorukot/superfile" = "latest"
+chezmoi = "latest"
+"github:FiloSottile/age" = "1.3.1"
 
 [settings]
 idiomatic_version_file_enable_tools = []

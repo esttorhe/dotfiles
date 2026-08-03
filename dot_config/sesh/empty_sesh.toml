@@ -7,7 +7,7 @@ startup_command = "yazi"
 # open a file
 [[session]]
 name = "chezmoi"
-path = "/Users/esteban.torres/.local/share/chezmoi"
+path = "~/.local/share/chezmoi"
 startup_command = "vi ."
 
 [[session]]

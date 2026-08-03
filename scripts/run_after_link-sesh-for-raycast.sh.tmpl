@@ -1,0 +1,55 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# ABOUTME: Links the mise-managed sesh binary into the Homebrew bin directory.
+# ABOUTME: The Raycast sesh extension only searches a fixed PATH, which excludes mise.
+
+set -e
+
+# The Raycast sesh extension builds its own PATH from the "Environment Path"
+# preference, whose default is
+# /usr/local/bin:/usr/bin:/opt/homebrew/bin:/run/current-system/sw/bin.
+# PATH entries are never tilde-expanded, so a per-user mise directory cannot be
+# named there portably. Instead, expose sesh under the Homebrew prefix, which is
+# already on that PATH and identical on every machine of a given architecture.
+if command -v brew > /dev/null 2>&1; then
+    BREW_BIN="$(brew --prefix)/bin"
+elif [[ -d "/opt/homebrew/bin" ]]; then
+    BREW_BIN="/opt/homebrew/bin"
+else
+    BREW_BIN="/usr/local/bin"
+fi
+
+LINK="${BREW_BIN}/sesh"
+
+# A real sesh installed by Homebrew is already discoverable; leave it untouched.
+if [[ -e "$LINK" && ! -L "$LINK" ]]; then
+    exit 0
+fi
+
+# Locate the sesh that mise manages.
+SESH_SHIM="${HOME}/.local/share/mise/shims/sesh"
+if [[ ! -x "$SESH_SHIM" ]]; then
+    if command -v mise > /dev/null 2>&1; then
+        SESH_SHIM="$(mise which sesh 2>/dev/null || true)"
+    else
+        SESH_SHIM=""
+    fi
+fi
+
+if [[ -z "$SESH_SHIM" || ! -x "$SESH_SHIM" ]]; then
+    echo "sesh not found via mise; skipping Raycast link."
+    exit 0
+fi
+
+if [[ "$(readlink "$LINK" 2>/dev/null)" == "$SESH_SHIM" ]]; then
+    exit 0
+fi
+
+if [[ ! -w "$BREW_BIN" ]]; then
+    echo "Cannot write to ${BREW_BIN}; skipping Raycast link for sesh."
+    exit 0
+fi
+
+ln -sfn "$SESH_SHIM" "$LINK"
+echo "Linked ${LINK} -> ${SESH_SHIM} so Raycast can find sesh."
+{{- end -}}

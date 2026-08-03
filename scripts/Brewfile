@@ -1,8 +1,6 @@
 tap "hashicorp/tap"
-tap "infisical/get-cli"
 tap "kreuzwerker/taps"
 tap "oven-sh/bun"
-tap "supabase/tap"
 tap "xcodesorg/made"
 brew "act"
 brew "adns"
@@ -125,7 +123,6 @@ brew "gpgme"
 brew "gmime"
 brew "gnu-getopt"
 brew "gnu-sed"
-brew "go@1.20"
 brew "pkgconf"
 brew "gobject-introspection"
 brew "goreleaser"
@@ -207,17 +204,12 @@ brew "xmlto"
 brew "yazi"
 brew "z"
 brew "zlib"
-brew "infisical/get-cli/infisical"
-brew "kreuzwerker/taps/m1-terraform-provider-helper"
-brew "oven-sh/bun/bun"
-brew "supabase/tap/supabase"
+#brew "oven-sh/bun/bun"
 #brew 'reattach-to-user-namespace'
 brew 'asmvik/formulae/skhd'
 brew 'fortune'
 brew 'fish'
 brew 'WeasyPrint'
-brew 'steipete/tap/remindctl'
-brew 'steipete/tap/peekaboo'
 brew 'gradle'
 brew 'yt-dlp'
 brew 'anomalyco/tap/opencode'
@@ -271,8 +263,6 @@ vscode "esbenp.prettier-vscode"
 vscode "expo.vscode-expo-tools"
 vscode "firefox-devtools.vscode-firefox-debug"
 vscode "github.codespaces"
-vscode "github.copilot"
-vscode "github.copilot-chat"
 vscode "golang.go"
 vscode "hashicorp.terraform"
 vscode "kamikillerto.vscode-colorize"
