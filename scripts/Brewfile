@@ -220,6 +220,7 @@ brew 'steipete/tap/remindctl'
 brew 'steipete/tap/peekaboo'
 brew 'gradle'
 brew 'yt-dlp'
+brew 'anomalyco/tap/opencode'
 cask "1password-cli"
 cask "amethyst"
 #cask 'bluebubbles'
