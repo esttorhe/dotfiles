@@ -1,0 +1,56 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# ABOUTME: Installs /etc/pam.d/sudo_local so sudo authenticates via Touch ID.
+# ABOUTME: Chains pam_reattach ahead of pam_tid so the prompt works inside tmux.
+
+set -e
+
+PAM_MODULE="$(brew --prefix 2>/dev/null)/lib/pam/pam_reattach.so"
+TARGET="/etc/pam.d/sudo_local"
+
+# pam-reattach comes from the Brewfile; without it, sudo inside tmux/screen
+# cannot reach the Aqua session that owns the Touch ID prompt.
+if [[ ! -f "$PAM_MODULE" ]]; then
+    echo "pam_reattach not found at $PAM_MODULE. Skipping Touch ID sudo setup."
+    echo "Install it with 'brew install pam-reattach', then re-run 'chezmoi apply'."
+    exit 0
+fi
+
+# macOS Sonoma and later include sudo_local from /etc/pam.d/sudo. Without that
+# include the file we write is inert, and patching /etc/pam.d/sudo directly
+# would be undone by the next system update.
+if ! grep -qE '^auth[[:space:]]+include[[:space:]]+sudo_local' /etc/pam.d/sudo; then
+    echo "/etc/pam.d/sudo does not include sudo_local. Skipping Touch ID sudo setup."
+    exit 0
+fi
+
+# ignore_ssh makes pam_reattach a no-op when SSH_CLIENT/SSH_CONNECTION/SSH_TTY
+# are set, so remote sessions fall through to the password prompt instead of
+# lighting up the sensor on an unattended laptop.
+DESIRED="$(mktemp)"
+trap 'rm -f "$DESIRED"' EXIT
+cat > "$DESIRED" <<EOF
+# sudo_local: local config file which survives system update and is included for sudo
+# Managed by chezmoi: scripts/run_onchange_install-sudo-touchid.sh.tmpl
+auth       optional       $PAM_MODULE ignore_ssh
+auth       sufficient     pam_tid.so
+EOF
+
+if cmp -s "$DESIRED" "$TARGET"; then
+    echo "Touch ID for sudo already configured."
+    exit 0
+fi
+
+# Writing to /etc/pam.d needs root, and Touch ID sudo is not available yet on a
+# fresh machine, so this is a password prompt. Bail out when nothing can answer
+# it rather than hanging an unattended apply.
+if ! sudo -n true 2>/dev/null && [[ ! -t 0 ]]; then
+    echo "Touch ID for sudo needs root but no terminal is available."
+    echo "Re-run 'chezmoi apply' from an interactive shell to finish setup."
+    exit 0
+fi
+
+echo "Configuring Touch ID for sudo (requires sudo)..."
+sudo install -m 444 -o root -g wheel "$DESIRED" "$TARGET"
+echo "Touch ID for sudo configured. Run 'sudo -k' to drop the cached timestamp and test."
+{{- end -}}

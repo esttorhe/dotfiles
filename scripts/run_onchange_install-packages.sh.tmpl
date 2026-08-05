@@ -1,5 +1,9 @@
 {{- if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
+# ABOUTME: Installs the Homebrew packages listed in scripts/Brewfile.
+# ABOUTME: The Brewfile hash below re-runs this whenever the package list changes.
+
+# Brewfile hash: {{ include "scripts/Brewfile" | sha256sum }}
 
 echo 'Installing Homebrew packages...'
 brew bundle install
