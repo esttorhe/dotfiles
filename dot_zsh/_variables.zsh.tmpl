@@ -11,7 +11,7 @@ if [ "${unameOut}" = "Darwin" ]; then
     export PATH="$(brew --prefix qt@5)/bin:$PATH"
 
     # HOMEBREW
-    export HOMEBREW_EDITOR="vi"
+    export HOMEBREW_EDITOR="nvim"
 fi
 
 export ZSH_PLUGINS_ALIAS_TIPS_EXCLUDES="_ g"
@@ -31,7 +31,8 @@ export PATH=$HOME/Library/Python/2.7/bin:${PATH}
 
 export LC_ALL"=en_US.UTF-8"
 export LANG="en_US.UTF-8"
-export EDITOR="vi"
+export EDITOR="nvim"
+export VISUAL="nvim"
 export TERM=xterm-256color
 
 # DOCKER
