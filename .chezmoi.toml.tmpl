@@ -21,7 +21,35 @@ encryption = "age"
     command = "bash"
     args = [
         "-c",
-        "cp {{ "{{" }} .Target {{ "}}" }} {{ "{{" }} .Target {{ "}}" }}.base && code --new-window --wait --merge {{ "{{" }} .Destination {{ "}}" }} {{ "{{" }} .Target {{ "}}" }} {{ "{{" }} .Target {{ "}}" }}.base {{ "{{" }} .Source {{ "}}" }}",
+        '''
+set -eu
+destination=$1 target=$2 source=$3
+tmpdir=$(mktemp -d)
+trap 'rm -rf "$tmpdir"' EXIT
+
+# Merge into a scratch file so an abandoned merge cannot clobber the source.
+# Naming it after the source (minus .tmpl) gives VS Code the right syntax mode.
+merged="$tmpdir/$(basename "${source%.tmpl}")"
+: > "$merged"
+
+# path1 = the live file, path2 = the source (template markup lives here),
+# base = the rendered target, which is the common ancestor of both. VS Code
+# then replays the destination's edits onto the template instead of over it.
+code --new-window --wait --merge "$destination" "$source" "$target" "$merged"
+
+if [ ! -s "$merged" ]; then
+    echo "chezmoi merge: nothing saved, left $source unchanged" >&2
+elif grep -q '^<<<<<<< ' "$merged"; then
+    echo "chezmoi merge: unresolved conflict markers, left $source unchanged" >&2
+    exit 1
+else
+    cp "$merged" "$source"
+fi
+''',
+        "chezmoi-merge",
+        {{ `"{{ .Destination }}"` }},
+        {{ `"{{ .Target }}"` }},
+        {{ `"{{ .Source }}"` }},
     ]
 
 [age]
