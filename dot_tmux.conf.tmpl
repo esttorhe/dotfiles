@@ -217,6 +217,16 @@ set -g @plugin 'tmux-plugins/tmux-continuum'
 # Last saved environment is automatically restored when tmux is started.
 set -g @continuum-restore 'on'
 
+# Snapshot every 5 minutes instead of the 15 minute default, so an unexpected
+# reboot costs less session layout.
+set -g @continuum-save-interval '5'
+
+# Restore replays each window's saved layout verbatim, so reattaching from a
+# terminal that is not the size it was saved at leaves panes sized for the old
+# geometry and tmux fills the leftover area with dots. Re-fit every window to
+# the attached client, then hand sizing back to the global window-size setting.
+set -g @resurrect-hook-post-restore-all 'tmux list-windows -a -F "#{session_name}:#{window_index}" | while read -r w; do tmux resize-window -t "$w" -A; tmux set-window-option -t "$w" -u window-size; done'
+
 # === tmux-fzf-links ===
 set-option -g @fzf-links-key 'f'
 set-option -g @fzf-links-editor-open-cmd "tmux new-window -n 'vi' /opt/homebrew/bin/nvim +%line '%file'"
