@@ -213,6 +213,7 @@ brew 'WeasyPrint'
 brew 'gradle'
 brew 'yt-dlp'
 brew 'anomalyco/tap/opencode'
+cask 'codex'
 cask "1password-cli"
 cask "amethyst"
 #cask 'bluebubbles'
