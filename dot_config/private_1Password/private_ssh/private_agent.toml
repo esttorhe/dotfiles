@@ -28,15 +28,40 @@
 #
 # More examples can be found here:
 #  https://developer.1password.com/docs/ssh/agent/config
+
+# Order is significant: the agent offers keys in the order listed here, and
+# sshd stops accepting attempts after MaxAuthTries (6 by default). The keys
+# reached most often are listed first so that hosts without an explicit
+# IdentityFile in ~/.ssh/config still authenticate within that budget.
+#
+# `account` is required to disambiguate: the Employee vault exists in both
+# pixeltowers.1password.com and peecai.1password.eu, and listing a vault
+# without an account matches every account that has one by that name.
+#
+# The PixelTowers vault of the personal account is deliberately not listed:
+# its three keys (Hetzner – Prod v1, Hetzner PixelTowers Dedicated Infra,
+# chris_babylon_winkoz) are byte-identical duplicates of keys in the work
+# account's Employee vault, so listing both offered each of them twice.
+
+[[ssh-keys]]
+item = "SSH Github"
+vault = "Private"
+account = "my.1password.eu"
+
+[[ssh-keys]]
+item = "Pocho[Claudio] – SSH Key"
+vault = "Private"
+account = "my.1password.eu"
+
 [[ssh-keys]]
 vault = "Employee"
+account = "pixeltowers.1password.com"
 
 [[ssh-keys]]
 vault = "Private"
-
-[[ssh-keys]]
-vault = "PixelTowers"
+account = "my.1password.eu"
 
 [[ssh-keys]]
 item = "esteban_babylon"
 vault = "Winkoz"
+account = "my.1password.eu"
