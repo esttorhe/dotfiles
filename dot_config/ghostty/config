@@ -31,14 +31,9 @@ keybind = super+c=copy_to_clipboard
 keybind = super+v=paste_from_clipboard
 keybind = super+shift+,=reload_config
 
-# Quake-style drop-down terminal, toggled from anywhere in the system.
+# System-wide show/hide, works while Ghostty is unfocused.
 # Requires Accessibility permission; Ghostty requests it on launch/reload.
-# Session state persists across toggles, so this is a long-lived terminal.
-keybind = global:ctrl+alt+z=toggle_quick_terminal
-
-# For top/bottom positions the primary axis is height, so this is 80% tall.
-quick-terminal-position = top
-quick-terminal-size = 80%
+keybind = global:ctrl+alt+z=toggle_visibility
 
 # tmux keybindings (prefix is Ctrl+X = \x18)
 keybind = super+o=text:\x18o
