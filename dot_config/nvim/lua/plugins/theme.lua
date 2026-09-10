@@ -1,34 +1,39 @@
--- ABOUTME: Tokyo Night Moon theme configuration
+-- ABOUTME: Catppuccin Mocha theme configuration
 -- ABOUTME: Provides consistent colors for status line, diagnostics, and UI
 
 return {
   {
-    "folke/tokyonight.nvim",
+    "catppuccin/nvim",
+    name = "catppuccin",
     lazy = false,
     priority = 1000,
     opts = {
-      style = "moon",
-      transparent = true,
-      terminal_colors = true,
-      styles = {
-        comments = { italic = true },
-        keywords = { italic = true },
-        sidebars = "transparent",
-        floats = "transparent",
+      flavour = "mocha",
+      transparent_background = true,
+      term_colors = true,
+      float = {
+        transparent = true,
       },
-      on_highlights = function(hl, c)
-        -- Custom diagnostic underlines with Tokyo Night colors
-        hl.DiagnosticUnderlineError = { undercurl = true, sp = c.red }
-        hl.DiagnosticUnderlineWarn = { undercurl = true, sp = c.yellow }
-        hl.DiagnosticUnderlineInfo = { undercurl = true, sp = c.cyan }
-        hl.DiagnosticUnderlineHint = { undercurl = true, sp = c.teal }
-      end,
+      styles = {
+        comments = { "italic" },
+        keywords = { "italic" },
+      },
+      lsp_styles = {
+        -- Undercurl reads better than a flat underline against the palette.
+        underlines = {
+          errors = { "undercurl" },
+          warnings = { "undercurl" },
+          information = { "undercurl" },
+          hints = { "undercurl" },
+          ok = { "undercurl" },
+        },
+      },
     },
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "tokyonight-moon",
+      colorscheme = "catppuccin-mocha",
     },
   },
 }
