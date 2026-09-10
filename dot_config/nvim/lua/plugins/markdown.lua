@@ -28,6 +28,20 @@ local function markdownlint_config(path)
 end
 
 return {
+  -- LazyVim's markdown extra strips render-markdown down to `heading.icons = {}`
+  -- and `checkbox.enabled = false`, which leaves raw `#` markers and unrendered
+  -- task lists. Restore the plugin's own defaults for both.
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    opts = {
+      heading = {
+        icons = { "\u{f0ca1} ", "\u{f0ca3} ", "\u{f0ca5} ", "\u{f0ca7} ", "\u{f0ca9} ", "\u{f0cab} " },
+      },
+      checkbox = {
+        enabled = true,
+      },
+    },
+  },
   {
     "mfussenegger/nvim-lint",
     optional = true,
