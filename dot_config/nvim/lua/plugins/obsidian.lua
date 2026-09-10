@@ -1,47 +1,32 @@
+-- ABOUTME: obsidian.nvim for the second_brain vault, on the actively maintained
+-- ABOUTME: obsidian-nvim fork using its current (3.x) option names.
+
 return {
-  "epwalsh/obsidian.nvim",
+  "obsidian-nvim/obsidian.nvim",
+  version = "*", -- latest release rather than latest commit
   lazy = true,
-  event = { "BufReadPre " .. vim.fn.expand("~") .. "/workspace/src/github.com/esttorhe/second_brain/**.md" },
-  -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand':
-  -- event = { "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md" },
-  dependencies = {
-    -- Required.
-    "nvim-lua/plenary.nvim",
-
-    -- Optional, for completion.
-    "hrsh7th/nvim-cmp",
-
-    -- Optional, for search and quick-switch functionality.
-    "nvim-telescope/telescope.nvim",
-
-    -- Optional, an alternative to telescope for search and quick-switch functionality.
-    -- "ibhagwan/fzf-lua"
-
-    -- Optional, another alternative to telescope for search and quick-switch functionality.
-    -- "junegunn/fzf",
-    -- "junegunn/fzf.vim"
-  },
+  event = { "BufReadPre " .. vim.fn.expand("~") .. "/workspace/github.com/esttorhe/second_brain/**.md" },
   opts = {
-    dir = "~/workspace/src/github.com/esttorhe/second_brain", -- no need to call 'vim.fn.expand' here
+    -- The `:Obsidian<Verb>` commands are dropped in 4.0; use `:Obsidian verb`.
+    legacy_commands = false,
 
-    -- Optional, if you keep notes in a specific subdirectory of your vault.
-    -- notes_subdir = "notes",
+    workspaces = {
+      {
+        name = "second_brain",
+        path = "~/workspace/github.com/esttorhe/second_brain",
+      },
+    },
 
-    -- Optional, if you keep daily notes in a separate directory.
+    -- Dailies live at Journal/<year>/YYYY.MM.DD.md. `date_format` is allowed to
+    -- carry path components; obsidian takes the stem of the result as the ID.
     daily_notes = {
-      folder = "Jounral/Daily",
+      folder = "Journal",
+      date_format = "%Y/%Y.%m.%d",
     },
 
-    -- Optional, completion.
-    completion = {
-      nvim_cmp = true, -- if using nvim-cmp, otherwise set to false
-    },
-
-    -- Optional, customize how names/IDs for new notes are created.
+    -- Zettelkasten IDs: a timestamp plus a slug of the title, so a note titled
+    -- 'My new note' becomes '1657296016-my-new-note.md'.
     note_id_func = function(title)
-      -- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
-      -- In this case a note with the title 'My new note' will given an ID that looks
-      -- like '1657296016-my-new-note', and therefore the file name '1657296016-my-new-note.md'
       local suffix = ""
       if title ~= nil then
         -- If title is given, transform it into valid file name.
@@ -55,64 +40,26 @@ return {
       return tostring(os.time()) .. "-" .. suffix
     end,
 
-    -- Optional, set to true if you don't want Obsidian to manage frontmatter.
-    disable_frontmatter = false,
-
-    -- Optional, alternatively you can customize the frontmatter data.
-    note_frontmatter_func = function(note)
-      -- This is equivalent to the default frontmatter function.
-      local out = { id = note.id, aliases = note.aliases, tags = note.tags }
-      -- `note.metadata` contains any manually added fields in the frontmatter.
-      -- So here we just make sure those fields are kept in the frontmatter.
-      if note.metadata ~= nil and require("obsidian").util.table_length(note.metadata) > 0 then
-        for k, v in pairs(note.metadata) do
-          out[k] = v
-        end
-      end
-      return out
-    end,
-
-    -- Optional, for templates (see below).
     templates = {
-      subdir = "templates",
+      folder = "templates",
       date_format = "%Y-%m-%d-%a",
       time_format = "%H:%M",
     },
 
-    -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
-    -- URL it will be ignored but you can customize this behavior here.
-    follow_url_func = function(url)
-      -- Open the URL in the default web browser.
-      vim.fn.jobstart({ "open", url }) -- Mac OS
-      -- vim.fn.jobstart({"xdg-open", url})  -- linux
-    end,
+    picker = {
+      name = "snacks.picker",
+    },
 
-    -- Optional, set to true if you use the Obsidian Advanced URI plugin.
-    -- https://github.com/Vinzent03/obsidian-advanced-uri
-    use_advanced_uri = true,
+    -- Open notes in the Obsidian app at the current line.
+    open = {
+      use_advanced_uri = true,
+    },
 
-    -- Optional, set to true to force ':ObsidianOpen' to bring the app to the foreground.
-    open_app_foreground = false,
-
-    -- Optional, by default commands like `:ObsidianSearch` will attempt to use
-    -- telescope.nvim, fzf-lua, and fzf.nvim (in that order), and use the
-    -- first one they find. By setting this option to your preferred
-    -- finder you can attempt it first. Note that if the specified finder
-    -- is not installed, or if it the command does not support it, the
-    -- remaining finders will be attempted in the original order.
-    finder = "telescope.nvim",
+    -- render-markdown.nvim owns markdown rendering. Obsidian's own UI module
+    -- draws a second set of overlays over the same buffer, which double-renders
+    -- list markers and headings. Upstream also plans to remove it.
+    ui = {
+      enable = false,
+    },
   },
-  config = function(_, opts)
-    require("obsidian").setup(opts)
-
-    -- Optional, override the 'gf' keymap to utilize Obsidian's search functionality.
-    -- see also: 'follow_url_func' config option above.
-    vim.keymap.set("n", "gf", function()
-      if require("obsidian").util.cursor_on_markdown_link() then
-        return "<cmd>ObsidianFollowLink<CR>"
-      else
-        return "gf"
-      end
-    end, { noremap = false, expr = true })
-  end,
 }
