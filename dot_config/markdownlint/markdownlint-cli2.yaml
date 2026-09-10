@@ -1,0 +1,32 @@
+# ABOUTME: Global markdownlint-cli2 rules used when a project ships no config
+# ABOUTME: of its own; keeps checks that catch real breakage, drops prose nags.
+config:
+  # --- Formatting nags that Prettier already owns on save ---
+  MD004: false # ul-style (consistent bullet character)
+  MD007: false # ul-indent (unordered list indentation)
+  MD009: false # no-trailing-spaces
+  MD012: false # no-multiple-blanks
+  MD022: false # blanks-around-headings
+  MD029: false # ol-prefix (ordered list numbering style)
+  MD031: false # blanks-around-fences
+  MD032: false # blanks-around-lists
+  MD046: false # code-block-style (fenced vs indented)
+  MD047: false # single-trailing-newline
+  MD048: false # code-fence-style (``` vs ~~~)
+  MD049: false # emphasis-style (_ vs *)
+  MD050: false # strong-style (__ vs **)
+
+  # --- Prose rules that fight normal writing ---
+  MD013: false # line-length; wrapping is the editor's job, not the linter's
+  MD024: false # no-duplicate-heading; repeated section names are legitimate
+  MD033: false # no-inline-html; needed for details/summary, img, kbd
+  MD034: false # no-bare-urls
+  MD036: false # no-emphasis-as-heading
+  MD041: false # first-line-heading; notes and fragments start mid-document
+  MD045: false # no-alt-text
+  MD053: false # link-image-reference-definitions (unused definitions)
+
+# Everything not listed stays enabled. That leaves the rules that flag
+# genuinely broken markup rather than style: MD011 (reversed link syntax),
+# MD018-MD021 (missing space after #), MD037-MD039 (spaces inside emphasis,
+# code spans and links), MD042 (empty links) and MD052 (undefined reference).
