@@ -9,14 +9,10 @@ vim.opt.statuscolumn = "%@SignCb@%s%=%T%@NumCb@%l %r│%T"
 
 vim.wo.relativenumber = false
 
-vim.g.vim_markdown_folding_disabled = 1
-
 vim.opt.spelllang = { "en" }
 
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
-
-vim.g.vim_markdown_folding_disabled = 1
 
 vim.wo.wrap = true
 vim.wo.linebreak = true

@@ -20,10 +20,6 @@ return {
     -- Optional, another alternative to telescope for search and quick-switch functionality.
     -- "junegunn/fzf",
     -- "junegunn/fzf.vim"
-
-    -- Optional, alternative to nvim-treesitter for syntax highlighting.
-    "godlygeek/tabular",
-    "preservim/vim-markdown",
   },
   opts = {
     dir = "~/workspace/src/github.com/esttorhe/second_brain", -- no need to call 'vim.fn.expand' here
