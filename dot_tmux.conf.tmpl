@@ -215,6 +215,11 @@ set-hook -g window-pane-changed "$PANE_BORDER_TOGGLE"
 # this file is sourced. run-shell expands #{...} itself, hence the ## escapes.
 run-shell 'tmux list-windows -a -F "##{session_name}:##{window_index} ##{window_panes}" | while read -r w n; do if [ "$n" = 1 ]; then tmux set -w -t "$w" pane-border-status off; else tmux set -w -t "$w" pane-border-status top; fi; done'
 
+# Panes have no rename binding of their own, unlike $ for sessions and , for
+# windows. Freeze the title first, otherwise the shell rewrites it every prompt.
+bind P command-prompt -I "#{pane_title}" -p "pane name:" "set -p allow-set-title off ; select-pane -T '%%'"
+bind M-P set -p -u allow-set-title
+
 # Window activity styling (keep colors consistent with theme)
 set -g window-status-activity-style "fg=$CYAN,bg=$BG"
 set -g window-status-bell-style "fg=$YELLOW,bg=$BG"
