@@ -199,6 +199,22 @@ set -g window-status-current-format "#[fg=$PURPLE,bg=$BG]#[fg=$BG,bg=$PURPLE,bol
 set -g pane-border-style "fg=$SURFACE"
 set -g pane-active-border-style "fg=$PURPLE"
 
+# Claude Code writes its session name (/rename, or `claude --name`) into the
+# terminal title, which tmux records as pane_title. Surface it on the border and
+# fall back to the running command for panes that only report a path.
+set -g pane-border-format "#[fg=$SURFACE]#{?pane_active,#[fg=$PURPLE#,bold],}─ #{?#{m:*✳*,#{pane_title}},󰚩 #{s|✳ ||:pane_title},#{pane_current_command}} ─"
+
+# A border row only earns its line once the window is actually split. Both hooks
+# are needed: window-layout-changed still reports the old pane count while a pane
+# is being removed, and window-pane-changed does not fire on a resize.
+PANE_BORDER_TOGGLE='if -F "#{==:#{window_panes},1}" "set -w pane-border-status off" "set -w pane-border-status top"'
+set-hook -g window-layout-changed "$PANE_BORDER_TOGGLE"
+set-hook -g window-pane-changed "$PANE_BORDER_TOGGLE"
+
+# Hooks only fire on later changes, so seed the windows that already exist when
+# this file is sourced. run-shell expands #{...} itself, hence the ## escapes.
+run-shell 'tmux list-windows -a -F "##{session_name}:##{window_index} ##{window_panes}" | while read -r w n; do if [ "$n" = 1 ]; then tmux set -w -t "$w" pane-border-status off; else tmux set -w -t "$w" pane-border-status top; fi; done'
+
 # Window activity styling (keep colors consistent with theme)
 set -g window-status-activity-style "fg=$CYAN,bg=$BG"
 set -g window-status-bell-style "fg=$YELLOW,bg=$BG"
