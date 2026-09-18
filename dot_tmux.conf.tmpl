@@ -165,7 +165,11 @@ set -g status-right "#[fg=$SURFACE,bg=$BG]$LEFT_SEP#[fg=$FG,bg=$SURFACE] #S #[fg
 
 # Allow automatic rename; manually renamed windows (prefix + ,) keep their name
 set -g automatic-rename on
-set -g automatic-rename-format "#{b:pane_current_path}"
+
+# Named after whichever pane currently has focus, so switching panes retrains the
+# window label. Claude Code panes report a session name, everything else only has
+# a path, and worktree directories make poor labels on their own.
+set -g automatic-rename-format "#{?#{m:*✳*,#{pane_title}},#{s|✳ ||:pane_title},#{b:pane_current_path}}"
 
 # Icon lookup based on pane_current_command (claude detected via pane_title ✳ symbol)
 ICON="\
@@ -185,11 +189,11 @@ ICON="\
 #{?#{==:#{pane_current_command},go},,}}}}}}}}}}}}}}"
 
 # Inactive windows
-set -g window-status-format "#[fg=$FG,bg=$BG] #I $ICON #W "
+set -g window-status-format "#[fg=$FG,bg=$BG] #I $ICON #{=/20/…:window_name} "
 set -g window-status-separator ""
 
 # Active window with powerline style
-set -g window-status-current-format "#[fg=$PURPLE,bg=$BG]#[fg=$BG,bg=$PURPLE,bold]$RIGHT_SEP #I $ICON #W #[fg=$PURPLE,bg=$BG]$RIGHT_SEP"
+set -g window-status-current-format "#[fg=$PURPLE,bg=$BG]#[fg=$BG,bg=$PURPLE,bold]$RIGHT_SEP #I $ICON #{=/40/…:window_name} #[fg=$PURPLE,bg=$BG]$RIGHT_SEP"
 
 # Pane borders
 set -g pane-border-style "fg=$SURFACE"
