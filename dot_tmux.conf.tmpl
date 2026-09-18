@@ -166,10 +166,17 @@ set -g status-right "#[fg=$SURFACE,bg=$BG]$LEFT_SEP#[fg=$FG,bg=$SURFACE] #S #[fg
 # Allow automatic rename; manually renamed windows (prefix + ,) keep their name
 set -g automatic-rename on
 
+# Coding agents publish something worth reading as the terminal title, which tmux
+# records as pane_title: Claude Code its session name behind an asterism, Codex
+# the project it was opened on behind a spinner frame. Everything else reports a
+# path at best. AGENT_LABEL drops that leading marker, whichever one it is.
+AGENT_PANE="#{||:#{m:*✳*,#{pane_title}},#{==:#{pane_current_command},codex}}"
+AGENT_LABEL="#{s|^[^A-Za-z0-9] ||:pane_title}"
+
 # Named after whichever pane currently has focus, so switching panes retrains the
-# window label. Claude Code panes report a session name, everything else only has
-# a path, and worktree directories make poor labels on their own.
-set -g automatic-rename-format "#{?#{m:*✳*,#{pane_title}},#{s|✳ ||:pane_title},#{b:pane_current_path}}"
+# window label. Worktree directories make poor labels on their own, so prefer an
+# agent's own name and keep the path as the fallback.
+set -g automatic-rename-format "#{?$AGENT_PANE,$AGENT_LABEL,#{b:pane_current_path}}"
 
 # Icon lookup based on pane_current_command (claude detected via pane_title ✳ symbol)
 ICON="\
@@ -183,7 +190,7 @@ ICON="\
 #{?#{==:#{pane_current_command},yazi},,\
 #{?#{==:#{pane_current_command},htop},󰍛,\
 #{?#{==:#{pane_current_command},btop},󰍛,\
-#{?#{m:*✳*,#{pane_title}},󰚩,\
+#{?$AGENT_PANE,󰚩,\
 #{?#{==:#{pane_current_command},node},,\
 #{?#{==:#{pane_current_command},python},,\
 #{?#{==:#{pane_current_command},go},,}}}}}}}}}}}}}}"
@@ -199,10 +206,9 @@ set -g window-status-current-format "#[fg=$PURPLE,bg=$BG]#[fg=$BG,bg=$PURPLE,bol
 set -g pane-border-style "fg=$SURFACE"
 set -g pane-active-border-style "fg=$PURPLE"
 
-# Claude Code writes its session name (/rename, or `claude --name`) into the
-# terminal title, which tmux records as pane_title. Surface it on the border and
-# fall back to the running command for panes that only report a path.
-set -g pane-border-format "#[fg=$SURFACE]#{?pane_active,#[fg=$PURPLE#,bold],}─ #{?#{m:*✳*,#{pane_title}},󰚩 #{s|✳ ||:pane_title},#{pane_current_command}} ─"
+# Surface the agent's own name on the border, falling back to the running command
+# for panes that report only a path.
+set -g pane-border-format "#[fg=$SURFACE]#{?pane_active,#[fg=$PURPLE#,bold],}─ #{?$AGENT_PANE,󰚩 $AGENT_LABEL,#{pane_current_command}} ─"
 
 # A border row only earns its line once the window is actually split. Both hooks
 # are needed: window-layout-changed still reports the old pane count while a pane
