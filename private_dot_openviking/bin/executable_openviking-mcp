@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# ABOUTME: Stable stdio MCP entrypoint for OpenViking, resolving the newest installed plugin version.
+# ABOUTME: Lets agent runtimes reference one fixed path that survives openviking-memory plugin upgrades.
+set -euo pipefail
+
+CACHE_DIR="${OPENVIKING_PLUGIN_CACHE:-$HOME/.claude/plugins/cache/openviking/openviking-memory}"
+
+if [[ ! -d "$CACHE_DIR" ]]; then
+  echo "openviking-mcp: plugin cache not found at $CACHE_DIR" >&2
+  exit 1
+fi
+
+# Highest semver directory that actually ships the proxy.
+PROXY=""
+while IFS= read -r version_dir; do
+  candidate="$version_dir/servers/mcp-proxy.mjs"
+  if [[ -f "$candidate" ]]; then
+    PROXY="$candidate"
+  fi
+done < <(find "$CACHE_DIR" -mindepth 1 -maxdepth 1 -type d | sort -V)
+
+if [[ -z "$PROXY" ]]; then
+  echo "openviking-mcp: no mcp-proxy.mjs found under $CACHE_DIR" >&2
+  exit 1
+fi
+
+exec node "$PROXY" "$@"

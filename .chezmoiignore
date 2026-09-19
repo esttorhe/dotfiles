@@ -2,19 +2,20 @@ zsh/
 git/
 xresources/
 home_infra.md
+multica.md
 
-{{- if ne .chezmoi.os "linux" -}}
+{{ if ne .chezmoi.os "linux" -}}
 # Only install on Linux
 .config/hypr
 .local/share/omarchy
-{{- end -}}
+{{ end -}}
 
-{{- if eq .chezmoi.os "darwin" -}}
+{{ if eq .chezmoi.os "darwin" -}}
 # macOS uses ~/Library/Application Support/lazygit/
 .config/lazygit
-{{- end -}}
+{{ end -}}
 
-{{- if ne .chezmoi.os "darwin" -}}
+{{ if ne .chezmoi.os "darwin" -}}
 # Linux uses ~/.config/lazygit/
 Library/Application Support/lazygit
-{{- end -}}
+{{ end -}}

@@ -41,7 +41,7 @@ export PATH="/usr/local/opt/sqlite/bin:$PATH"
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
 
 # pnpm
-export PNPM_HOME="/Users/esteban.torres/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -53,7 +53,7 @@ eval "$($HOME/.local/bin/mise activate zsh)"
 eval "$(mise activate zsh --shims)"
 
 # bun completions
-[ -s "/Users/esteban.torres/.bun/_bun" ] && source "/Users/esteban.torres/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -77,7 +77,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 source <(openclaw completion --shell zsh)
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/esteban.torres/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 # End of LM Studio CLI section
 
 

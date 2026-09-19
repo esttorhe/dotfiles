@@ -173,10 +173,14 @@ set -g automatic-rename on
 AGENT_PANE="#{||:#{m:*✳*,#{pane_title}},#{==:#{pane_current_command},codex}}"
 AGENT_LABEL="#{s|^[^A-Za-z0-9] ||:pane_title}"
 
+# A pane pinned with prefix + P holds a hand-picked title, which is worth reading
+# for the same reason an agent's is.
+NAMED_PANE="#{||:#{@pinned},$AGENT_PANE}"
+
 # Named after whichever pane currently has focus, so switching panes retrains the
 # window label. Worktree directories make poor labels on their own, so prefer an
 # agent's own name and keep the path as the fallback.
-set -g automatic-rename-format "#{?$AGENT_PANE,$AGENT_LABEL,#{b:pane_current_path}}"
+set -g automatic-rename-format "#{?$NAMED_PANE,$AGENT_LABEL,#{b:pane_current_path}}"
 
 # Icon lookup based on pane_current_command (claude detected via pane_title ✳ symbol)
 ICON="\
@@ -208,7 +212,7 @@ set -g pane-active-border-style "fg=$PURPLE"
 
 # Surface the agent's own name on the border, falling back to the running command
 # for panes that report only a path.
-set -g pane-border-format "#[fg=$SURFACE]#{?pane_active,#[fg=$PURPLE#,bold],}─ #{?$AGENT_PANE,󰚩 $AGENT_LABEL,#{pane_current_command}} ─"
+set -g pane-border-format "#[fg=$SURFACE]#{?pane_active,#[fg=$PURPLE#,bold],}─ #{?#{@pinned},󰐃 ,}#{?$AGENT_PANE,󰚩 ,}#{?$NAMED_PANE,$AGENT_LABEL,#{pane_current_command}} ─"
 
 # A border row only earns its line once the window is actually split. Both hooks
 # are needed: window-layout-changed still reports the old pane count while a pane
@@ -222,9 +226,12 @@ set-hook -g window-pane-changed "$PANE_BORDER_TOGGLE"
 run-shell 'tmux list-windows -a -F "##{session_name}:##{window_index} ##{window_panes}" | while read -r w n; do if [ "$n" = 1 ]; then tmux set -w -t "$w" pane-border-status off; else tmux set -w -t "$w" pane-border-status top; fi; done'
 
 # Panes have no rename binding of their own, unlike $ for sessions and , for
-# windows. Freeze the title first, otherwise the shell rewrites it every prompt.
-bind P command-prompt -I "#{pane_title}" -p "pane name:" "set -p allow-set-title off ; select-pane -T '%%'"
-bind M-P set -p -u allow-set-title
+# windows. Freezing the title is what makes a chosen name stick, since the shell
+# rewrites it every prompt and an agent rewrites it whenever its session changes.
+# Mark the pane so that freeze is visible on its border and say so on the way in;
+# an unannounced freeze reads as the title silently breaking.
+bind P command-prompt -I "#{pane_title}" -p "pane name:" "set -p allow-set-title off ; set -p @pinned 1 ; select-pane -T '%%' ; display-message 'pane pinned, prefix M-P to release'"
+bind M-P set -p -u allow-set-title \; set -p -u @pinned \; display-message "pane released to automatic titles"
 
 # Window activity styling (keep colors consistent with theme)
 set -g window-status-activity-style "fg=$CYAN,bg=$BG"
