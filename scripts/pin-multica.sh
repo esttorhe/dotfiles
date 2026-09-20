@@ -6,6 +6,10 @@ trap 'echo "Multica pin failed at line $LINENO" >&2' ERR
 export HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
 export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
 script_dir="$(cd "$(dirname "$0")" && pwd)"
+# Bundle removes Homebrew from PATH while evaluating its DSL.
+if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
+  export PATH="$HOMEBREW_PREFIX/bin:$PATH"
+fi
 brew_prefix="$(brew --prefix)"
 cellar="$(brew --cellar)"
 expected="$cellar/multica/0.4.44/bin/multica"
