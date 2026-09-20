@@ -1,0 +1,13 @@
+[Unit]
+Description=Evaluate claudio-box backup freshness every 10 minutes
+
+[Timer]
+# Ten minutes, not the 60s of multica-check.timer. The condition being watched changes at most
+# once a night and the threshold is 36 hours, so 10-minute resolution costs 0.5% of the detection
+# budget while cutting two SSH round-trips per minute down to two per ten minutes.
+OnBootSec=3min
+OnUnitActiveSec=10min
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target

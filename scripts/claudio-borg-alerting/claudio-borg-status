@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+# ABOUTME: Prints the claudio-box Borg backup run and success markers as one JSON object.
+# ABOUTME: Read-only reporter, reached over SSH as a forced command so the caller gets nothing else.
+import datetime as dt
+import json
+import os
+import socket
+import sys
+
+# The markers are root-only (0600 inside a 0700 directory) because the backup job runs as root
+# under UMask=0077. This reporter is the entire reason a remote checker needs privilege at all,
+# so it reads those two files and nothing else. It never touches the backup job, its log or its
+# lock. python3 rather than jq: the backup job already requires python3 on this host, and adding
+# a package to a host to satisfy a monitoring check is a change nobody asked for.
+STATE = os.environ.get('CLAUDIO_BORG_STATE_DIR', '/var/lib/claudio-borg')
+
+# Only these keys ever leave the host. The markers hold nothing secret today, but an allowlist
+# means a future field added to the marker cannot silently start crossing the internet to Telegram.
+ALLOWED = ('schema_version', 'status', 'archive', 'exit_code', 'started_at', 'finished_at')
+
+
+def marker(name):
+    # An absent or unparseable marker is reported as null, not as an error: "the marker is missing"
+    # is a finding the checker must alert on, not a transport failure it should retry.
+    try:
+        with open(os.path.join(STATE, name), 'rb') as stream:
+            loaded = json.loads(stream.read().decode('utf-8'))
+    except (OSError, ValueError, UnicodeDecodeError):
+        return None
+    if not isinstance(loaded, dict):
+        return None
+    return {key: loaded[key] for key in ALLOWED if key in loaded}
+
+
+json.dump({
+    'schema': 1,
+    'host': socket.gethostname().split('.')[0],
+    'now': int(dt.datetime.now(dt.timezone.utc).timestamp()),
+    'last_run': marker('last-run.json'),
+    'last_success': marker('last-success.json'),
+}, sys.stdout, sort_keys=True)
+sys.stdout.write('\n')

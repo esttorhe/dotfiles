@@ -1,0 +1,15 @@
+[Unit]
+Description=Check the claudio-box Borg backup for failure and for silent staleness
+After=network-online.target
+Wants=network-online.target
+# Deliberately not bound to anything on claudio-box: this unit exists to keep reporting
+# when claudio-box is the thing that is unavailable.
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/claudio-backup-check.sh
+# If the checker itself dies, say so. A monitor that fails silently is worse than no monitor,
+# because it converts "no alerts" from evidence into an assumption.
+ExecStopPost=/bin/sh -c 'if [ "$EXIT_STATUS" != "0" ]; then /usr/local/sbin/multica-notify.sh PAGE "claudio-backup-check.service failed with status $EXIT_STATUS on $(hostname -s). The claudio-box backup is no longer being watched."; fi'
+Nice=10
+IOSchedulingClass=idle

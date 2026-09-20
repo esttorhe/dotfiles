@@ -1,0 +1,19 @@
+# Thresholds and rationale: README.md in this directory.
+# Installed at /etc/multica-monitor/claudio-backup.conf on the checking host (garage-multica).
+
+# --- The host being watched. Reached over the tailnet; the key is pinned to a forced command
+# --- on the far end that can only print the two backup markers.
+CLAUDIO_SSH_HOST="esttorhe@100.75.168.99"
+CLAUDIO_SSH_IDENTITY="/root/.ssh/claudio-status-ed25519"
+CLAUDIO_SSH_KNOWN_HOSTS="/root/.ssh/claudio-status-known-hosts"
+
+# --- The durable destination, read directly so this observation survives claudio-box being down.
+# --- Reuses the Storage Box key the control-plane backup check already holds; no new credential.
+REPO_SSH_HOST="u672829@u672829.your-storagebox.de"
+REPO_SSH_PORT=23
+REPO_SSH_IDENTITY="/root/.ssh/multica-backup-ed25519"
+REPO_SSH_KNOWN_HOSTS="/root/.ssh/multica-backup-known-hosts"
+REPO_PATH="./claudio-box/backup"
+
+# One nightly cycle of grace on a 03:00 UTC schedule with 15 minutes of jitter.
+STALE_PAGE_H=36
