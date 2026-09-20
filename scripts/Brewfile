@@ -1,7 +1,12 @@
 tap "hashicorp/tap"
 tap "kreuzwerker/taps"
+tap "multica-ai/tap"
 tap "oven-sh/bun"
 tap "xcodesorg/made"
+# Brewfile has no exact-version constraint for an unversioned formula.
+# Reconcile the exact keg before Bundle can resolve the floating upstream formula.
+system("/bin/bash", File.join(__dir__, "pin-multica.sh")) || abort("Multica 0.4.44 pin failed")
+brew "multica-ai/tap/multica"
 brew "act"
 brew "adns"
 brew "age"
