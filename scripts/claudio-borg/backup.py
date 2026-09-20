@@ -17,7 +17,7 @@ HOME = Path('/home/esttorhe')
 STATE = Path('/var/lib/claudio-borg')
 SNAPSHOT = Path('/run/user/1000/claudio-borg-snapshot')
 REPO = 'ssh://u672829-sub1@u672829.your-storagebox.de:23/./backup'
-SECRET = 'op://wodzrmmziuws4zipwerklmkm5q/t55kltqlep7kx4c7cm2zduczyq/password'
+SECRET = 'op://g62rurfbyx35xbfyvuo5vac6ri/lgwviy5ouzpbncghys6ozyq4ry/password'
 DOLT = str(HOME / '.local/bin/dolt')
 FLOOR = 2 * 1024**3
 
@@ -94,7 +94,16 @@ def backup(passphrase_stdin):
         if passphrase_stdin:
             secret = sys.stdin.readline().rstrip('\r\n')
         else:
-            secret = run(['op', 'read', SECRET], capture=True).rstrip('\r\n')
+            credential_dir = os.environ.get('CREDENTIALS_DIRECTORY')
+            if not credential_dir:
+                raise RuntimeError('Missing systemd credential directory')
+            token = (Path(credential_dir) / 'op-service-account-token').read_text().strip()
+            if not token:
+                raise RuntimeError('1Password service account token is empty')
+            # Only the 1Password subprocess receives the bootstrap token.
+            op_env = dict(os.environ, OP_SERVICE_ACCOUNT_TOKEN=token, OP_CACHE='false')
+            secret = run(['op', 'read', SECRET], env=op_env, capture=True).rstrip('\r\n')
+            del token, op_env
         if not secret:
             raise RuntimeError('Borg passphrase is empty')
         borg_env = dict(os.environ, BORG_PASSPHRASE=secret, BORG_REPO=REPO,

@@ -6,10 +6,9 @@ locking and cleanup. It invokes the installed SQLite, Dolt and Borg clients.
 It runs as root because two OpenViking config files are root-owned mode 0600.
 No source permissions are relaxed.
 
-The systemd timer is **installed but disabled** pending an unattended credential
-decision. A successful supervised run is not proof of a functioning schedule.
-The service currently fails closed because `op` is not installed on claudio-box
-and no unattended 1Password identity has been provisioned there.
+The systemd service uses a read-only 1Password service account scoped to the
+`claudio-borg-automation` vault, which contains only the Borg passphrase.
+Enable the timer only after a real unattended service run succeeds.
 
 Capture contract
 ----------------
@@ -53,11 +52,15 @@ from a foreground `op read` on the operator machine through SSH stdin. No
 passphrase is placed in argv, a script literal or a file. Dolt uses the existing
 `.beads-password` through `DOLT_CLI_PASSWORD`, never through a command argument.
 
-The current Borg item is in Private. [1Password service accounts cannot access
-that vault](https://www.1password.dev/service-accounts/get-started).
-Resolve the credential decision, update the item-ID reference if it moves,
-and prove `systemctl start claudio-borg.service` succeeds without an interactive
-session before enabling `claudio-borg.timer`.
+Vault ID: `g62rurfbyx35xbfyvuo5vac6ri`; item ID: `lgwviy5ouzpbncghys6ozyq4ry`.
+The original Private-vault passphrase remains a recovery copy.
+The bootstrap token recovery item is `znktaaewnphhz4w6tvz7efzfo4` in Private;
+the service account cannot access it. The host stores only the encrypted token
+at `/etc/credstore.encrypted/claudio-borg-op-token`. Systemd decrypts it into
+the service credential directory, and Python passes it only to `op read`.
+The Borg passphrase is fetched at runtime and never saved locally.
+Missing credentials, empty tokens and failed reads fail closed.
+See [1Password service-account permissions](https://www.1password.dev/service-accounts/get-started).
 
 Monitoring contract
 -------------------
@@ -82,7 +85,13 @@ Deployment and validation
 Installed code: `/usr/local/lib/claudio-borg/backup.py`, root-owned.
 Units: `/etc/systemd/system/claudio-borg.{service,timer}`.
 Schedule: 03:00 UTC nightly plus up to 15 minutes jitter, persistent catch-up.
-The timer remains disabled until credential provisioning is verified.
+Install 1Password CLI and provision the encrypted bootstrap token before
+starting the service. The credential must be encrypted with name
+`op-service-account-token`; pass plaintext over SSH stdin to `systemd-creds
+encrypt`, never through argv or a plaintext file. Protect the encrypted file
+with root ownership and mode 0600. Back up the existing script and service
+before installing revisions, reload systemd, then run the service. Verify
+`Result=success`, the last-success marker, and backup log before enabling the timer.
 
 Run the integration checks from a machine with the `claudio-box` SSH alias:
 
@@ -92,10 +101,10 @@ uv run --with pytest python -m pytest -q scripts/claudio-borg/test_live.py
 
 They require a prior successful supervised run. The first test hides the real
 SQLite directory only inside a transient systemd mount namespace. The second
-asserts the current deployment blocker using the actual service. Both require
+runs the installed script in a real transient service without credentials. Both require
 nonzero exits and preservation of the last-success marker. No fake data,
 credential or executable is substituted. Running them records failed attempts;
-the second test should be replaced once credentials are provisioned.
+finish validation with a successful run of `claudio-borg.service`.
 
 Rollback: leave/disable `claudio-borg.timer` with `systemctl disable --now`.
 The source services were never changed. Retain the encrypted repository and
