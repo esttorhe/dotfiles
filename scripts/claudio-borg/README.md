@@ -24,9 +24,12 @@ Capture contract
 * Borg streams `.openclaw`, `.openviking`, the database snapshots and Dolt
   ancillary configuration directly to the stage-1 sub-account repository.
   No gbrain, msgvault or blogwatcher-ui data is included.
-* Every nonzero subprocess exit, including a Borg warning, fails the run.
-  Archives are named `pending-claudio-box-*` until `borg create` succeeds.
-  Failed pending archives are retained for inspection, not reported as success.
+* Borg exit 1 is success with warnings; warning stderr is preserved in the log
+  and the marker's optional `warnings` list (command and message). All other
+  nonzero Borg exits fail; non-Borg commands fail on every nonzero exit.
+  Archives are named `pending-claudio-box-*` until create and snapshot cleanup
+  succeed. Failed runs delete their pending archive if it exists; cleanup errors
+  are logged without replacing the original failure. Renamed archives are retained.
 * Snapshots are removed on ordinary success, failure, SIGINT and SIGTERM.
   SIGKILL/power loss can leave stale state; an existing snapshot directory
   blocks the next run rather than being overwritten. Inspect it before removal.
@@ -73,6 +76,8 @@ Monitoring contract
 * JSON fields: `schema_version` (1), `started_at`, `finished_at` (UTC ISO 8601),
   `status`, `archive`, `exit_code`, `min_root_free_bytes`, and
   `free_space_sample_interval_seconds` (0.25, added on completion).
+  Optional `warnings` and `error` fields preserve Borg warning output and the
+  original failure respectively; the schema remains version 1.
 * A missing marker means no recorded success/attempt. A newer failed attempt
   identifies a failure; an old success with no newer attempt identifies missed
   execution. A stale `running` record requires checking service/process state.
@@ -105,6 +110,16 @@ runs the installed script in a real transient service without credentials. Both 
 nonzero exits and preservation of the last-success marker. No fake data,
 credential or executable is substituted. Running them records failed attempts;
 finish validation with a successful run of `claudio-borg.service`.
+
+`test_borg.py` runs with pytest as root on claudio-box, in a transient systemd
+unit with the same encrypted credential and PATH as the service. It imports the
+adjacent script and exercises real Borg, SQLite and the live Dolt server. Only
+the two small Dolt databases are snapshotted; other datasets and the unencrypted
+test repository are tiny disposable fixtures under `/var/tmp`. Markers and Borg
+cache/security directories are isolated. The fixture removes its repository and
+tmpfs snapshot on teardown. Failure injection occurs only in tests, after real
+commands; the production job has no mock mode. Never point these tests at the
+production repository. Remove the temporary pytest environment after validation.
 
 Rollback: leave/disable `claudio-borg.timer` with `systemctl disable --now`.
 The source services were never changed. Retain the encrypted repository and

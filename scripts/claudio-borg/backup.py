@@ -48,6 +48,20 @@ def sql(database, query, env):
                            'sql', '-r', 'json', '-q', query], env=env, capture=True))['rows']
 
 
+def borg(command, *, env, warnings, capture=False):
+    result = subprocess.run(['borg', *command], env=env, text=True,
+                            stdin=subprocess.DEVNULL, stderr=subprocess.PIPE,
+                            stdout=subprocess.PIPE if capture else None)
+    # Borg logs on stderr even on success. Preserve it in the service log.
+    if result.stderr:
+        print(result.stderr, end='', file=sys.stderr, flush=True)
+    if result.returncode == 1:
+        warnings.append(dict(command=command[0], message=result.stderr.strip()))
+    elif result.returncode != 0:
+        result.check_returncode()
+    return result.stdout if capture else None
+
+
 def require(path, directory=False):
     if not (path.is_dir() if directory else path.is_file()):
         raise RuntimeError(f'Required dataset unavailable: {path}')
@@ -82,6 +96,9 @@ def backup(passphrase_stdin):
     monitor = threading.Thread(target=sample, daemon=True)
     monitor.start()
     owned_snapshot = False
+    pending = None
+    borg_env = None
+    warnings = []
     code = 1
     try:
         space()
@@ -152,23 +169,34 @@ def backup(passphrase_stdin):
                 if path.exists():
                     paths.append(path)
         pending = 'pending-' + archive
-        run(['borg', 'create', '--stats', '--compression', 'lz4', '::' + pending,
-             *map(str, paths)], env=borg_env)
+        borg(['create', '--stats', '--compression', 'lz4', '::' + pending,
+              *map(str, paths)], env=borg_env, warnings=warnings)
         space()
         shutil.rmtree(SNAPSHOT)
         owned_snapshot = False
-        run(['borg', 'rename', '::' + pending, archive], env=borg_env)
-        run(['borg', 'prune', '--list', '--glob-archives', 'claudio-box-*',
-             '--keep-daily', '7', '--keep-weekly', '4', '--keep-monthly', '6'], env=borg_env)
-        run(['borg', 'compact'], env=borg_env)
-        run(['borg', 'list'], env=borg_env)
-        run(['borg', 'info', '::' + archive], env=borg_env)
+        borg(['rename', '::' + pending, archive], env=borg_env, warnings=warnings)
+        pending = None
+        borg(['prune', '--list', '--glob-archives', 'claudio-box-*',
+              '--keep-daily', '7', '--keep-weekly', '4', '--keep-monthly', '6'],
+             env=borg_env, warnings=warnings)
+        borg(['compact'], env=borg_env, warnings=warnings)
+        borg(['list'], env=borg_env, warnings=warnings)
+        borg(['info', '::' + archive], env=borg_env, warnings=warnings)
         space()
         code = 0
     except (Exception, KeyboardInterrupt) as error:
         # Commands never carry secrets in argv. Avoid dumping environment or SQL rows.
+        record['error'] = f'{type(error).__name__}: {error}'
         print(f'{timestamp()} FAILED: {type(error).__name__}: {error}', file=sys.stderr, flush=True)
     finally:
+        if code != 0 and pending is not None and borg_env is not None:
+            try:
+                archives = json.loads(borg(['list', '--json'], env=borg_env,
+                                           warnings=warnings, capture=True))['archives']
+                if any(item['name'] == pending for item in archives):
+                    borg(['delete', '::' + pending], env=borg_env, warnings=warnings)
+            except (Exception, KeyboardInterrupt) as error:
+                print(f'Pending archive cleanup failed: {error}', file=sys.stderr, flush=True)
         if owned_snapshot:
             try:
                 shutil.rmtree(SNAPSHOT)
@@ -180,6 +208,8 @@ def backup(passphrase_stdin):
         record.update(status='success' if code == 0 else 'failed', exit_code=code,
                       finished_at=timestamp(), min_root_free_bytes=minimum[0],
                       free_space_sample_interval_seconds=0.25)
+        if warnings:
+            record['warnings'] = warnings
         write_json(STATE / 'last-run.json', record)
         if code == 0:
             write_json(STATE / 'last-success.json', record)
