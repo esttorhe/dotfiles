@@ -1,0 +1,16 @@
+[Unit]
+Description=Consistent claudio-box Borg backup to membrain
+After=network-online.target user@1000.service
+Wants=network-online.target
+Requires=user@1000.service
+
+[Service]
+Type=oneshot
+User=root
+Environment=HOME=/home/esttorhe
+Environment=PATH=/home/esttorhe/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 /usr/local/lib/claudio-borg/backup.py
+UMask=0077
+TimeoutStartSec=4h
+Nice=10
+IOSchedulingClass=idle
