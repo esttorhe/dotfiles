@@ -35,6 +35,7 @@ gcloud = "578.0.0"
 "github:argoproj/argo-cd" = "latest"
 hunk = "latest"
 "github:namespacelabs/foundation" = { version = "latest", matching = "nsc" }
+bun = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = []
