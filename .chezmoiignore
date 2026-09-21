@@ -2,7 +2,6 @@ zsh/
 git/
 xresources/
 home_infra.md
-multica.md
 
 {{ if ne .chezmoi.os "linux" -}}
 # Only install on Linux
