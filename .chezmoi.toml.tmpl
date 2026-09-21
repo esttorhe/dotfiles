@@ -2,6 +2,7 @@
 {{- $pixeltowersEmail := promptStringOnce . "pixeltowers_email" "Pixeltowers email address" -}}
 {{- $opPersonal := promptStringOnce . "op_account_personal" "1Password personal account sign-in address" -}}
 {{- $opWork := promptStringOnce . "op_account_work" "1Password work account sign-in address" -}}
+{{- $litellm := promptStringOnce . "litellm_base_url" "LiteLLM base URL (with /v1)" -}}
 
 encryption = "age"
 
@@ -10,6 +11,7 @@ encryption = "age"
     pixeltowers_email = {{ $pixeltowersEmail | quote }}
     op_account_personal = {{ $opPersonal | quote }}
     op_account_work = {{ $opWork | quote }}
+    litellm_base_url = {{ $litellm | quote }}
 
 [onepassword]
     prompt = false
