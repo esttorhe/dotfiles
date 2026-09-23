@@ -82,7 +82,8 @@ bundled CLI explicitly. Homebrew 0.4.44 can read this profile's daemon status,
 but the bundled 0.5.1 CLI matches the running 0.5.1 daemon. Check both the profile
 and daemon UUID before changing these settings; there is no default-profile fallback.
 
-The plist runs once at load and every hour in **explicit dry-run mode**. It sets
+The plist runs once at load and every hour in **explicit apply mode**, matching
+Esteban’s approved scheduled-reaping decision. It sets
 HOME, PATH and the working directory rather than relying on shell initialization.
 The audit's final `summary` must have `errors: 0`; launchctl should report last exit
 code 0. stdout and stderr also live in the same log directory. Bootstrap is needed
@@ -91,19 +92,19 @@ If the daemon is stopped or this CLI profile resolves a different daemon, the jo
 logs the failure and exits nonzero without touching Git refs. After a rebuild,
 update the plist's daemon UUID to the one verified by the profile-specific daemon status command above.
 
-Do not enable deletion until Esteban has reviewed a real dry-run report. To make
-a deliberate one-off apply afterward, while the daemon is idle:
+To review a one-off dry-run report without deleting refs:
 
 ```sh
 python3 "$HOME/.local/share/multica-reaper/reaper.py" \
   --profile desktop-garage-multica.tail90165f.ts.net \
   --multica-bin "/Applications/Multica.app/Contents/Resources/app.asar.unpacked/resources/bin/multica" \
-  --daemon-id 01a0b3e7-caf5-74c2-8c1e-39788fb67724 --apply
+  --daemon-id 01a0b3e7-caf5-74c2-8c1e-39788fb67724 --dry-run
 ```
 
-Scheduling apply requires an explicit change of the source plist's `--dry-run`
-argument to `--apply`, followed by applying and reloading the job. Installation
-does not silently switch modes after a report has been generated.
+To switch the schedule back to dry-run, back up the source and installed plists,
+change the source plist's `--apply` argument to `--dry-run`, then apply the plist
+and reload only the reaper using the commands above. Keep the source change so
+a later chezmoi update preserves the selected mode.
 
 ## Stop and rollback
 
