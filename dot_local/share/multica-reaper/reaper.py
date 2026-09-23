@@ -9,12 +9,23 @@ import os
 import re
 import subprocess
 import sys
+import time
 import uuid
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
 STATE_REF = "refs/multica/local-state/"
+DAEMON_MESSAGES = frozenset(
+    (
+        "chore(agent): baseline — the task worktree started here",
+        "chore(agent): baseline — uncommitted work from the local directory",
+        "chore(agent): uncommitted work from the local directory since the previous turn",
+        "chore(agent): uncommitted changes from task",
+    )
+)
+DELETABLE = ("merged", "pushed_equal", "content_equal", "daemon_only")
+BUNDLE_RETENTION_SECONDS = 30 * 24 * 60 * 60
 
 
 def delete_refs(repo, branch, tip, oid):
@@ -180,6 +191,30 @@ def preservation(repo, branch, tip):
     return ("remote_unverified" if errors else "done_unpushed"), default
 
 
+def deletion_reason(repo, branch, tip):
+    reason, default = preservation(repo, branch, tip)
+    if reason != "done_unpushed" or not default:
+        return reason, default
+    try:
+        git(repo, "cat-file", "-e", default + "^{commit}")
+    except Unsafe:
+        return reason, default
+    difference = run(
+        "git", "-C", str(repo), "diff", "--quiet", default + "..." + tip, ok=(0, 1)
+    )
+    if difference.returncode == 0:
+        return "content_equal", default
+    commits = git(repo, "rev-list", default + ".." + tip).splitlines()
+    for commit in commits:
+        parents = git(repo, "show", "-s", "--format=%P", commit).split()
+        message = run(
+            "git", "-C", str(repo), "show", "-s", "--format=%B", commit
+        ).stdout.rstrip()
+        if len(parents) != 1 or message not in DAEMON_MESSAGES:
+            return reason, default
+    return ("daemon_only" if commits else reason), default
+
+
 class Reaper:
     def __init__(self, state, apply=False, profile=None, binary="multica"):
         self.profile = profile
@@ -193,6 +228,8 @@ class Reaper:
                 for key in (
                     "merged",
                     "pushed_equal",
+                    "content_equal",
+                    "daemon_only",
                     "done_unpushed",
                     "remote_unverified",
                     "cancelled",
@@ -217,6 +254,34 @@ class Reaper:
             stream.flush()
             os.fsync(stream.fileno())
         print(line, flush=True)
+
+    def expire_bundles(self):
+        cutoff = time.time() - BUNDLE_RETENTION_SECONDS
+        for bundle in sorted((self.state / "backups").glob("*.bundle")):
+            if bundle.is_symlink() or not bundle.is_file():
+                continue
+            if bundle.stat().st_mtime >= cutoff:
+                continue
+            if self.apply:
+                bundle.unlink()
+            self.log(
+                "bundle_expired" if self.apply else "would_expire",
+                "bundle older than 30 days",
+                bundle=str(bundle),
+            )
+
+    def recheck(self, repo, branch, tip, oid, owner, workspaces, reason):
+        if git(repo, "rev-parse", "--verify", "refs/heads/" + branch) != tip:
+            raise Unsafe("branch tip changed before deletion")
+        if (
+            issue_status(owner, self.profile, self.binary) != "done"
+            or record(repo, branch, tip, workspaces)[0] != oid
+        ):
+            raise Unsafe("owner or issue changed before deletion")
+        current_reason, default = deletion_reason(repo, branch, tip)
+        if current_reason != reason:
+            raise Unsafe("preservation proof changed before deletion")
+        return default
 
     def cli(self, *args):
         return cli(*args, profile=self.profile, binary=self.binary)
@@ -358,8 +423,8 @@ class Reaper:
                 self.counts[reason] += 1
                 self.log("keep", reason, **fields)
                 continue
-            reason, default = preservation(repo, branch, tip)
-            if reason not in ("merged", "pushed_equal"):
+            reason, default = deletion_reason(repo, branch, tip)
+            if reason not in DELETABLE:
                 self.counts[reason] += 1
                 revisions = [tip]
                 if default:
@@ -378,25 +443,27 @@ class Reaper:
                 continue
             self.counts[reason] += 1
             eligible_paths.update(row["worktree"] for row in held)
-            candidates.append((branch, tip, oid, owner, fields))
+            candidates.append((branch, tip, oid, owner, fields, reason))
             self.log("candidate", reason, **fields)
         self.prune(repo, eligible_paths)
-        for branch, tip, oid, owner, fields in candidates:
+        for branch, tip, oid, owner, fields, reason in candidates:
             if not self.apply:
-                self.log("would_delete", "dry-run; no refs changed", **fields)
+                self.log("would_delete", reason, **fields)
                 continue
             if any(
                 row.get("branch") == "refs/heads/" + branch for row in worktrees(repo)
             ):
                 self.log("keep", "worktree registration still exists", **fields)
                 continue
-            if (
-                issue_status(owner, self.profile, self.binary) != "done"
-                or record(repo, branch, tip, workspaces)[0] != oid
-            ):
-                raise Unsafe("owner or issue changed before deletion")
-            if preservation(repo, branch, tip)[0] not in ("merged", "pushed_equal"):
-                raise Unsafe("preservation proof changed before deletion")
+            default = self.recheck(repo, branch, tip, oid, owner, workspaces, reason)
+            details = {}
+            if reason in ("content_equal", "daemon_only"):
+                details = {
+                    "commits": git(
+                        repo, "log", "--format=%h %s", default + ".." + tip
+                    ).splitlines(),
+                    "diff_stat": git(repo, "diff", "--stat", default + "..." + tip),
+                }
             backup = self.state / "backups" / (uuid.uuid4().hex + ".bundle")
             backup.parent.mkdir(exist_ok=True)
             git(
@@ -407,18 +474,22 @@ class Reaper:
                 "refs/heads/" + branch,
                 STATE_REF + branch,
             )
+            git(repo, "bundle", "verify", str(backup))
             self.log(
                 "backup",
-                "restore refs with git fetch bundle ref:ref",
+                reason,
                 bundle=str(backup),
+                **details,
                 **fields,
             )
+            self.recheck(repo, branch, tip, oid, owner, workspaces, reason)
             # Both old OIDs must still match; failure deletes neither ref.
             delete_refs(repo, branch, tip, oid)
             self.log(
                 "deleted",
-                "branch and ownership ref atomically removed",
+                reason,
                 bundle=str(backup),
+                **details,
                 **fields,
             )
         self.log(
@@ -466,6 +537,7 @@ def main():
             binary=args.multica_bin,
         )
         try:
+            reaper.expire_bundles()
             repos = reaper.discover(args.daemon_id)
             for repo, workspaces in repos.items():
                 try:
