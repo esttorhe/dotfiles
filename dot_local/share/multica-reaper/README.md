@@ -2,10 +2,14 @@
 <!-- ABOUTME: Document ownership evidence, dry-run review, launchd installation, and real-system tests. -->
 
 This user-level tool discovers `local_directory` resources in every workspace
-reported by `multica daemon status`, selects this daemon's `worktree` resources,
+reported by `multica --profile <profile> daemon status`, selects this daemon's `worktree` resources,
 and audits their `agent/*` branches. No repository list is stored. Python 3.9+
 and authenticated `multica` and `git` CLIs must be available without a shell
-startup file. It never changes daemon configuration or visits the `.repos` cache.
+startup file. The required `--profile` is forwarded on every CLI call, including
+issue status rechecks. `--multica-bin` selects the executable independently of PATH.
+Explicit profile calls run from HOME with inherited `MULTICA_*` overrides removed,
+so a managed task's environment or working directory cannot redirect the profile.
+It never changes daemon configuration or visits the `.repos` cache.
 
 ## Safety contract
 
@@ -57,11 +61,26 @@ After merging, apply only these targets from chezmoi (review `chezmoi diff` firs
 mkdir -p "$HOME/Library/Logs/multica-reaper"
 chezmoi apply "$HOME/.local/share/multica-reaper" \
   "$HOME/Library/LaunchAgents/com.esttorhe.multica-reaper.plist"
+"/Applications/Multica.app/Contents/Resources/app.asar.unpacked/resources/bin/multica" \
+  --profile desktop-garage-multica.tail90165f.ts.net daemon status --output json
 plutil -lint "$HOME/Library/LaunchAgents/com.esttorhe.multica-reaper.plist"
 launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.esttorhe.multica-reaper.plist"
 launchctl print "gui/$(id -u)/com.esttorhe.multica-reaper"
 tail -n 30 "$HOME/Library/Logs/multica-reaper/audit.jsonl"
 ```
+
+For an already loaded job, reload only the reaper after applying its files:
+
+```sh
+launchctl bootout "gui/$(id -u)/com.esttorhe.multica-reaper"
+launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.esttorhe.multica-reaper.plist"
+launchctl kickstart "gui/$(id -u)/com.esttorhe.multica-reaper"
+```
+
+The plist selects `desktop-garage-multica.tail90165f.ts.net` and the Desktop app's
+bundled CLI explicitly. Homebrew 0.4.44 can read this profile's daemon status,
+but the bundled 0.5.1 CLI matches the running 0.5.1 daemon. Check both the profile
+and daemon UUID before changing these settings; there is no default-profile fallback.
 
 The plist runs once at load and every hour in **explicit dry-run mode**. It sets
 HOME, PATH and the working directory rather than relying on shell initialization.
@@ -70,13 +89,15 @@ code 0. stdout and stderr also live in the same log directory. Bootstrap is need
 once per login domain; inspect an already loaded job instead of loading it twice.
 If the daemon is stopped or this CLI profile resolves a different daemon, the job
 logs the failure and exits nonzero without touching Git refs. After a rebuild,
-update the plist's daemon UUID to the one verified by `multica daemon status`.
+update the plist's daemon UUID to the one verified by the profile-specific daemon status command above.
 
 Do not enable deletion until Esteban has reviewed a real dry-run report. To make
 a deliberate one-off apply afterward, while the daemon is idle:
 
 ```sh
 python3 "$HOME/.local/share/multica-reaper/reaper.py" \
+  --profile desktop-garage-multica.tail90165f.ts.net \
+  --multica-bin "/Applications/Multica.app/Contents/Resources/app.asar.unpacked/resources/bin/multica" \
   --daemon-id 01a0b3e7-caf5-74c2-8c1e-39788fb67724 --apply
 ```
 
@@ -90,11 +111,14 @@ does not silently switch modes after a report has been generated.
 launchctl bootout "gui/$(id -u)/com.esttorhe.multica-reaper"
 ```
 
-This stops only this job; it does not stop either Multica daemon. Remove the
+The launchd label is independent of the selected CLI profile. This stops only this job; it does not stop either Multica daemon. Remove the
 reaper's plist after stopping if it must not start at next login. The deployment
 adds the reaper directory, its plist and its log directory; it overwrites no
 existing user files on first installation. Back up these targets before any
-subsequent replacement. To undo a deletion, use the bundle and branch named in
+subsequent replacement. To roll back a profile or binary change, boot out only
+the reaper, restore its backed-up files and plist, then bootstrap that plist.
+Do not stop or reconfigure the Desktop daemon to roll back the reaper.
+To undo a deletion, use the bundle and branch named in
 the audit (do not force over an existing branch):
 
 ```sh

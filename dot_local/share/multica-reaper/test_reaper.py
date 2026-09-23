@@ -214,6 +214,8 @@ def test_wrong_daemon_fails_closed(tmp_path):
     result = reaper.run(
         "python3",
         str(Path(reaper.__file__)),
+        "--profile",
+        "desktop-garage-multica.tail90165f.ts.net",
         "--daemon-id",
         str(uuid.uuid4()),
         "--state-dir",
@@ -249,3 +251,30 @@ def test_apply_twice_is_idempotent(repo, owners, tmp_path, capsys):
     assert before == reaper.git(repo, "show-ref")
     assert len(list((worker.state / "backups").glob("*.bundle"))) == 1
     assert capsys.readouterr().err == ""
+
+
+def test_explicit_profile_reads_live_daemon_resources_and_issue(
+    tmp_path, owners, capsys
+):
+    profile = "desktop-garage-multica.tail90165f.ts.net"
+    binary = "/Applications/Multica.app/Contents/Resources/app.asar.unpacked/resources/bin/multica"
+    worker = reaper.Reaper(tmp_path / "audit", profile=profile, binary=binary)
+    status = worker.cli("daemon", "status")
+    assert status["profile"] == profile
+    assert status["status"] == "running"
+    assert worker.discover(status["daemon_id"])
+    assert reaper.issue_status(owners["done"], profile, binary) == "done"
+    assert capsys.readouterr().err == ""
+
+
+def test_stopped_profile_fails_closed(tmp_path):
+    status = reaper.cli("daemon", "status", profile="desktop-localhost-8080")
+    assert status["status"] != "running", (
+        "This check requires the stopped localhost daemon"
+    )
+    worker = reaper.Reaper(
+        tmp_path / "audit", apply=True, profile="desktop-localhost-8080"
+    )
+    with pytest.raises(reaper.Unsafe, match="configured daemon is not running"):
+        worker.discover("01a0b3e7-caf5-74c2-8c1e-39788fb67724")
+    assert not (worker.state / "backups").exists()
