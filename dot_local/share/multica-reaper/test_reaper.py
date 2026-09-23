@@ -3,6 +3,7 @@
 import json
 import os
 import shutil
+import time
 import uuid
 from pathlib import Path
 
@@ -39,6 +40,9 @@ def repo(tmp_path):
 def create_branch(repo, owner, state="merged", name="agent/test/unrelated-name"):
     base = reaper.git(repo, "rev-parse", "main")
     tree = reaper.git(repo, "rev-parse", "main^{tree}")
+    if state != "merged":
+        blob = reaper.git(repo, "hash-object", "-w", "--stdin", data="valuable work")
+        tree = reaper.git(repo, "mktree", data=f"100644 blob {blob}\twork.txt\n")
     tip = (
         base
         if state == "merged"
@@ -278,3 +282,258 @@ def test_stopped_profile_fails_closed(tmp_path):
     with pytest.raises(reaper.Unsafe, match="configured daemon is not running"):
         worker.discover("01a0b3e7-caf5-74c2-8c1e-39788fb67724")
     assert not (worker.state / "backups").exists()
+
+
+DAEMON_MESSAGES = (
+    "chore(agent): baseline — the task worktree started here",
+    "chore(agent): baseline — uncommitted work from the local directory",
+    "chore(agent): uncommitted work from the local directory since the previous turn",
+    "chore(agent): uncommitted changes from task",
+)
+
+
+def append_commit(repo, branch, message, content=None, extra_parent=None):
+    parent = reaper.git(repo, "rev-parse", branch)
+    tree = reaper.git(repo, "rev-parse", parent + "^{tree}")
+    if content is not None:
+        if content:
+            blob = reaper.git(repo, "hash-object", "-w", "--stdin", data=content)
+            tree = reaper.git(repo, "mktree", data=f"100644 blob {blob}\twork.txt\n")
+        else:
+            tree = reaper.git(repo, "rev-parse", "main^{tree}")
+    parents = ["-p", parent]
+    if extra_parent:
+        parents.extend(("-p", extra_parent))
+    tip = reaper.git(repo, "commit-tree", tree, *parents, "-m", message)
+    reaper.git(repo, "update-ref", "refs/heads/" + branch, tip)
+    return tip
+
+
+@pytest.mark.parametrize(
+    "messages,contents,status,reason",
+    [
+        ([DAEMON_MESSAGES[0]], [None], "done", "content_equal"),
+        (
+            [DAEMON_MESSAGES[0], DAEMON_MESSAGES[3]],
+            [None, "leftovers"],
+            "done",
+            "daemon_only",
+        ),
+        (
+            [DAEMON_MESSAGES[1], DAEMON_MESSAGES[2]],
+            ["snapshot", "later"],
+            "done",
+            "daemon_only",
+        ),
+        (
+            [DAEMON_MESSAGES[0], "feat: useful work"],
+            [None, "work"],
+            "done",
+            "done_unpushed",
+        ),
+        ([DAEMON_MESSAGES[3] + " extra"], ["work"], "done", "done_unpushed"),
+        ([DAEMON_MESSAGES[3] + "\n\nextra body"], ["work"], "done", "done_unpushed"),
+        ([" " + DAEMON_MESSAGES[3]], ["work"], "done", "done_unpushed"),
+        (["feat: change", "revert change"], ["work", ""], "done", "content_equal"),
+        ([DAEMON_MESSAGES[0]], [None], "in_progress", "not_done"),
+        ([DAEMON_MESSAGES[0]], [None], "cancelled", "cancelled"),
+    ],
+)
+@pytest.mark.parametrize("apply", [False, True])
+def test_completed_content_rules(
+    repo, owners, tmp_path, capsys, messages, contents, status, reason, apply
+):
+    owner = owners[status]
+    branch, _, oid = create_branch(repo, owner)
+    for message, content in zip(messages, contents):
+        tip = append_commit(repo, branch, message, content)
+    before = reaper.git(repo, "show-ref")
+    worker = reaper.Reaper(tmp_path / "audit", apply=apply)
+    worker.repository(repo, {owner[0]})
+    eligible = reason in ("content_equal", "daemon_only")
+    assert exists(repo, branch) is not (apply and eligible)
+    assert worker.counts[reason] == 1
+    if eligible:
+        assert worker.counts["done_unpushed"] == 0
+        event = next(
+            row
+            for row in audit(worker)
+            if row["action"] == ("deleted" if apply else "would_delete")
+        )
+        assert event["reason"] == reason
+        if apply:
+            bundle = event["bundle"]
+            reaper.git(repo, "bundle", "verify", bundle)
+            for action in ("backup", "deleted"):
+                row = next(row for row in audit(worker) if row["action"] == action)
+                assert row["bundle"] == bundle
+                assert len(row["commits"]) == len(messages)
+                assert bool(row["diff_stat"]) is (reason == "daemon_only")
+            reaper.git(
+                repo,
+                "fetch",
+                bundle,
+                f"refs/heads/{branch}:refs/heads/{branch}",
+                f"{reaper.STATE_REF}{branch}:{reaper.STATE_REF}{branch}",
+            )
+            assert reaper.git(repo, "rev-parse", branch) == tip
+            assert reaper.git(repo, "rev-parse", reaper.STATE_REF + branch) == oid
+    if not apply:
+        assert before == reaper.git(repo, "show-ref")
+        assert not (worker.state / "backups").exists()
+    if reason == "done_unpushed":
+        assert any(row["action"] == "KEEP_UNIQUE_WORK" for row in audit(worker))
+    assert capsys.readouterr().err == ""
+
+
+def test_daemon_message_merge_kept(repo, owners, tmp_path, capsys):
+    owner = owners["done"]
+    branch, _, _ = create_branch(repo, owner)
+    append_commit(repo, branch, DAEMON_MESSAGES[0])
+    side = reaper.git(
+        repo,
+        "commit-tree",
+        "main^{tree}",
+        "-p",
+        "main",
+        "-m",
+        DAEMON_MESSAGES[1],
+    )
+    append_commit(repo, branch, DAEMON_MESSAGES[3], "merged work", side)
+    worker = reaper.Reaper(tmp_path / "audit", apply=True)
+    worker.repository(repo, {owner[0]})
+    assert exists(repo, branch)
+    assert worker.counts["done_unpushed"] == 1
+    assert capsys.readouterr().err == ""
+
+
+@pytest.mark.parametrize("failure", ["unreachable", "no_default", "missing_object"])
+def test_daemon_work_needs_verified_default(repo, owners, tmp_path, capsys, failure):
+    owner = owners["done"]
+    branch, _, _ = create_branch(repo, owner)
+    append_commit(repo, branch, DAEMON_MESSAGES[3], "leftovers")
+    remote = repo.parent / "remote.git"
+    reason = "remote_unverified"
+    if failure == "unreachable":
+        reaper.git(repo, "remote", "set-url", "origin", str(tmp_path / "absent.git"))
+    elif failure == "no_default":
+        reaper.git(remote, "symbolic-ref", "HEAD", "refs/heads/absent")
+        reason = "done_unpushed"
+    else:
+        tip = reaper.git(
+            remote,
+            "commit-tree",
+            "main^{tree}",
+            "-p",
+            "main",
+            "-m",
+            "remote advancement",
+        )
+        reaper.git(remote, "update-ref", "refs/heads/main", tip)
+    worker = reaper.Reaper(tmp_path / "audit", apply=True)
+    worker.repository(repo, {owner[0]})
+    assert exists(repo, branch)
+    assert worker.counts[reason] == 1
+    assert capsys.readouterr().err == ""
+
+
+def test_content_equal_uses_merge_base(repo, owners, tmp_path, capsys):
+    owner = owners["done"]
+    branch, _, _ = create_branch(repo, owner)
+    append_commit(repo, branch, DAEMON_MESSAGES[0])
+    append_commit(repo, "main", "default advanced", "default content")
+    reaper.git(repo, "push", "origin", "main")
+    worker = reaper.Reaper(tmp_path / "audit", apply=True)
+    worker.repository(repo, {owner[0]})
+    assert not exists(repo, branch)
+    assert worker.counts["content_equal"] == 1
+    assert capsys.readouterr().err == ""
+
+
+@pytest.mark.parametrize("reason", ["content_equal", "daemon_only"])
+@pytest.mark.parametrize("stage", ["scan", "backup"])
+def test_tip_moves_after_scan(repo, owners, tmp_path, capsys, reason, stage):
+    owner = owners["done"]
+    branch, _, oid = create_branch(repo, owner)
+    append_commit(
+        repo,
+        branch,
+        DAEMON_MESSAGES[3],
+        None if reason == "content_equal" else "leftovers",
+    )
+
+    class MovingReaper(reaper.Reaper):
+        def prune(self, repo, eligible):
+            super().prune(repo, eligible)
+            if stage == "scan":
+                append_commit(repo, branch, "feat: concurrent work", "keep me")
+
+        def log(self, action, reason, **fields):
+            super().log(action, reason, **fields)
+            if stage == "backup" and action == "backup":
+                append_commit(repo, branch, "feat: concurrent work", "keep me")
+
+    worker = MovingReaper(tmp_path / "audit", apply=True)
+    with pytest.raises(reaper.Unsafe, match="branch tip changed"):
+        worker.repository(repo, {owner[0]})
+    assert exists(repo, branch)
+    assert reaper.git(repo, "rev-parse", reaper.STATE_REF + branch) == oid
+    assert (worker.state / "backups").exists() is (stage == "backup")
+    assert capsys.readouterr().err == ""
+
+
+@pytest.mark.parametrize("apply", [False, True])
+def test_bundle_retention(repo, owners, tmp_path, capsys, apply):
+    owner = owners["done"]
+    branch, _, _ = create_branch(repo, owner)
+    worker = reaper.Reaper(tmp_path / "audit", apply=apply)
+    backups = worker.state / "backups"
+    backups.mkdir()
+    old, recent = backups / "old.bundle", backups / "recent.bundle"
+    for bundle in (old, recent):
+        reaper.git(
+            repo,
+            "bundle",
+            "create",
+            str(bundle),
+            "refs/heads/" + branch,
+            reaper.STATE_REF + branch,
+        )
+    ancient = time.time() - 31 * 24 * 60 * 60
+    os.utime(old, (ancient, ancient))
+    other = backups / "keep.txt"
+    other.write_text("audit context")
+    os.utime(other, (ancient, ancient))
+    worker.expire_bundles()
+    assert old.exists() is not apply
+    assert recent.exists()
+    assert other.exists()
+    assert audit(worker)[0]["action"] == ("bundle_expired" if apply else "would_expire")
+    assert audit(worker)[0]["bundle"] == str(old)
+    assert capsys.readouterr().err == ""
+
+
+@pytest.mark.parametrize("reason", ["content_equal", "daemon_only"])
+def test_default_proof_changes_after_scan(repo, owners, tmp_path, capsys, reason):
+    owner = owners["done"]
+    branch, _, oid = create_branch(repo, owner)
+    append_commit(
+        repo,
+        branch,
+        DAEMON_MESSAGES[3],
+        None if reason == "content_equal" else "leftovers",
+    )
+
+    class ChangingRemoteReaper(reaper.Reaper):
+        def prune(self, repo, eligible):
+            super().prune(repo, eligible)
+            reaper.git(
+                repo.parent / "remote.git", "symbolic-ref", "HEAD", "refs/heads/absent"
+            )
+
+    worker = ChangingRemoteReaper(tmp_path / "audit", apply=True)
+    with pytest.raises(reaper.Unsafe, match="preservation proof changed"):
+        worker.repository(repo, {owner[0]})
+    assert exists(repo, branch)
+    assert reaper.git(repo, "rev-parse", reaper.STATE_REF + branch) == oid
+    assert capsys.readouterr().err == ""

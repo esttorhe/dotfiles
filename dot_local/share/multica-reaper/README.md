@@ -23,19 +23,40 @@ supply an issue ID.
 
 Only exact `status: done` qualifies, read through `multica issue get` in the
 record's workspace. `cancelled` is counted separately and always retained.
-Deletion additionally requires ancestry in the live `origin` default tip, or
-an exact live remote tip match for the configured upstream or same-named branch.
+Deletion first checks ancestry in the live `origin` default tip, then an exact
+live remote tip match for the configured upstream or same-named branch.
 Remote-tracking refs alone are insufficient. No fetch occurs, including during
-dry runs. If the live default commit is unavailable locally or the remote cannot
-be verified, retention is the safe outcome. Local-only merges not present in the
-live remote default are retained unless the branch itself is pushed.
+dry runs.
 
-`done_unpushed` has its own count and commit subjects; `remote_unverified` is
-reported separately. A missing default object causes the log to include the full
-branch history because a unique range cannot be proven. Every branch receives an
-action or skip reason. Audit output is append-only JSON Lines, with UTC timestamps,
-in `~/Library/Logs/multica-reaper/audit.jsonl`. Logs and recovery bundles are kept
-until explicitly archived by the owner; no automatic retention deletion runs.
+Only a `done_unpushed` result is eligible for these additional rules, in order:
+
+1. `content_equal`: `git diff --quiet <default>...<tip>` reports no changes.
+   This compares the merge-base to the branch tip, including agent changes that
+   net to zero. It does not compare the two tip trees.
+2. `daemon_only`: every commit in `<default>..<tip>` has exactly one parent and
+   its full message, with trailing whitespace stripped, exactly matches one of:
+   - `chore(agent): baseline — the task worktree started here`
+   - `chore(agent): baseline — uncommitted work from the local directory`
+   - `chore(agent): uncommitted work from the local directory since the previous turn`
+   - `chore(agent): uncommitted changes from task`
+
+Author identity is irrelevant. Additional text, a message body, or a merge commit
+disqualifies Rule 2. Rule 1 takes precedence. Both require the live remote default
+OID to exist locally; neither applies to `remote_unverified`. A branch containing
+other unique work remains `KEEP_UNIQUE_WORK`.
+
+`content_equal` and `daemon_only` have separate summary counts; they are not also
+counted as `done_unpushed`. Retained `done_unpushed` branches log commit subjects;
+`remote_unverified` is reported separately. A missing default object causes the
+log to include the full branch history because a unique range cannot be proven.
+Every branch receives an action or skip reason. Audit output is append-only JSON
+Lines, with UTC timestamps, in `~/Library/Logs/multica-reaper/audit.jsonl`.
+
+On every run, recovery `backups/*.bundle` files older than 30 days by mtime expire,
+regardless of deletion reason. Apply logs each removal as `bundle_expired`;
+dry-run logs `would_expire` and removes nothing. Audit logs do not expire.
+After expiry, content unique to a daemon-only bundle is no longer recoverable
+from that bundle, including snapshots of the owner's uncommitted work.
 
 Existing directories and locked worktrees are retained, even when clean.
 `git worktree prune --dry-run --verbose --expire=now` runs per repo. Real pruning
@@ -45,7 +66,12 @@ candidate prevents that repo's entire pruning pass; branches still registered
 after pruning are retained. No worktree directory is deleted.
 
 Before applying a deletion, status, ownership, and preservation are rechecked.
-A recovery bundle preserves both refs and their reachable history. Branch and
+Both additional rules are re-evaluated against the current tip before deletion;
+a moved tip aborts. A recovery bundle in `backups/` preserves both refs and their
+reachable history and must pass `git bundle verify` before deletion. Verification
+failure keeps the branch and produces an error. For the additional rules,
+`backup` and `deleted` entries include the bundle path, unique commit subjects,
+and `git diff --stat <default>...<tip>`. Branch and
 ownership refs are deleted together in a Git transaction guarded by their exact
 old OIDs; concurrent tip changes abort deletion. A file lock prevents overlapping
 reaper runs. Git does not provide a transaction spanning Multica status, remote
@@ -54,6 +80,11 @@ apply should run while the daemon is idle; existing directories are never remove
 and bundles provide recovery even if an issue is reopened during that window.
 
 ## Install and check on macOS
+
+For this update to an already installed hourly job, run `chezmoi update` after
+merging. Confirm the next hourly run's `audit.jsonl` contains `content_equal`
+or `daemon_only` reasons when eligible branches exist, and `errors: 0` in its
+summary.
 
 After merging, apply only these targets from chezmoi (review `chezmoi diff` first):
 
@@ -120,7 +151,7 @@ subsequent replacement. To roll back a profile or binary change, boot out only
 the reaper, restore its backed-up files and plist, then bootstrap that plist.
 Do not stop or reconfigure the Desktop daemon to roll back the reaper.
 To undo a deletion, use the bundle and branch named in
-the audit (do not force over an existing branch):
+the audit before its 30-day expiry (do not force over an existing branch):
 
 ```sh
 git -C /path/to/repo fetch /path/from/audit.bundle \
