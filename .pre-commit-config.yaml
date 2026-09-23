@@ -1,0 +1,12 @@
+# ABOUTME: Validate the local reaper's Python code before commits.
+# ABOUTME: Use pinned lint and formatting checks without changing unrelated dotfiles.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.8
+    hooks:
+      - id: ruff-check
+        args: [--isolated]
+        files: ^dot_local/share/multica-reaper/.*\.py$
+      - id: ruff-format
+        args: [--isolated]
+        files: ^dot_local/share/multica-reaper/.*\.py$

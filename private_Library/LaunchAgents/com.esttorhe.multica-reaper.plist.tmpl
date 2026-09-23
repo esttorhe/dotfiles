@@ -1,0 +1,28 @@
+<!-- ABOUTME: Schedule a read-only audit of completed Multica local task branches. -->
+<!-- ABOUTME: Use explicit paths and durable logs without an interactive shell. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key><string>com.esttorhe.multica-reaper</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/env</string>
+        <string>python3</string>
+        <string>{{ .chezmoi.homeDir }}/.local/share/multica-reaper/reaper.py</string>
+        <string>--daemon-id</string>
+        <string>01a0b3e7-caf5-74c2-8c1e-39788fb67724</string>
+        <string>--dry-run</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key><string>{{ .chezmoi.homeDir }}</string>
+        <key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+    <key>WorkingDirectory</key><string>{{ .chezmoi.homeDir }}</string>
+    <key>RunAtLoad</key><true/>
+    <key>StartInterval</key><integer>3600</integer>
+    <key>ProcessType</key><string>Background</string>
+    <key>StandardOutPath</key><string>{{ .chezmoi.homeDir }}/Library/Logs/multica-reaper/launchd.stdout.log</string>
+    <key>StandardErrorPath</key><string>{{ .chezmoi.homeDir }}/Library/Logs/multica-reaper/launchd.stderr.log</string>
+</dict>
+</plist>

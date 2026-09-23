@@ -1,3 +1,9 @@
+# ABOUTME: Keep repository tooling and platform-specific files out of home-directory deployment.
+# ABOUTME: Select user configuration targets appropriate to the current operating system.
+.pre-commit-config.yaml
+.local/share/multica-reaper/test_reaper.py
+.local/share/multica-reaper/__pycache__/
+.local/share/multica-reaper/.pytest_cache/
 zsh/
 git/
 xresources/
@@ -17,4 +23,5 @@ home_infra.md
 {{ if ne .chezmoi.os "darwin" -}}
 # Linux uses ~/.config/lazygit/
 Library/Application Support/lazygit
+Library/LaunchAgents/com.esttorhe.multica-reaper.plist
 {{ end -}}
