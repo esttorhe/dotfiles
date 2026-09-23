@@ -29,8 +29,10 @@ class Unsafe(RuntimeError):
     pass
 
 
-def run(*args, cwd=None, data=None, ok=(0,)):
+def run(*args, cwd=None, data=None, ok=(0,), profile_env=False):
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    if profile_env:
+        env = {k: v for k, v in env.items() if not k.startswith("MULTICA_")}
     env.update(LC_ALL="C", GIT_TERMINAL_PROMPT="0", GIT_NO_REPLACE_OBJECTS="1")
     try:
         result = subprocess.run(
@@ -55,13 +57,32 @@ def git(repo, *args, **kwargs):
     return run("git", "-C", str(repo), *args, **kwargs).stdout.strip()
 
 
-def cli(*args):
-    return json.loads(run("multica", *args, "--output", "json").stdout)
+def cli(*args, profile=None, binary="multica"):
+    options = ("--profile", profile) if profile else ()
+    return json.loads(
+        run(
+            binary,
+            *options,
+            *args,
+            "--output",
+            "json",
+            cwd=Path.home() if profile else None,
+            profile_env=bool(profile),
+        ).stdout
+    )
 
 
-def issue_status(owner):
+def issue_status(owner, profile=None, binary="multica"):
     workspace, _, issue = owner
-    value = cli("--workspace-id", workspace, "issue", "get", issue)
+    value = cli(
+        "--workspace-id",
+        workspace,
+        "issue",
+        "get",
+        issue,
+        profile=profile,
+        binary=binary,
+    )
     if value.get("id") != issue or value.get("workspace_id") != workspace:
         raise Unsafe("issue identity mismatch")
     return value["status"]
@@ -160,7 +181,9 @@ def preservation(repo, branch, tip):
 
 
 class Reaper:
-    def __init__(self, state, apply=False):
+    def __init__(self, state, apply=False, profile=None, binary="multica"):
+        self.profile = profile
+        self.binary = binary
         self.state = Path(state)
         self.state.mkdir(parents=True, exist_ok=True)
         self.apply = apply
@@ -195,18 +218,21 @@ class Reaper:
             os.fsync(stream.fileno())
         print(line, flush=True)
 
+    def cli(self, *args):
+        return cli(*args, profile=self.profile, binary=self.binary)
+
     def discover(self, daemon_id):
-        status = cli("daemon", "status")
+        status = self.cli("daemon", "status")
         if status.get("daemon_id") != daemon_id or status.get("status") != "running":
             raise Unsafe("configured daemon is not running in this CLI profile")
         repos = {}
         for workspace in status["workspaces"]:
             wid = workspace["id"]
-            projects = cli("--workspace-id", wid, "project", "list")
+            projects = self.cli("--workspace-id", wid, "project", "list")
             if not isinstance(projects, list):
                 raise Unsafe("unexpected project list shape")
             for project in projects:
-                resources = cli(
+                resources = self.cli(
                     "--workspace-id", wid, "project", "resource", "list", project["id"]
                 )
                 for resource in resources:
@@ -321,7 +347,7 @@ class Reaper:
                 if len(parts) != 2:
                     raise Unsafe("symbolic branch ref")
                 oid, owner = record(repo, branch, tip, workspaces)
-                status = issue_status(owner)
+                status = issue_status(owner, self.profile, self.binary)
             except (Unsafe, ValueError, KeyError) as exc:
                 self.counts["unresolvable"] += 1
                 self.log("keep", "unresolvable", detail=str(exc), **fields)
@@ -365,7 +391,7 @@ class Reaper:
                 self.log("keep", "worktree registration still exists", **fields)
                 continue
             if (
-                issue_status(owner) != "done"
+                issue_status(owner, self.profile, self.binary) != "done"
                 or record(repo, branch, tip, workspaces)[0] != oid
             ):
                 raise Unsafe("owner or issue changed before deletion")
@@ -406,6 +432,12 @@ class Reaper:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--daemon-id", required=True)
+    parser.add_argument(
+        "--profile", required=True, help="Multica configuration profile"
+    )
+    parser.add_argument(
+        "--multica-bin", default="multica", help="Multica CLI executable"
+    )
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument(
         "--apply",
@@ -420,14 +452,19 @@ def main():
     )
     args = parser.parse_args()
     os.umask(0o077)
-    reaper = Reaper(args.state_dir, args.apply)
+    reaper = Reaper(args.state_dir, args.apply, args.profile, args.multica_bin)
     with (reaper.state / "run.lock").open("a") as lock:
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             reaper.log("skip_run", "another reaper holds the lock")
             return 0
-        reaper.log("start", "apply" if args.apply else "dry-run")
+        reaper.log(
+            "start",
+            "apply" if args.apply else "dry-run",
+            profile=args.profile,
+            binary=args.multica_bin,
+        )
         try:
             repos = reaper.discover(args.daemon_id)
             for repo, workspaces in repos.items():
