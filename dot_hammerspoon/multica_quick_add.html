@@ -1,0 +1,290 @@
+<!doctype html>
+<!-- ABOUTME: Form rendered inside the Hammerspoon Multica quick-add panel, styled with Multica's design tokens. -->
+<!-- ABOUTME: Posts ready/submit/cancel/workspaceChanged messages to Lua via the "multica" webkit message handler. -->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+	/* Tokens copied from the Multica desktop app's theme (:root and .dark). */
+	:root {
+		--surface: oklch(100% 0 0);
+		--foreground: oklch(14.1% .005 285.823);
+		--muted: oklch(96.7% .001 286.375);
+		--muted-foreground: oklch(50.5% .016 285.938);
+		--accent: oklch(96.7% .001 286.375);
+		--border: oklch(94.5% .003 286.32);
+		--input: oklch(92% .004 286.32);
+		--primary: oklch(21% .006 285.885);
+		--primary-foreground: oklch(98.5% 0 0);
+		--destructive: oklch(57.7% .245 27.325);
+		--radius: .5rem;
+		--font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+	}
+	:root.dark {
+		--surface: oklch(21% .006 285.885);
+		--foreground: oklch(98.5% 0 0);
+		--muted: oklch(27.4% .006 286.033);
+		--muted-foreground: oklch(70.5% .015 286.067);
+		--accent: oklch(27.4% .006 286.033);
+		--border: oklch(100% 0 0 / .1);
+		--input: oklch(100% 0 0 / .15);
+		--primary: oklch(92% .004 286.32);
+		--primary-foreground: oklch(21% .006 285.885);
+		--destructive: oklch(70.4% .191 22.216);
+	}
+	* { box-sizing: border-box; }
+	html, body {
+		margin: 0;
+		height: 100%;
+		background: transparent;
+		overflow: hidden;
+	}
+	body {
+		padding: 1px;
+		color: var(--foreground);
+		font: 14px/1.4 var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		-webkit-user-select: none;
+		user-select: none;
+	}
+	input, textarea { -webkit-user-select: text; user-select: text; }
+	.card {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: calc(var(--radius) * 1.5);
+		overflow: hidden;
+	}
+	header {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 12px 16px 0;
+		font-size: 12px;
+		color: var(--muted-foreground);
+	}
+	main {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		padding: 8px 16px 0;
+		min-height: 0;
+	}
+	input, textarea {
+		width: 100%;
+		border: 0;
+		outline: none;
+		background: transparent;
+		color: var(--foreground);
+		font-family: inherit;
+		padding: 0;
+	}
+	input::placeholder, textarea::placeholder { color: var(--muted-foreground); }
+	#title { font-size: 18px; font-weight: 600; padding: 4px 0; }
+	#description { flex: 1; resize: none; font-size: 14px; margin-top: 6px; }
+	.properties {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		padding: 10px 16px;
+	}
+	.pill {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		height: 26px;
+		padding: 0 10px;
+		border: 1px solid var(--input);
+		border-radius: 999px;
+		font-size: 12px;
+		color: var(--foreground);
+	}
+	.pill:hover { background: var(--accent); }
+	.pill:focus-within { border-color: var(--muted-foreground); }
+	.pill.ghost { border-color: transparent; padding: 0 6px; color: var(--muted-foreground); }
+	.pill select {
+		-webkit-appearance: none;
+		appearance: none;
+		border: 0;
+		outline: none;
+		background: transparent;
+		color: inherit;
+		font: inherit;
+		padding: 0;
+		cursor: pointer;
+		field-sizing: content;
+	}
+	.dot {
+		width: 9px;
+		height: 9px;
+		border-radius: 50%;
+		border: 2px solid var(--muted-foreground);
+		flex: 0 0 auto;
+	}
+	.emoji { font-size: 13px; line-height: 1; }
+	footer {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 16px;
+		border-top: 1px solid var(--border);
+	}
+	#status { flex: 1; font-size: 12px; color: var(--muted-foreground); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+	#status.error { color: var(--destructive); }
+	kbd {
+		font-family: inherit;
+		font-size: 11px;
+		padding: 1px 5px;
+		border-radius: 4px;
+		background: var(--muted);
+	}
+	button {
+		height: 30px;
+		padding: 0 12px;
+		border: 0;
+		border-radius: var(--radius);
+		background: var(--primary);
+		color: var(--primary-foreground);
+		font: 500 13px var(--font-sans);
+		cursor: pointer;
+	}
+	button:disabled { opacity: .5; cursor: default; }
+</style>
+</head>
+<body>
+<div class="card">
+	<header>
+		<label class="pill ghost"><select id="workspace"><option value="">Loading…</option></select></label>
+		<span>›</span>
+		<span>New issue</span>
+	</header>
+	<main>
+		<input id="title" placeholder="Issue title" autofocus>
+		<textarea id="description" placeholder="Add description…"></textarea>
+	</main>
+	<div class="properties">
+		<label class="pill"><span class="dot" id="status-dot"></span><select id="status-select"><option value="">Status</option></select></label>
+		<label class="pill"><span class="emoji" id="agent-emoji">👤</span><select id="agent"><option value="">No assignee</option></select></label>
+	</div>
+	<footer>
+		<span id="status"><kbd>⌘↩</kbd> create · <kbd>esc</kbd> cancel</span>
+		<button id="create">Create issue</button>
+	</footer>
+</div>
+<script>
+	const $ = (id) => document.getElementById(id);
+	const post = (message) => window.webkit.messageHandlers.multica.postMessage(message);
+	const hint = $("status").innerHTML;
+	let agents = [];
+	let statuses = [];
+	let optionsReady = false;
+
+	function setStatus(text, isError) {
+		$("status").className = isError ? "error" : "";
+		if (text === null) {
+			$("status").innerHTML = hint;
+		} else {
+			$("status").textContent = text;
+		}
+	}
+
+	function syncStatusDot() {
+		const status = statuses.find((s) => s.key === $("status-select").value);
+		$("status-dot").style.borderColor = status ? status.color : "";
+	}
+
+	function syncAgentEmoji() {
+		const agent = agents.find((a) => a.id === $("agent").value);
+		$("agent-emoji").textContent = agent ? (agent.emoji || "🤖") : "👤";
+	}
+
+	window.setTheme = ({ dark }) => {
+		document.documentElement.classList.toggle("dark", dark);
+	};
+
+	window.setWorkspaces = ({ workspaces, selected }) => {
+		$("workspace").innerHTML = "";
+		for (const ws of workspaces) {
+			$("workspace").add(new Option(ws.name, ws.id, false, ws.id === selected));
+		}
+	};
+
+	window.setWorkspaceOptions = ({ workspaceId, agents: agentList, statuses: statusList, selectedStatus, selectedAgent }) => {
+		if (workspaceId !== $("workspace").value) return;
+		agents = agentList;
+		statuses = statusList;
+
+		$("status-select").innerHTML = "";
+		for (const status of statuses) {
+			$("status-select").add(new Option(status.name, status.key, false, status.key === selectedStatus));
+		}
+		if (!statuses.some((s) => s.key === selectedStatus) && statuses.length) {
+			$("status-select").value = statuses[0].key;
+		}
+
+		$("agent").innerHTML = "";
+		$("agent").add(new Option("No assignee", ""));
+		for (const agent of agents) {
+			$("agent").add(new Option(agent.name, agent.id, false, agent.id === selectedAgent));
+		}
+
+		syncStatusDot();
+		syncAgentEmoji();
+		optionsReady = true;
+		setStatus(null);
+	};
+
+	window.showError = ({ message }) => {
+		$("create").disabled = false;
+		setStatus(message.trim(), true);
+	};
+
+	function submit() {
+		const title = $("title").value.trim();
+		if (!title) {
+			setStatus("A title is required", true);
+			$("title").focus();
+			return;
+		}
+		if (!optionsReady) {
+			setStatus("Still loading workspace options…", true);
+			return;
+		}
+		$("create").disabled = true;
+		setStatus("Creating…", false);
+		post({
+			action: "submit",
+			title,
+			description: $("description").value,
+			workspaceId: $("workspace").value,
+			statusKey: $("status-select").value,
+			agentId: $("agent").value,
+		});
+	}
+
+	$("workspace").addEventListener("change", () => {
+		optionsReady = false;
+		setStatus("Loading…", false);
+		post({ action: "workspaceChanged", workspaceId: $("workspace").value });
+	});
+	$("status-select").addEventListener("change", syncStatusDot);
+	$("agent").addEventListener("change", syncAgentEmoji);
+	$("create").addEventListener("click", submit);
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape") {
+			event.preventDefault();
+			post({ action: "cancel" });
+		} else if (event.key === "Enter" && (event.metaKey || event.target.id === "title")) {
+			event.preventDefault();
+			submit();
+		}
+	});
+
+	$("title").focus();
+	post({ action: "ready" });
+</script>
+</body>
+</html>
