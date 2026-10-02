@@ -69,25 +69,43 @@ local function saveSelection(workspaceId, statusKey, agentId)
 	hs.settings.set(SETTINGS_WORKSPACE_KEY, workspaceId)
 end
 
--- Runs the multica CLI and collects stdout through a streaming callback, because
+-- Runs the multica CLI and collects stdout/stderr through a streaming callback, because
 -- hs.task otherwise stops draining the pipe at 64KB and the CLI blocks forever.
-local function runMultica(args, input, callback)
-	local chunks = {}
+-- Streamed output never reaches the completion callback, so both streams are accumulated here.
+local function runMultica(args, callback)
+	local stdoutChunks, stderrChunks = {}, {}
 	local task
 	task = hs.task.new(MULTICA_BIN, function(exitCode, stdout, stderr)
 		runningTasks[task] = nil
-		table.insert(chunks, stdout)
-		callback(exitCode, table.concat(chunks), stderr)
-	end, function(_, stdout)
-		table.insert(chunks, stdout)
+		table.insert(stdoutChunks, stdout)
+		table.insert(stderrChunks, stderr)
+		callback(exitCode, table.concat(stdoutChunks), table.concat(stderrChunks))
+	end, function(_, stdout, stderr)
+		table.insert(stdoutChunks, stdout)
+		table.insert(stderrChunks, stderr)
 		return true
 	end, args)
 	runningTasks[task] = true
 	task:start()
-	if input then
-		task:setInput(input)
-	end
 	task:closeInput()
+end
+
+local function cliErrorMessage(exitCode, stdout, stderr)
+	local message = stderr ~= "" and stderr or stdout
+	if message == "" then
+		message = "multica exited with code " .. tostring(exitCode)
+	end
+	return message
+end
+
+-- Descriptions go through a temp file rather than stdin: hs.task writes stdin
+-- asynchronously, so closing it right away can deliver an empty description.
+local function writeTempFile(contents)
+	local path = os.tmpname()
+	local file = assert(io.open(path, "w"))
+	file:write(contents)
+	file:close()
+	return path
 end
 
 local function pushWorkspaceOptions(workspaceId)
@@ -103,9 +121,9 @@ local function pushWorkspaceOptions(workspaceId)
 end
 
 local function fetchAgents(workspaceId, callback)
-	runMultica({ "--workspace-id", workspaceId, "agent", "list", "--output", "json" }, nil, function(exitCode, stdout, stderr)
+	runMultica({ "--workspace-id", workspaceId, "agent", "list", "--output", "json" }, function(exitCode, stdout, stderr)
 		if exitCode ~= 0 then
-			showError("Could not list agents: " .. stderr)
+			showError("Could not list agents: " .. cliErrorMessage(exitCode, stdout, stderr))
 			return
 		end
 		local agents = {}
@@ -183,9 +201,9 @@ local function loadWorkspaces()
 		pushWorkspaces()
 		return
 	end
-	runMultica({ "workspace", "list", "--output", "json" }, nil, function(exitCode, stdout, stderr)
+	runMultica({ "workspace", "list", "--output", "json" }, function(exitCode, stdout, stderr)
 		if exitCode ~= 0 then
-			showError("Could not list workspaces: " .. stderr)
+			showError("Could not list workspaces: " .. cliErrorMessage(exitCode, stdout, stderr))
 			return
 		end
 		workspaces = hs.json.decode(stdout)
@@ -210,16 +228,21 @@ local function createIssue(request)
 		table.insert(args, "--assignee-id")
 		table.insert(args, request.agentId)
 	end
-	local description = nil
+	local descriptionPath = nil
 	if request.description ~= nil and request.description ~= "" then
-		description = request.description
-		table.insert(args, "--description-stdin")
+		descriptionPath = writeTempFile(request.description)
+		table.insert(args, "--description-file")
+		table.insert(args, descriptionPath)
+		table.insert(args, "--allow-external-file")
 	end
 
 	saveSelection(request.workspaceId, request.statusKey, request.agentId)
-	runMultica(args, description, function(exitCode, stdout, stderr)
+	runMultica(args, function(exitCode, stdout, stderr)
+		if descriptionPath then
+			os.remove(descriptionPath)
+		end
 		if exitCode ~= 0 then
-			showError(stderr ~= "" and stderr or stdout)
+			showError(cliErrorMessage(exitCode, stdout, stderr))
 			return
 		end
 		local issue = hs.json.decode(stdout)
