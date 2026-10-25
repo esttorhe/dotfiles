@@ -1,3 +1,6 @@
+# Added by `devbox configure-ssh`
+Include ~/.namespace/ssh/*.ssh
+
 {{ join .chezmoi.sourceDir ".encrypted-ssh-data.txt" | include | decrypt }}
 {{ if eq .chezmoi.os "linux" }}
 Host *

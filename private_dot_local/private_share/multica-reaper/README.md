@@ -172,7 +172,7 @@ use the configured human identity. With pytest and pre-commit installed:
 
 ```sh
 REAPER_TEST_WORKSPACE=afc3f3a2-107a-46fb-9e6b-64f73b92c8e8 \
-  python3 -m pytest -q dot_local/share/multica-reaper
+  python3 -m pytest -q private_dot_local/private_share/multica-reaper
 pre-commit run --all-files
 ```
 

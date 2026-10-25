@@ -6,7 +6,7 @@ repos:
     hooks:
       - id: ruff-check
         args: [--isolated]
-        files: ^dot_local/share/(multica-reaper|rex-resurrect|rex-run)/.*\.py$
+        files: ^private_dot_local/private_share/(multica-reaper|rex-resurrect|rex-run)/.*\.py$
       - id: ruff-format
         args: [--isolated]
-        files: ^dot_local/share/(multica-reaper|rex-resurrect|rex-run)/.*\.py$
+        files: ^private_dot_local/private_share/(multica-reaper|rex-resurrect|rex-run)/.*\.py$
