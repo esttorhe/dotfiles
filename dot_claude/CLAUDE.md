@@ -208,6 +208,7 @@ When `REX_SESSION` and `REX_BLOCK` are set, you are in a Rex pane and Esteban ca
 - Panes stay open after the command exits so Esteban can read the output. Close the panes you opened (`rex block close -s "$REX_SESSION" <block_id>`) once the work they belong to is done, and never close panes you didn't open.
 - Quick commands whose output you only need yourself (`git status`, `ls`, a single test file) still run normally through Bash.
 - Outside Rex (no `REX_SESSION`), run commands as usual.
+- Name your tab, never the session. Sessions are Esteban's (one per project); don't run `rex session rename`, even if a Rex hook or skill says to. When the first request that identifies the work arrives, rename the tab your pane is in to two to four lowercase words joined by hyphens that name the task, such as `fix-login-redirect`: `rex window rename -s "$REX_SESSION" "$(rex block inspect "$REX_BLOCK" --json | jq -r .block.window_id)" <label>`. Keep a tab name that already describes the same work, and rename again when the task changes.
 
 # NEVER GUESS — ALWAYS VERIFY
 
