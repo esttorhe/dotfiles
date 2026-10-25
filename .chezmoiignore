@@ -24,4 +24,6 @@ home_infra.md
 # Linux uses ~/.config/lazygit/
 Library/Application Support/lazygit
 Library/LaunchAgents/com.esttorhe.multica-reaper.plist
+# The rex CLI ships inside the macOS app bundle
+.local/bin/rex
 {{ end -}}
