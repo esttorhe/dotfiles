@@ -1,4 +1,4 @@
-# ABOUTME: Validate the local reaper's Python code before commits.
+# ABOUTME: Validate the local Python tools (multica-reaper, rex-resurrect) before commits.
 # ABOUTME: Use pinned lint and formatting checks without changing unrelated dotfiles.
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -6,7 +6,7 @@ repos:
     hooks:
       - id: ruff-check
         args: [--isolated]
-        files: ^dot_local/share/multica-reaper/.*\.py$
+        files: ^dot_local/share/(multica-reaper|rex-resurrect)/.*\.py$
       - id: ruff-format
         args: [--isolated]
-        files: ^dot_local/share/multica-reaper/.*\.py$
+        files: ^dot_local/share/(multica-reaper|rex-resurrect)/.*\.py$

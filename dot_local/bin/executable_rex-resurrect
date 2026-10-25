@@ -1,0 +1,4 @@
+#!/bin/sh
+# ABOUTME: Command-line entry point for rex-resurrect (save, restore, tick, list).
+# ABOUTME: Runs the standard-library script that chezmoi installs under ~/.local/share/rex-resurrect.
+exec /usr/bin/env python3 "$HOME/.local/share/rex-resurrect/rex_resurrect.py" "$@"

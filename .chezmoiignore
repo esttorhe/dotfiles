@@ -4,6 +4,9 @@
 .local/share/multica-reaper/test_reaper.py
 .local/share/multica-reaper/__pycache__/
 .local/share/multica-reaper/.pytest_cache/
+.local/share/rex-resurrect/test_rex_resurrect.py
+.local/share/rex-resurrect/__pycache__/
+.local/share/rex-resurrect/.pytest_cache/
 zsh/
 git/
 xresources/
