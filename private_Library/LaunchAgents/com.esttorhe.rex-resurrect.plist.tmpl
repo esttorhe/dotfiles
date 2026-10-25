@@ -1,0 +1,24 @@
+<!-- ABOUTME: Run rex-resurrect every five minutes, like tmux-continuum. -->
+<!-- ABOUTME: Each tick restores the last snapshot once per Rex server start, then saves a new one. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key><string>com.esttorhe.rex-resurrect</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ .chezmoi.homeDir }}/.local/bin/rex-resurrect</string>
+        <string>tick</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key><string>{{ .chezmoi.homeDir }}</string>
+        <key>PATH</key><string>{{ .chezmoi.homeDir }}/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+    <key>WorkingDirectory</key><string>{{ .chezmoi.homeDir }}</string>
+    <key>RunAtLoad</key><true/>
+    <key>StartInterval</key><integer>300</integer>
+    <key>ProcessType</key><string>Background</string>
+    <key>StandardOutPath</key><string>{{ .chezmoi.homeDir }}/Library/Logs/rex-resurrect/launchd.stdout.log</string>
+    <key>StandardErrorPath</key><string>{{ .chezmoi.homeDir }}/Library/Logs/rex-resurrect/launchd.stderr.log</string>
+</dict>
+</plist>

@@ -47,3 +47,35 @@ rex.bind("resize/k", "pane.resize", { direction = "up", amount = 5 })
 rex.bind("resize/l", "pane.resize", { direction = "right", amount = 5 })
 rex.bind("resize/=", "pane.balance")
 rex.bind("resize/enter", "client.mode.exit")
+
+-- Session save/restore with rex-resurrect (prefix C-s / C-r, as in tmux-resurrect).
+-- launchd also saves every five minutes and restores once after Rex starts.
+local home = os.getenv("HOME")
+
+local function resurrect(command)
+  local r, err = rex.exec({ home .. "/.local/bin/rex-resurrect", command }, {
+    env = { PATH = home .. "/.local/bin:/opt/homebrew/bin:/usr/bin:/bin" },
+    timeout = 120,
+  })
+  if not r then error(err, 0) end
+  if r.code ~= 0 then error("rex-resurrect " .. command .. ": " .. r.stderr, 0) end
+  rex.log("rex-resurrect " .. command .. ": " .. r.stdout)
+  return rex.json.decode(r.stdout)
+end
+
+rex.action{
+  name = "resurrect_save",
+  title = "Save Sessions (rex-resurrect)",
+  category = "Sessions",
+  run = function() return resurrect("save") end,
+}
+
+rex.action{
+  name = "resurrect_restore",
+  title = "Restore Sessions (rex-resurrect)",
+  category = "Sessions",
+  run = function() return resurrect("restore") end,
+}
+
+rex.bind(P .. "ctrl+s", "resurrect_save")
+rex.bind(P .. "ctrl+r", "resurrect_restore")
