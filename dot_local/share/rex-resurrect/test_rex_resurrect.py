@@ -1,6 +1,8 @@
 # ABOUTME: Exercise rex-resurrect against the live local Rex server with disposable rrtest- sessions.
 # ABOUTME: Cover layout round trips, program restore, duplicate protection, and the save/restore guard.
 import json
+import shutil
+import subprocess
 import time
 import uuid
 
@@ -262,3 +264,117 @@ def test_unforced_save_refuses_before_this_server_has_been_restored(
     (state_dir / "last.json").write_text(json.dumps({"version": 1, "sessions": []}))
     assert rr.save(force=False)["saved"] is False
     assert json.loads((state_dir / "last.json").read_text())["sessions"] == []
+
+
+TMUX = shutil.which("tmux") or "/opt/homebrew/bin/tmux"
+
+
+@pytest.fixture
+def tmux_socket(tmp_path):
+    """A private tmux server, so the real one is never read or changed."""
+    name = f"rrtest-{uuid.uuid4().hex[:8]}"
+    yield name
+    subprocess.run([TMUX, "-L", name, "kill-server"], capture_output=True, check=False)
+
+
+def tmux(socket, *args):
+    return subprocess.run(
+        [TMUX, "-L", socket, "-f", "/dev/null", *args],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+
+
+def test_parse_tmux_layout_turns_three_columns_into_nested_splits():
+    tree = rr.parse_tmux_layout(
+        "a1b2,120x40,0,0{40x40,0,0,1,39x40,41,0,2,39x40,81,0,3}"
+    )
+    assert tree[0] == "split" and tree[1] == "horizontal"
+    assert tree[3] == ("pane", 1)
+    assert tree[4][0] == "split" and tree[4][3:] == (("pane", 2), ("pane", 3))
+    assert round(tree[2], 2) == 0.34
+
+
+def test_parse_tmux_layout_reads_the_json_format_of_newer_tmux():
+    layout = (
+        '{"V":2,"L":{"t":"h","w":120,"h":40,"x":0,"y":0,"c":['
+        '{"t":"p","w":60,"h":40,"x":0,"y":0,"l":0,"i":0,"I":"%0"},'
+        '{"t":"p","w":59,"h":40,"x":61,"y":0,"a":true,"i":1,"I":"%1"}]}}'
+    )
+    assert rr.parse_tmux_layout(layout) == (
+        "split",
+        "horizontal",
+        61 / 120,
+        ("pane", 0),
+        ("pane", 1),
+    )
+    single = '{"V":2,"L":{"t":"p","w":120,"h":40,"x":0,"y":0,"a":true,"i":0,"I":"%2"}}'
+    assert rr.parse_tmux_layout(single) == ("pane", 2)
+
+
+def test_import_tmux_copies_sessions_windows_splits_and_directories(
+    tmux_socket, tmp_path
+):
+    left, right, solo = (tmp_path / d for d in ("left", "right", "solo"))
+    for d in (left, right, solo):
+        d.mkdir()
+    tmux(
+        tmux_socket,
+        "new-session",
+        "-d",
+        "-s",
+        "work",
+        "-n",
+        "code",
+        "-x",
+        "120",
+        "-y",
+        "40",
+        "-c",
+        str(left),
+    )
+    tmux(tmux_socket, "split-window", "-h", "-t", "work:code", "-c", str(right))
+    tmux(tmux_socket, "new-window", "-d", "-t", "work", "-n", "notes", "-c", str(solo))
+    time.sleep(1)
+
+    snap = rr.import_tmux(TMUX, socket=tmux_socket)
+    work = next(s for s in snap["sessions"] if s["label"] == "work")
+    assert [w["label"] for w in work["windows"]] == ["code", "notes"]
+    code = work["windows"][0]["layout"]
+    assert code["split"]["direction"] == "horizontal"
+    assert [p["cwd"] for p in rr.panes(code)] == [str(left), str(right)]
+    assert rr.panes(work["windows"][1]["layout"])[0]["cwd"] == str(solo)
+
+
+def test_tmux_claude_panes_resume_by_name_or_open_the_picker():
+    named = rr.tmux_program("claude", "✳ DPA – Replies")
+    unnamed = rr.tmux_program("claude", "claude --dangerously ~/w/g/p/peec")
+    assert named == ("claude", "DPA – Replies")
+    assert rr.launch_command(*unnamed, picker=True) == "claude --resume"
+    assert rr.tmux_program("fish", "~/w") == (None, None)
+
+
+def test_restore_without_start_types_the_command_but_leaves_it_unrun(label, tmp_path):
+    snap = {
+        "label": label,
+        "windows": [
+            {
+                "label": "monitor",
+                "active": True,
+                "layout": rr.pane_node("", str(tmp_path), "top", None),
+            }
+        ],
+    }
+    rr.restore({"version": 1, "sessions": [snap]}, start=False)
+    restored_id = rr.session_id_for_label(label)
+    block_id = rr.panes(rr.snapshot_session(restored_id)["windows"][0]["layout"])[0][
+        "block_id"
+    ]
+    time.sleep(3)
+    process = rr.block_call(restored_id, block_id, "process")
+    assert (process.get("foreground") or {}).get("name") != "top"
+    screen = rr.rex(
+        "capture", "-s", restored_id, "-b", block_id, "--trim", json_output=False
+    )
+    assert "top" in screen

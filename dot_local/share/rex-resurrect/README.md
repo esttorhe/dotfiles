@@ -41,6 +41,24 @@ is left out, so restarts don't pile them up.
 
 Restore an older snapshot with
 `rex-resurrect restore --snapshot ~/.local/state/rex-resurrect/snapshots/<file>`.
+Add `--no-start` to type each program's command at its prompt without
+running it.
+
+## Moving from tmux
+
+`rex-resurrect import-tmux --output FILE` writes every tmux session, window,
+split and directory as a snapshot. Both tmux layout formats are read: the
+classic string and the JSON newer servers report. A Claude pane titled
+`✳ name` becomes `claude --resume 'name'`; an unnamed one opens Claude's
+resume picker, since several panes can share a directory. Then:
+
+```sh
+rex-resurrect import-tmux --output /tmp/tmux.json
+rex-resurrect restore --snapshot /tmp/tmux.json --no-start
+```
+
+With `--no-start`, a conversation still open in tmux isn't resumed twice:
+press Enter in each Rex pane once its tmux pane is closed.
 
 ## Tests
 

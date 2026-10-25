@@ -195,13 +195,13 @@ def snapshot_all():
 # ---------------------------------------------------------------------------
 
 
-def launch_command(program, session_name):
+def launch_command(program, session_name, picker=False):
+    """picker opens Claude's resume picker for an unnamed session, where --continue
+    would guess when several panes share a directory."""
     if program == "claude":
-        return (
-            f"claude --resume {shlex.quote(session_name)}"
-            if session_name
-            else "claude --continue"
-        )
+        if session_name:
+            return f"claude --resume {shlex.quote(session_name)}"
+        return "claude --resume" if picker else "claude --continue"
     return program
 
 
@@ -223,8 +223,9 @@ def create_layout(node):
     return {"block": block}
 
 
-def restore(snapshot):
-    """Recreate every saved session whose label isn't open already."""
+def restore(snapshot, start=True):
+    """Recreate every saved session whose label isn't open already. With start=False each
+    program's command is typed at the prompt but not run, for the user to start later."""
     existing = {s["label"] for s in list_sessions()}
     result = {"restored": [], "skipped": []}
     for session in snapshot.get("sessions", []):
@@ -246,7 +247,11 @@ def restore(snapshot):
             # Programs are typed into the shell, like tmux-resurrect, so quitting returns to a prompt.
             for pane, block_id in zip(panes(window["layout"]), made["block_ids"]):
                 if pane.get("program"):
-                    command = launch_command(pane["program"], pane.get("session_name"))
+                    command = launch_command(
+                        pane["program"],
+                        pane.get("session_name"),
+                        picker=pane.get("picker", False),
+                    )
                     rex(
                         "send",
                         "-s",
@@ -256,6 +261,8 @@ def restore(snapshot):
                         command,
                         json_output=False,
                     )
+                    if not start:
+                        continue
                     rex(
                         "send-key",
                         "-s",
@@ -272,6 +279,152 @@ def restore(snapshot):
                 )
         result["restored"].append(session["label"])
     return result
+
+
+# ---------------------------------------------------------------------------
+# Importing from tmux
+# ---------------------------------------------------------------------------
+
+
+def _nest_tmux(direction, children, total):
+    """Nest any number of (node, width, height) children two at a time. Each ratio
+    counts the pane's border, so the sizes add up to the parent's."""
+    if len(children) == 1:
+        return children[0][0]
+    first, rest = children[0], children[1:]
+    first_size = first[1] if direction == "horizontal" else first[2]
+    return (
+        "split",
+        direction,
+        min((first_size + 1) / total, 0.99),
+        first[0],
+        _nest_tmux(direction, rest, total - first_size - 1),
+    )
+
+
+def _parse_tmux_json(node):
+    """Newer tmux reports layouts as JSON: t is p (pane), h (side by side) or v (stacked)."""
+    width, height = node["w"], node["h"]
+    if node["t"] == "p":
+        return ("pane", int(node["I"].lstrip("%"))), width, height
+    direction = "horizontal" if node["t"] == "h" else "vertical"
+    children = [_parse_tmux_json(child) for child in node["c"]]
+    size = width if direction == "horizontal" else height
+    return _nest_tmux(direction, children, size), width, height
+
+
+def parse_tmux_layout(layout):
+    """Parse a tmux window_layout into ("pane", id) and
+    ("split", direction, ratio, before, after) tuples. Older tmux servers report the
+    classic "csum,WxH,X,Y{...}" string, newer ones a JSON object."""
+    if layout.lstrip().startswith("{"):
+        return _parse_tmux_json(json.loads(layout)["L"])[0]
+
+    text = layout.split(",", 1)[1]  # drop the checksum
+    pos = 0
+
+    def number():
+        nonlocal pos
+        start = pos
+        while pos < len(text) and text[pos].isdigit():
+            pos += 1
+        return int(text[start:pos])
+
+    def cell():
+        nonlocal pos
+        width = number()
+        pos += 1  # x
+        height = number()
+        pos += 1  # ,
+        number()  # left offset
+        pos += 1  # ,
+        number()  # top offset
+        if pos < len(text) and text[pos] in "{[":
+            direction = "horizontal" if text[pos] == "{" else "vertical"
+            pos += 1
+            children = [cell()]
+            while text[pos] == ",":
+                pos += 1
+                children.append(cell())
+            pos += 1  # closing bracket
+            size = width if direction == "horizontal" else height
+            return _nest_tmux(direction, children, size), width, height
+        pos += 1  # ,
+        return ("pane", number()), width, height
+
+    return cell()[0]
+
+
+def tmux_program(command, title):
+    """The restorable program a tmux pane runs, and Claude's session name from its title."""
+    if command == "claude":
+        text = (title or "").strip()
+        return "claude", (text.lstrip("✳").strip() or None) if text.startswith(
+            "✳"
+        ) else None
+    return (command, None) if command in RESTORABLE else (None, None)
+
+
+def tmux_lines(tmux_bin, socket, *args):
+    cmd = [tmux_bin] + (["-L", socket] if socket else []) + list(args)
+    out = subprocess.run(
+        cmd, capture_output=True, text=True, timeout=30, check=True
+    ).stdout
+    return [line.split("\t") for line in out.splitlines() if line]
+
+
+def import_tmux(tmux_bin="tmux", socket=None):
+    """Read every tmux session into a snapshot that restore() can rebuild in Rex."""
+    panes_by_id = {}
+    for pane_id, command, title, path in tmux_lines(
+        tmux_bin,
+        socket,
+        "list-panes",
+        "-a",
+        "-F",
+        "#{pane_id}\t#{pane_current_command}\t#{pane_title}\t#{pane_current_path}",
+    ):
+        program, session_name = tmux_program(command, title)
+        node = pane_node("", path, program, session_name)
+        if program == "claude" and not session_name:
+            node["pane"]["picker"] = True
+        panes_by_id[int(pane_id.lstrip("%"))] = node
+
+    def convert(tree):
+        if tree[0] == "pane":
+            return panes_by_id[tree[1]]
+        _, direction, ratio, before, after = tree
+        return {
+            "split": {
+                "direction": direction,
+                "ratio": ratio,
+                "before": convert(before),
+                "after": convert(after),
+            }
+        }
+
+    sessions = {}
+    for session, name, active, layout in tmux_lines(
+        tmux_bin,
+        socket,
+        "list-windows",
+        "-a",
+        "-F",
+        "#{session_name}\t#{window_name}\t#{window_active}\t#{window_layout}",
+    ):
+        sessions.setdefault(session, []).append(
+            {
+                "label": name,
+                "active": active == "1",
+                "layout": convert(parse_tmux_layout(layout)),
+            }
+        )
+    return {
+        "version": 1,
+        "saved_at": datetime.now(timezone.utc).isoformat(),
+        "source": "tmux",
+        "sessions": [{"label": s, "windows": w} for s, w in sessions.items()],
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -356,20 +509,43 @@ def main(argv=None):
     restore_cmd.add_argument(
         "--snapshot", help="a file under snapshots/ instead of the last one"
     )
+    restore_cmd.add_argument(
+        "--no-start",
+        action="store_true",
+        help="type each program's command at its prompt without running it",
+    )
     sub.add_parser(
         "tick", help="restore once per server start, then save (for launchd)"
     )
     sub.add_parser("list", help="list saved snapshots, newest last")
+    import_cmd = sub.add_parser(
+        "import-tmux", help="write tmux's sessions as a snapshot for restore"
+    )
+    import_cmd.add_argument("--tmux", default=shutil.which("tmux") or "tmux")
+    import_cmd.add_argument("--socket", help="a tmux -L socket name")
+    import_cmd.add_argument("--output", required=True, help="where to write it")
     args = parser.parse_args(argv)
 
     try:
         if args.command == "save":
             result = locked(save, force=True)
         elif args.command == "restore":
+            start = not args.no_start
             if args.snapshot:
-                result = locked(restore, read_json(args.snapshot, {"sessions": []}))
-            else:
+                snap = read_json(args.snapshot, {"sessions": []})
+                result = locked(restore, snap, start=start)
+            elif start:
                 result = locked(restore_last)
+            else:
+                snap = read_json(state_dir() / "last.json", {"sessions": []})
+                result = locked(restore, snap, start=False)
+        elif args.command == "import-tmux":
+            snap = import_tmux(args.tmux, socket=args.socket)
+            write_json(Path(args.output).expanduser(), snap)
+            result = {
+                "path": args.output,
+                "sessions": [s["label"] for s in snap["sessions"]],
+            }
         elif args.command == "tick":
             result = locked(tick)
         else:
