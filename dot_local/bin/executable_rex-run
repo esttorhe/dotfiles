@@ -1,0 +1,4 @@
+#!/bin/sh
+# ABOUTME: Command-line entry point for rex-run: run a command in a new Rex pane beside the caller.
+# ABOUTME: Runs the standard-library script that chezmoi installs under ~/.local/share/rex-run.
+exec /usr/bin/env python3 "$HOME/.local/share/rex-run/rex_run.py" "$@"

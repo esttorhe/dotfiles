@@ -7,6 +7,9 @@
 .local/share/rex-resurrect/test_rex_resurrect.py
 .local/share/rex-resurrect/__pycache__/
 .local/share/rex-resurrect/.pytest_cache/
+.local/share/rex-run/test_rex_run.py
+.local/share/rex-run/__pycache__/
+.local/share/rex-run/.pytest_cache/
 zsh/
 git/
 xresources/
