@@ -93,15 +93,32 @@ def panes(node):
     return [node["pane"]]
 
 
+def claude_session_id(pid):
+    """The conversation a running Claude instance has open, from the sessions/<pid>.json file
+    Claude Code keeps for each process; None when the file is missing or unreadable."""
+    if pid is None:
+        return None
+    config = os.environ.get("CLAUDE_CONFIG_DIR") or "~/.claude"
+    path = Path(config).expanduser() / "sessions" / f"{pid}.json"
+    try:
+        return json.loads(path.read_text()).get("sessionId") or None
+    except (OSError, ValueError, AttributeError):
+        return None
+
+
 def program_for(process, title):
-    """The restorable program in the foreground, and Claude's session name when it shows one."""
-    name = ((process or {}).get("foreground") or {}).get("name")
+    """The restorable program in the foreground, and the Claude session to resume: its exact
+    id when the running instance reports one, else the session name its title shows."""
+    foreground = (process or {}).get("foreground") or {}
+    name = foreground.get("name")
     if name not in RESTORABLE:
         return None
     session_name = None
-    text = ((title or {}).get("title") or "").strip()
-    if name == "claude" and text.startswith("✳"):
-        session_name = text.lstrip("✳").strip() or None
+    if name == "claude":
+        session_name = claude_session_id(foreground.get("pid"))
+        text = ((title or {}).get("title") or "").strip()
+        if not session_name and text.startswith("✳"):
+            session_name = text.lstrip("✳").strip() or None
     return name, session_name
 
 
@@ -126,13 +143,18 @@ def snapshot_pane(session_id, block):
     found = program_for(process, title)
     program, session_name = found if found else (None, None)
     label = block.get("label") or ""
-    return pane_node(
+    node = pane_node(
         "" if label == "shell" else label,
         cwd_for(pwd, process),
         program,
         session_name,
         block_id,
     )
+    # Without an id or name, --continue would put every such pane in a directory into the
+    # same most recent conversation, so these open Claude's resume picker instead.
+    if program == "claude" and not session_name:
+        node["pane"]["picker"] = True
+    return node
 
 
 def snapshot_layout(session_id, layout, blocks):

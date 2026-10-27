@@ -203,6 +203,60 @@ def test_program_detection_uses_the_live_process_and_title():
     assert rr.program_for(claude_proc, {"title": "claude"}) == ("claude", None)
 
 
+@pytest.fixture
+def claude_dir(tmp_path, monkeypatch):
+    """A Claude config dir with per-process session files, away from the real ~/.claude."""
+    config = tmp_path / "claude"
+    (config / "sessions").mkdir(parents=True)
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(config))
+    return config
+
+
+def test_claude_session_id_comes_from_the_running_instance_file(claude_dir):
+    (claude_dir / "sessions" / "4242.json").write_text(
+        json.dumps({"pid": 4242, "sessionId": "0bdd8e21-e7bd"})
+    )
+    (claude_dir / "sessions" / "77.json").write_text("{not json")
+    assert rr.claude_session_id(4242) == "0bdd8e21-e7bd"
+    assert rr.claude_session_id(5151) is None
+    assert rr.claude_session_id(77) is None
+    assert rr.claude_session_id(None) is None
+
+
+def test_program_detection_prefers_the_exact_claude_session_over_the_title(claude_dir):
+    (claude_dir / "sessions" / "4242.json").write_text(
+        json.dumps({"pid": 4242, "sessionId": "0bdd8e21-e7bd"})
+    )
+    claude_proc = {
+        "foreground": {"name": "claude", "pid": 4242},
+        "ancestors": [{"name": "fish", "cwd": "/w"}],
+    }
+    assert rr.program_for(claude_proc, {"title": "✳ shared title"}) == (
+        "claude",
+        "0bdd8e21-e7bd",
+    )
+
+
+def test_unidentified_claude_pane_restores_through_the_picker(claude_dir, monkeypatch):
+    """--continue would put every such pane in a directory into the same conversation."""
+    replies = {
+        "process": {
+            "foreground": {"name": "claude", "pid": 9999},
+            "ancestors": [{"name": "fish", "cwd": "/w"}],
+        },
+        "pwd": {"pwd": "file:///w"},
+        "title": {"title": "claude"},
+    }
+    monkeypatch.setattr(
+        rr, "block_call", lambda session_id, block_id, method: replies[method]
+    )
+    pane = rr.snapshot_pane("s", {"block_id": "b", "label": "shell"})["pane"]
+    assert pane["program"] == "claude"
+    assert pane["session_name"] is None
+    assert pane["picker"] is True
+    assert rr.launch_command("claude", None, picker=pane["picker"]) == "claude --resume"
+
+
 def test_launch_command_resumes_named_claude_sessions():
     assert rr.launch_command("nvim", None) == "nvim"
     assert (
