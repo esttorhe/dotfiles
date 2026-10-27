@@ -1,0 +1,28 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# ABOUTME: Apply Rex app preferences (solid window, no focus-follows-mouse) on macOS.
+# ABOUTME: chezmoi reruns it whenever this file changes; Rex is restarted so it reads them.
+
+set -e
+
+# Rex writes its preferences back when it quits, so a value set while it runs can be lost.
+# Quit the app first and reopen it afterwards. Sessions live in the Rex server and survive.
+was_running=false
+if pgrep -x Rex > /dev/null; then
+    was_running=true
+    osascript -e 'quit app "Rex Beta"'
+    for _ in $(seq 1 20); do
+        pgrep -x Rex > /dev/null || break
+        sleep 0.5
+    done
+fi
+
+# Solid window background from the theme, instead of the blended style.
+defaults write com.superlogical.rex Workspace.interfaceStyle -string useTheme
+# Focus stays where it is until clicked or moved by key.
+defaults write com.superlogical.rex Workspace.focusFollowsMouse -bool false
+
+if [[ "$was_running" == true ]]; then
+    open -a "Rex Beta"
+fi
+{{- end -}}
