@@ -10,6 +10,7 @@
 .local/share/rex-run/test_rex_run.py
 .local/share/rex-run/__pycache__/
 .local/share/rex-run/.pytest_cache/
+.hammerspoon/tab_switcher_core_test.lua
 zsh/
 git/
 xresources/
