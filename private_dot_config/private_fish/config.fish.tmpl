@@ -15,17 +15,19 @@ set fish_greeting ""
 # Tool integrations
 # ============================================
 
+# Mise version manager. Activated first so the tools it installs (atuin among
+# them) are on PATH for the integrations below, even in shells that start with
+# only the system PATH, such as Rex panes.
+if type -q mise
+    mise activate fish | source
+end
+
 # Starship prompt
 starship init fish | source
 
 # Atuin shell history
 if type -q atuin
     atuin init fish | source
-end
-
-# Mise version manager
-if type -q mise
-    mise activate fish | source
 end
 
 # fzf keybindings
