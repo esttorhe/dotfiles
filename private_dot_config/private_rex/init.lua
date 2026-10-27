@@ -179,4 +179,4 @@ dofile(home .. "/.config/rex/plugins/rex-opener/init.lua")({
   path = home .. "/.local/bin:/opt/homebrew/bin:" .. home
     .. "/.local/share/mise/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
 })
--- rex.bind(P .. "o", "rex_opener_open")  -- unbound while the picker issue is debugged
+rex.bind(P .. "o", "rex_opener_open")
