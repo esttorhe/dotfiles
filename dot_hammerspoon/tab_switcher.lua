@@ -2,6 +2,7 @@
 -- ABOUTME: Shows an hs.chooser instantly from cached sources, refreshes them in the background, and focuses the pick.
 
 local core = require("tab_switcher_core")
+local taskOutput = require("task_output")
 
 local M = {}
 
@@ -54,34 +55,9 @@ local appSearchTimer = nil
 local searchFocusTimer = nil
 local installedSearchApps = nil
 
--- Tasks are kept referenced while running so they are not garbage collected mid-flight.
-local runningTasks = {}
-
--- Sends stdout to a temp file read after exit. Without a streaming callback hs.task stops draining
--- the pipe at 64KB and the child blocks forever, and with one the last chunk can arrive after the
--- termination callback, truncating large outputs such as tab lists and chat databases.
-local function runProgram(path, args, callback)
-	local outPath = os.tmpname()
-	local shellArgs = { "-c", 'out="$1"; shift; exec "$@" > "$out"', "sh", outPath, path, table.unpack(args) }
-	local task
-	task = hs.task.new("/bin/sh", function(exitCode, _, stderr)
-		runningTasks[task] = nil
-		local file = io.open(outPath, "r")
-		local stdout = file and file:read("*a") or ""
-		if file then
-			file:close()
-		end
-		os.remove(outPath)
-		callback(exitCode, stdout, stderr)
-	end, shellArgs)
-	runningTasks[task] = true
-	task:start()
-	task:closeInput()
-end
-
 -- Runs a program whose stdout is JSON and hands the decoded value to `callback`, or logs why it could not.
 local function runJSON(label, path, args, callback)
-	runProgram(path, args, function(exitCode, stdout, stderr)
+	taskOutput.run(path, args, function(exitCode, stdout, stderr)
 		if exitCode ~= 0 then
 			print(string.format("tab_switcher: %s failed: %s", label, stderr))
 			return callback(nil)
@@ -277,7 +253,7 @@ local function refreshAll()
 end
 
 local function activateTab(choice)
-	runProgram(OSASCRIPT, {
+	taskOutput.run(OSASCRIPT, {
 		"-l",
 		"JavaScript",
 		ACTIVATE_SCRIPT,
@@ -311,7 +287,7 @@ local function activateRex(choice)
 			table.insert(args, 1, "-C")
 			table.insert(args, 2, newest.client_id)
 		end
-		runProgram(REX, args, function(exitCode, _, stderr)
+		taskOutput.run(REX, args, function(exitCode, _, stderr)
 			if exitCode ~= 0 then
 				print("tab_switcher: could not select rex tab: " .. stderr)
 			end

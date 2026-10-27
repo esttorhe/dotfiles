@@ -1,6 +1,8 @@
 -- ABOUTME: Floating quick-add panel that creates Multica issues from any app.
 -- ABOUTME: Collects title/description/status/agent in an hs.webview and creates the issue via the multica CLI.
 
+local taskOutput = require("task_output")
+
 local M = {}
 
 local MULTICA_BIN = "/opt/homebrew/bin/multica"
@@ -17,9 +19,6 @@ local previousWindow = nil
 local workspaces = nil
 -- Agents and statuses per workspace id, fetched once per Hammerspoon session.
 local workspaceOptions = {}
-
--- Tasks are kept referenced while running so they are not garbage collected mid-flight.
-local runningTasks = {}
 
 local function readFile(path)
 	local file = assert(io.open(path, "r"))
@@ -69,25 +68,8 @@ local function saveSelection(workspaceId, statusKey, agentId)
 	hs.settings.set(SETTINGS_WORKSPACE_KEY, workspaceId)
 end
 
--- Runs the multica CLI and collects stdout/stderr through a streaming callback, because
--- hs.task otherwise stops draining the pipe at 64KB and the CLI blocks forever.
--- Streamed output never reaches the completion callback, so both streams are accumulated here.
 local function runMultica(args, callback)
-	local stdoutChunks, stderrChunks = {}, {}
-	local task
-	task = hs.task.new(MULTICA_BIN, function(exitCode, stdout, stderr)
-		runningTasks[task] = nil
-		table.insert(stdoutChunks, stdout)
-		table.insert(stderrChunks, stderr)
-		callback(exitCode, table.concat(stdoutChunks), table.concat(stderrChunks))
-	end, function(_, stdout, stderr)
-		table.insert(stdoutChunks, stdout)
-		table.insert(stderrChunks, stderr)
-		return true
-	end, args)
-	runningTasks[task] = true
-	task:start()
-	task:closeInput()
+	taskOutput.run(MULTICA_BIN, args, callback)
 end
 
 local function cliErrorMessage(exitCode, stdout, stderr)
