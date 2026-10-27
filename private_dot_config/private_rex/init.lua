@@ -83,9 +83,8 @@ rex.bind(P .. "ctrl+r", "resurrect_restore")
 -- closes on its own when its program exits.
 local SHELL_FLAVOR = "com.superlogical.terminal.shell"
 local TERMINAL = "com.superlogical.terminal"
--- Floating layers must cover the whole window: Rex draws a layer that covers
--- only part of it as an empty overlay.
-local POPUP_BOUNDS = { 0, 0, 1, 1 }
+-- Where popups and floated panes sit, as fractions of the window: x, y, width, height.
+local POPUP_BOUNDS = { 0.1, 0.1, 0.8, 0.8 }
 
 -- The focused pane's directory, from the file:// URL its shell reports.
 local function focused_cwd()
@@ -95,37 +94,31 @@ local function focused_cwd()
   return (path:gsub("%%(%x%x)", function(hex) return string.char(tonumber(hex, 16)) end))
 end
 
--- A popup is a pane opened beside the focused one and zoomed to fill the tab.
--- Floating layers can't be used: Rex shows a program's default background in
--- them as see-through, so the pane underneath bleeds through. Quitting the
--- program closes its pane, and the tab's layout comes back.
-local function popup(ctx, command)
+-- A popup is a floating layer over the active tab, starting in the focused
+-- pane's directory. Quitting the program closes the layer.
+local function popup(command)
   local options = { cwd = focused_cwd() }
   if command then options.command = command end
-  local created, err = rex.session.new_split{
-    anchor_id = ctx.block_id,
-    direction = "horizontal",
-    side = "after",
+  local _, err = rex.session.new_layer{
+    bounds = POPUP_BOUNDS,
     focus = true,
     layout = rex.layout.block{ flavor = SHELL_FLAVOR, options = options },
   }
   if err ~= nil then error(err, 0) end
-  local _, zoom_err = rex.session.zoom_block{ block_id = created.block_ids[1], zoom = true }
-  if zoom_err ~= nil then error(zoom_err, 0) end
 end
 
 rex.action{
   name = "popup_lazygit",
   title = "Lazygit (floating)",
   category = "Panes",
-  run = function(ctx) popup(ctx, { "lazygit" }) end,
+  run = function() popup({ "lazygit" }) end,
 }
 
 rex.action{
   name = "popup_shell",
   title = "Scratch Shell (floating)",
   category = "Panes",
-  run = function(ctx) popup(ctx, nil) end,
+  run = function() popup(nil) end,
 }
 
 -- Float the focused pane, or put a floating one back into the tiled layout,
