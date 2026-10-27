@@ -21,21 +21,23 @@ local iconCache = {}
 -- Tasks are kept referenced while running so they are not garbage collected mid-flight.
 local runningTasks = {}
 
--- Collects output through a streaming callback, because hs.task otherwise stops
--- draining the pipe at 64KB and osascript blocks forever on large tab lists.
+-- Sends stdout to a temp file read after exit. Without a streaming callback hs.task stops draining
+-- the pipe at 64KB and the child blocks forever, and with one the last chunk can arrive after the
+-- termination callback, truncating large outputs such as tab lists.
 local function runOsascript(args, callback)
-	local stdoutChunks, stderrChunks = {}, {}
+	local outPath = os.tmpname()
+	local shellArgs = { "-c", 'out="$1"; shift; exec "$@" > "$out"', "sh", outPath, OSASCRIPT, table.unpack(args) }
 	local task
-	task = hs.task.new(OSASCRIPT, function(exitCode, stdout, stderr)
+	task = hs.task.new("/bin/sh", function(exitCode, _, stderr)
 		runningTasks[task] = nil
-		table.insert(stdoutChunks, stdout)
-		table.insert(stderrChunks, stderr)
-		callback(exitCode, table.concat(stdoutChunks), table.concat(stderrChunks))
-	end, function(_, stdout, stderr)
-		table.insert(stdoutChunks, stdout)
-		table.insert(stderrChunks, stderr)
-		return true
-	end, args)
+		local file = io.open(outPath, "r")
+		local stdout = file and file:read("*a") or ""
+		if file then
+			file:close()
+		end
+		os.remove(outPath)
+		callback(exitCode, stdout, stderr)
+	end, shellArgs)
 	runningTasks[task] = true
 	task:start()
 	task:closeInput()
