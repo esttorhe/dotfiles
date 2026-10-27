@@ -1,0 +1,11 @@
+# ABOUTME: Third-party files chezmoi downloads into the home directory.
+# ABOUTME: Each is pinned to a reviewed commit, so upstream changes never arrive unread.
+
+# rex-opener: open URLs and files from a Rex pane's output (loaded from Rex's init.lua).
+# Reviewed at this commit; to update, read the new diff, then change the commit below.
+[".config/rex/plugins/rex-opener"]
+    type = "archive"
+    url = "https://github.com/shaheislam/rex-opener/archive/72adf347ea9b51bca83c80c7d2e68bff1a23ea70.tar.gz"
+    exact = true
+    stripComponents = 1
+    exclude = ["*/assets", "*/assets/**"]

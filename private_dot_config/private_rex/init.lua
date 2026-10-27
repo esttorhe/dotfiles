@@ -34,7 +34,6 @@ rex.bind("alt+up", "pane.focus", { direction = "up" })
 rex.bind("alt+down", "pane.focus", { direction = "down" })
 
 -- Sessions (sesh picker in tmux)
-rex.bind(P .. "o", "session.switch")
 rex.bind(P .. "j", "session.switch")
 rex.bind(P .. "s", "session.switch")
 
@@ -172,3 +171,12 @@ rex.action{
 rex.bind(P .. "g", "popup_lazygit")
 rex.bind(P .. "f", "popup_shell")
 rex.bind(P .. "shift+f", "toggle_float")
+
+-- rex-opener (installed by chezmoi from .chezmoiexternal.toml): open a URL or file
+-- found in the focused pane's output. It needs Python 3.10+, so Homebrew comes
+-- before mise, whose default python3 is older; ~/.local/bin holds the rex CLI.
+dofile(home .. "/.config/rex/plugins/rex-opener/init.lua")({
+  path = home .. "/.local/bin:/opt/homebrew/bin:" .. home
+    .. "/.local/share/mise/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+})
+-- rex.bind(P .. "o", "rex_opener_open")  -- unbound while the picker issue is debugged
