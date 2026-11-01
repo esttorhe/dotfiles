@@ -203,8 +203,9 @@ Problem-Solving Approach:
 
 When `REX_SESSION` and `REX_BLOCK` are set, you are in a Rex pane and Esteban can watch other panes beside you. Run long-running or watchable commands there instead of in the background:
 
-- Use `rex-run` for dev servers, watch modes, test suites, builds, log tails and anything that runs longer than a few seconds: `rex-run --label <short-name> -- <command> <args>`. It places the pane for you: right of your pane when your tab has only one pane, otherwise stacked below the last command pane. Don't pick a split direction yourself.
-- `rex-run` prints JSON with the new `block_id`. Read output with `rex capture -s "$REX_SESSION" -b <block_id> --trim | tail -n 100`, wait for a finishing command with `rex wait -s "$REX_SESSION" <block_id> --for 60s --json`, and check its exit with `rex block call -s "$REX_SESSION" -b <block_id> process`.
+- Use `rex-run` for dev servers, watch modes, test suites, builds, log tails, Codex or other agent workers, and anything that runs longer than a few seconds: `rex-run --label <short-name> -- <command> <args>`. It opens a visible floating pane over the right of your tab, offset from earlier ones, and your pane keeps focus. Don't use `--split` or `--minimized` unless Esteban asks for them.
+- Esteban minimizes floating panes with `C-x m` and restores the latest with `C-x M`. You can do the same for panes you opened: `rex-run --minimize <block_id>` and `rex-run --restore <block_id>`.
+- `rex-run` prints JSON with the new `block_id` and `layer_id`. Read output with `rex capture -s "$REX_SESSION" -b <block_id> --trim | tail -n 100`, wait for a finishing command with `rex wait -s "$REX_SESSION" <block_id> --for 60s --json`, and check its exit with `rex block call -s "$REX_SESSION" -b <block_id> process`.
 - Panes stay open after the command exits so Esteban can read the output. Close the panes you opened (`rex block close -s "$REX_SESSION" <block_id>`) once the work they belong to is done, and never close panes you didn't open.
 - Quick commands whose output you only need yourself (`git status`, `ls`, a single test file) still run normally through Bash.
 - Outside Rex (no `REX_SESSION`), run commands as usual.
