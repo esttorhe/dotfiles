@@ -161,9 +161,43 @@ rex.action{
   end,
 }
 
+-- Bring back the most recently minimized floating pane in the focused pane's tab.
+-- Rex lists a window's floating layers back to front, so the last one is newest.
+rex.action{
+  name = "restore_floating",
+  title = "Restore Minimized Floating Pane",
+  category = "Panes",
+  run = function(ctx)
+    local view, err = rex.session.view{}
+    if err ~= nil then error(err, 0) end
+    for _, window in ipairs(view.windows) do
+      local here, minimized = false, nil
+      for _, layer in ipairs(window.layers) do
+        for _, block in ipairs(layer.blocks) do
+          if block.block_id == ctx.block_id then here = true end
+        end
+        if layer.kind == "floating" and layer.state == "minimized" then minimized = layer end
+      end
+      if here then
+        if not minimized then error("no minimized floating pane in this tab", 0) end
+        local _, e = rex.session.set_layer_state{
+          layer_id = minimized.layer_id,
+          state = "normal",
+          focus = true,
+        }
+        if e ~= nil then error(e, 0) end
+        return
+      end
+    end
+    error("the focused pane isn't in this session", 0)
+  end,
+}
+
 rex.bind(P .. "g", "popup_lazygit")
 rex.bind(P .. "f", "popup_shell")
 rex.bind(P .. "shift+f", "toggle_float")
+rex.bind(P .. "m", "pane.minimize_floating")
+rex.bind(P .. "shift+m", "restore_floating")
 
 -- rex-opener (installed by chezmoi from .chezmoiexternal.toml): open a URL or file
 -- found in the focused pane's output. It needs Python 3.10+, so Homebrew comes
