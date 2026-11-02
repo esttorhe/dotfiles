@@ -153,6 +153,49 @@ def test_restore_skips_sessions_that_already_exist(label, tmp_path):
     assert [s["label"] for s in rr.list_sessions()].count(label) == 1
 
 
+def wait_for_foreground(session_id, block_id, name, timeout=15):
+    """The block's foreground process once it is name, or the last one seen."""
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        process = rr.block_call(session_id, block_id, "process")
+        if (process.get("foreground") or {}).get("name") == name:
+            break
+        time.sleep(0.5)
+    return process
+
+
+def test_restore_relaunches_programs_in_blocks_rex_kept(label, tmp_path):
+    """Rex brings back its sessions and block ids after a restart, but not their programs."""
+    session_id, _ = make_split_session(label, tmp_path)
+    snap = rr.snapshot_session(session_id)
+    pane = rr.panes(snap["windows"][0]["layout"])[1]
+    pane["program"] = "top"
+
+    result = rr.restore({"version": 1, "sessions": [snap]})
+
+    assert result["skipped"] == [label]
+    assert result["relaunched"] == [pane["block_id"]]
+    process = wait_for_foreground(session_id, pane["block_id"], "top")
+    assert process["foreground"]["name"] == "top"
+    assert process["ancestors"][0]["cwd"] == pane["cwd"]
+
+
+def test_restore_leaves_kept_blocks_that_are_already_busy(label, tmp_path):
+    session_id, _ = make_split_session(label, tmp_path)
+    snap = rr.snapshot_session(session_id)
+    pane = rr.panes(snap["windows"][0]["layout"])[0]
+    rr.rex("send", "-s", session_id, "-b", pane["block_id"], "top", json_output=False)
+    rr.rex("send-key", "-s", session_id, "-b", pane["block_id"], "enter", json_output=False)
+    wait_for_foreground(session_id, pane["block_id"], "top")
+    pane["program"] = "nvim"
+
+    result = rr.restore({"version": 1, "sessions": [snap]})
+
+    assert result["relaunched"] == []
+    process = rr.block_call(session_id, pane["block_id"], "process")
+    assert process["foreground"]["name"] == "top"
+
+
 def test_restore_relaunches_a_known_program_in_its_directory(label, tmp_path):
     work = tmp_path / "work"
     work.mkdir()

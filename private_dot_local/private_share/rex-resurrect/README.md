@@ -25,6 +25,10 @@ is left out, so restarts don't pile them up.
   Rex server, then saves. Until that restore has happened, scheduled saves
   are refused, so an empty server never overwrites the snapshot it should
   restore. Sessions whose label is already open are never recreated.
+- Rex itself brings back its sessions, layouts and block ids after a
+  restart, but not the programs in them. For a session that is already
+  open, a restore starts each saved program again in its kept block, but
+  only when that block sits idle at a shell prompt.
 - In Rex, `Ctrl-X Ctrl-S` saves now and `Ctrl-X Ctrl-R` restores the last
   snapshot. Both are also in the command palette.
 - The script never starts a Rex server. With the app closed, a tick exits 1

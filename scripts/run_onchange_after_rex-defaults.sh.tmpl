@@ -21,6 +21,8 @@ fi
 defaults write com.superlogical.rex Workspace.interfaceStyle -string useTheme
 # Focus stays where it is until clicked or moved by key.
 defaults write com.superlogical.rex Workspace.focusFollowsMouse -bool false
+# Remote Control lets `rex do` switch the app's session (rex-worktrunk relies on it).
+defaults write com.superlogical.rex rex.client.remoteControl -bool true
 
 if [[ "$was_running" == true ]]; then
     open -a "Rex Beta"

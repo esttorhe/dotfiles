@@ -245,14 +245,55 @@ def create_layout(node):
     return {"block": block}
 
 
+def launch(session_id, block_id, pane, start):
+    """Type the pane's program at its prompt, and press Enter when start is set."""
+    command = launch_command(
+        pane["program"], pane.get("session_name"), picker=pane.get("picker", False)
+    )
+    rex("send", "-s", session_id, "-b", block_id, command, json_output=False)
+    if start:
+        rex("send-key", "-s", session_id, "-b", block_id, "enter", json_output=False)
+
+
+def is_idle_shell(process):
+    """A shell waiting at its prompt: nothing runs under it, so only login sits above it."""
+    ancestors = (process or {}).get("ancestors") or []
+    return all(proc.get("name") == "login" for proc in ancestors)
+
+
+def relaunch_kept(session_id, session, start):
+    """Rex keeps sessions and block ids across a server restart but not their programs.
+    Start each saved program again in its kept block, if that block is idle at a prompt."""
+    relaunched = []
+    for window in session["windows"]:
+        for pane in panes(window["layout"]):
+            block_id = pane.get("block_id")
+            if not pane.get("program") or not block_id:
+                continue
+            try:
+                process = block_call(session_id, block_id, "process")
+            except RexError:
+                continue  # the block is gone
+            if not is_idle_shell(process):
+                continue
+            launch(session_id, block_id, pane, start)
+            relaunched.append(block_id)
+    return relaunched
+
+
 def restore(snapshot, start=True):
-    """Recreate every saved session whose label isn't open already. With start=False each
-    program's command is typed at the prompt but not run, for the user to start later."""
-    existing = {s["label"] for s in list_sessions()}
-    result = {"restored": [], "skipped": []}
+    """Recreate every saved session whose label isn't open already, and restart saved
+    programs in the idle blocks of those that are. With start=False each program's
+    command is typed at the prompt but not run, for the user to start later."""
+    existing = {s["label"]: s["session_id"] for s in list_sessions()}
+    result = {"restored": [], "skipped": [], "relaunched": []}
     for session in snapshot.get("sessions", []):
         if session["label"] in existing or not session["windows"]:
             result["skipped"].append(session["label"])
+            if session["label"] in existing:
+                result["relaunched"] += relaunch_kept(
+                    existing[session["label"]], session, start
+                )
             continue
         created = api(
             "session.create",
@@ -269,31 +310,7 @@ def restore(snapshot, start=True):
             # Programs are typed into the shell, like tmux-resurrect, so quitting returns to a prompt.
             for pane, block_id in zip(panes(window["layout"]), made["block_ids"]):
                 if pane.get("program"):
-                    command = launch_command(
-                        pane["program"],
-                        pane.get("session_name"),
-                        picker=pane.get("picker", False),
-                    )
-                    rex(
-                        "send",
-                        "-s",
-                        session_id,
-                        "-b",
-                        block_id,
-                        command,
-                        json_output=False,
-                    )
-                    if not start:
-                        continue
-                    rex(
-                        "send-key",
-                        "-s",
-                        session_id,
-                        "-b",
-                        block_id,
-                        "enter",
-                        json_output=False,
-                    )
+                    launch(session_id, block_id, pane, start)
             if window.get("active"):
                 api(
                     "session.focus_window",
@@ -510,11 +527,12 @@ def restore_last():
 
 def tick():
     """Restore once for each new server, then save. Run every few minutes by launchd."""
-    restored = []
+    restored, relaunched = [], []
     if settled_instance() != server_instance():
-        restored = restore_last()["restored"]
+        result = restore_last()
+        restored, relaunched = result["restored"], result["relaunched"]
     saved = save(force=False)
-    return {"restored": restored, "saved": saved["saved"]}
+    return {"restored": restored, "relaunched": relaunched, "saved": saved["saved"]}
 
 
 def locked(fn, *args, **kwargs):
