@@ -1,0 +1,8 @@
+{
+  "autoPauseMinutes" : 15,
+  "sittingWarningMinutes" : 45,
+  "notificationCooldownMinutes" : 10,
+  "dailyStandingGoalHours" : 4,
+  "standingWarningMinutes" : 45,
+  "notificationStyle" : "both"
+}
