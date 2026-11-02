@@ -207,3 +207,10 @@ dofile(home .. "/.config/rex/plugins/rex-opener/init.lua")({
     .. "/.local/share/mise/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
 })
 rex.bind(P .. "o", "rex_opener_open")
+
+-- rex-worktrunk (installed by chezmoi from .chezmoiexternal.toml): fzf pickers to
+-- switch to, create or remove a git worktree of the focused pane's repo, with a
+-- Rex session per worktree. Needs wt, fzf and jq, and Remote Control turned on.
+dofile(home .. "/.config/rex/plugins/rex-worktrunk/init.lua").setup{ base = "@" }
+rex.bind(P .. "w", "worktree")
+rex.bind(P .. "d", "worktree_remove")
