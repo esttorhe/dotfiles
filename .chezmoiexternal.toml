@@ -9,3 +9,11 @@
     exact = true
     stripComponents = 1
     exclude = ["*/assets", "*/assets/**"]
+
+# rex-worktrunk: worktree switch / create / remove pickers driven by worktrunk (wt).
+# Reviewed at this commit; to update, read the new diff, then change the commit below.
+[".config/rex/plugins/rex-worktrunk"]
+    type = "archive"
+    url = "https://github.com/haxybaxy/rex-worktrunk/archive/024d12f2c152a0fbe46b2683e6c19873009b25f9.tar.gz"
+    exact = true
+    stripComponents = 1
