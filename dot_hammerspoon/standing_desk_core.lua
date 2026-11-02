@@ -30,6 +30,55 @@ M.REST_MESSAGES = {
 -- Goal reminders only start in the afternoon, leaving the morning to build up standing time.
 local GOAL_REMINDER_HOUR = 14
 
+M.DEFAULT_PREFS = {
+	sittingWarningMinutes = 30,
+	standingWarningMinutes = 30,
+	dailyStandingGoalHours = 3,
+	notificationCooldownMinutes = 10,
+	-- "both", "hud" or "notification". HUDs are hidden behind fullscreen apps; notifications are not.
+	notificationStyle = "both",
+	-- 0 disables auto-pause.
+	autoPauseMinutes = 15,
+}
+
+M.NOTIFICATION_STYLES = { both = true, hud = true, notification = true }
+
+-- Numeric settings with the label shown in the settings form and whether zero is allowed.
+local NUMERIC_PREFS = {
+	{ key = "sittingWarningMinutes", label = "Sitting reminder", allowZero = false },
+	{ key = "standingWarningMinutes", label = "Standing reminder", allowZero = false },
+	{ key = "dailyStandingGoalHours", label = "Daily standing goal", allowZero = true },
+	{ key = "notificationCooldownMinutes", label = "Reminder cooldown", allowZero = true },
+	{ key = "autoPauseMinutes", label = "Auto pause", allowZero = true },
+}
+
+-- Validates settings (from disk or the settings form) over the defaults.
+-- Returns the cleaned prefs, or nil and a message naming the first bad field.
+function M.sanitizePrefs(input)
+	input = input or {}
+	local out = {}
+	for _, spec in ipairs(NUMERIC_PREFS) do
+		local raw = input[spec.key]
+		if raw == nil or raw == "" then
+			out[spec.key] = M.DEFAULT_PREFS[spec.key]
+		else
+			local n = tonumber(raw)
+			if not n or n < 0 or (n == 0 and not spec.allowZero) then
+				local rule = spec.allowZero and "zero or more" or "greater than zero"
+				return nil, string.format("%s must be a number %s", spec.label, rule)
+			end
+			out[spec.key] = n
+		end
+	end
+
+	local style = input.notificationStyle or M.DEFAULT_PREFS.notificationStyle
+	if not M.NOTIFICATION_STYLES[style] then
+		return nil, "Reminder style must be both, hud or notification"
+	end
+	out.notificationStyle = style
+	return out
+end
+
 function M.emptyData()
 	return { sessions = {}, current = nil, lastNotificationTime = nil, lastNotificationType = nil }
 end
