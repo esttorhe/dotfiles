@@ -1,0 +1,160 @@
+<!doctype html>
+<!-- ABOUTME: Settings form rendered inside the Hammerspoon standing desk settings window. -->
+<!-- ABOUTME: Receives values via loadPrefs() and posts ready/save/cancel messages to Lua via the "standingDesk" webkit handler. -->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+	:root {
+		--bg: #f5f5f7;
+		--surface: #ffffff;
+		--fg: #1d1d1f;
+		--muted: #6e6e73;
+		--border: rgba(0, 0, 0, .1);
+		--accent: #22c55e;
+		--error: #dc2626;
+		color-scheme: light dark;
+	}
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--bg: #1e1e20;
+			--surface: #2a2a2d;
+			--fg: #f5f5f7;
+			--muted: #a1a1a6;
+			--border: rgba(255, 255, 255, .12);
+			--error: #f87171;
+		}
+	}
+	* { box-sizing: border-box; }
+	html, body { margin: 0; height: 100%; }
+	body {
+		background: var(--bg);
+		color: var(--fg);
+		font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif;
+		-webkit-user-select: none;
+		user-select: none;
+		padding: 18px 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+	}
+	h2 { margin: 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+	section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 4px 14px; }
+	label { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; }
+	label + label { border-top: 1px solid var(--border); }
+	.name small { display: block; color: var(--muted); font-size: 11px; }
+	.field { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+	input, select {
+		font: inherit;
+		color: var(--fg);
+		background: var(--bg);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		padding: 4px 8px;
+	}
+	input { width: 64px; text-align: right; -webkit-user-select: text; user-select: text; }
+	input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+	footer { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+	#status { flex: 1; color: var(--error); font-size: 12px; }
+	button {
+		font: inherit;
+		border-radius: 6px;
+		padding: 5px 14px;
+		border: 1px solid var(--border);
+		background: var(--surface);
+		color: var(--fg);
+	}
+	button.primary { background: var(--accent); border-color: transparent; color: #fff; font-weight: 600; }
+</style>
+</head>
+<body>
+	<h2>Reminders</h2>
+	<section>
+		<label>
+			<span class="name">Sitting reminder<small>Nudge to stand after sitting this long</small></span>
+			<span class="field"><input id="sittingWarningMinutes" type="number" min="1" step="1"> min</span>
+		</label>
+		<label>
+			<span class="name">Standing reminder<small>Nudge to sit after standing this long</small></span>
+			<span class="field"><input id="standingWarningMinutes" type="number" min="1" step="1"> min</span>
+		</label>
+		<label>
+			<span class="name">Reminder cooldown<small>Minimum gap between reminders</small></span>
+			<span class="field"><input id="notificationCooldownMinutes" type="number" min="0" step="1"> min</span>
+		</label>
+		<label>
+			<span class="name">Reminder style<small>HUDs are hidden behind fullscreen apps</small></span>
+			<select id="notificationStyle">
+				<option value="both">HUD and notification</option>
+				<option value="hud">HUD only</option>
+				<option value="notification">Notification only</option>
+			</select>
+		</label>
+	</section>
+
+	<h2>Tracking</h2>
+	<section>
+		<label>
+			<span class="name">Daily standing goal<small>Goal reminders start after 2 PM</small></span>
+			<span class="field"><input id="dailyStandingGoalHours" type="number" min="0" step="0.5"> h</span>
+		</label>
+		<label>
+			<span class="name">Auto pause when idle<small>0 turns it off; idle time is not counted</small></span>
+			<span class="field"><input id="autoPauseMinutes" type="number" min="0" step="1"> min</span>
+		</label>
+	</section>
+
+	<footer>
+		<span id="status"></span>
+		<button id="cancel">Cancel</button>
+		<button id="save" class="primary">Save</button>
+	</footer>
+
+<script>
+	const FIELDS = [
+		"sittingWarningMinutes",
+		"standingWarningMinutes",
+		"notificationCooldownMinutes",
+		"notificationStyle",
+		"dailyStandingGoalHours",
+		"autoPauseMinutes",
+	];
+	const $ = (id) => document.getElementById(id);
+	const post = (message) => window.webkit.messageHandlers.standingDesk.postMessage(message);
+
+	window.loadPrefs = (prefs) => {
+		for (const key of FIELDS) {
+			$(key).value = prefs[key];
+		}
+		$("sittingWarningMinutes").focus();
+	};
+
+	window.showError = ({ message }) => {
+		$("status").textContent = message;
+	};
+
+	function save() {
+		const prefs = {};
+		for (const key of FIELDS) {
+			prefs[key] = $(key).value;
+		}
+		$("status").textContent = "";
+		post({ action: "save", prefs });
+	}
+
+	$("save").addEventListener("click", save);
+	$("cancel").addEventListener("click", () => post({ action: "cancel" }));
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape") {
+			event.preventDefault();
+			post({ action: "cancel" });
+		} else if (event.key === "Enter") {
+			event.preventDefault();
+			save();
+		}
+	});
+
+	post({ action: "ready" });
+</script>
+</body>
+</html>

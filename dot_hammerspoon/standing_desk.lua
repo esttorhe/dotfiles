@@ -9,6 +9,9 @@ local DATA_DIR = os.getenv("HOME") .. "/.local/share/standing-desk"
 local STATE_PATH = DATA_DIR .. "/state.json"
 -- Written by the Raycast extension's "Export Standing Desk Sessions" command; imported once, then renamed.
 local RAYCAST_EXPORT_PATH = DATA_DIR .. "/raycast-export.json"
+local PREFS_PATH = DATA_DIR .. "/prefs.json"
+local CHEZMOI_BIN = os.getenv("HOME") .. "/.local/share/mise/shims/chezmoi"
+local SETTINGS_WIDTH, SETTINGS_HEIGHT = 460, 470
 
 local TITLE_REFRESH_SECONDS = 1
 local CHECK_INTERVAL_SECONDS = 30
@@ -17,16 +20,8 @@ local GREEN = { hex = "#22c55e" }
 local BLUE = { hex = "#3b82f6" }
 local MUTED = { white = 0.5, alpha = 1 }
 
-M.prefs = {
-	sittingWarningMinutes = 30,
-	standingWarningMinutes = 30,
-	dailyStandingGoalHours = 3,
-	notificationCooldownMinutes = 10,
-	-- "both", "hud" or "notification". HUDs are hidden behind fullscreen apps; notifications are not.
-	notificationStyle = "both",
-	-- Set to 0 to disable.
-	autoPauseMinutes = 15,
-}
+-- Settings are edited from the menu's Settings… window; missing keys fall back to core.DEFAULT_PREFS.
+M.prefs = core.sanitizePrefs({})
 
 local function nowMs()
 	return math.floor(hs.timer.secondsSinceEpoch() * 1000)
@@ -175,6 +170,103 @@ local function check()
 	end
 end
 
+local function loadPrefs()
+	local file = io.open(PREFS_PATH, "r")
+	if not file then
+		return core.sanitizePrefs({})
+	end
+	local raw = file:read("*a")
+	file:close()
+
+	local ok, decoded = pcall(hs.json.decode, raw)
+	local prefs, err = core.sanitizePrefs(ok and type(decoded) == "table" and decoded or {})
+	if not prefs then
+		hs.alert.show("Standing Desk: " .. err .. ", using defaults")
+		return core.sanitizePrefs({})
+	end
+	return prefs
+end
+
+local function savePrefs(prefs)
+	hs.fs.mkdir(DATA_DIR)
+	local tmp = PREFS_PATH .. ".tmp"
+	local file = assert(io.open(tmp, "w"))
+	file:write(hs.json.encode(prefs, true))
+	file:close()
+	assert(os.rename(tmp, PREFS_PATH))
+
+	-- prefs.json is managed by chezmoi so settings follow to other machines; copy the edit back
+	-- into the chezmoi source so it is not overwritten by the next `chezmoi apply`.
+	hs.task.new(CHEZMOI_BIN, function(exitCode, _, stderr)
+		if exitCode ~= 0 then
+			hs.alert.show("Standing Desk: chezmoi re-add failed, see console")
+			print("standing_desk: chezmoi re-add failed: " .. tostring(stderr))
+		end
+	end, { "re-add", PREFS_PATH }):start()
+end
+
+local function closeSettings()
+	if M.settingsWindow then
+		M.settingsWindow:delete()
+		M.settingsWindow = nil
+	end
+end
+
+local function sendToSettings(fn, payload)
+	if M.settingsWindow then
+		M.settingsWindow:evaluateJavaScript(string.format("%s(%s)", fn, hs.json.encode(payload)))
+	end
+end
+
+function M.openSettings()
+	if M.settingsWindow then
+		M.settingsWindow:show():bringToFront(true)
+		return
+	end
+
+	local controller = hs.webview.usercontent.new("standingDesk")
+	controller:setCallback(function(message)
+		local body = message.body
+		if body.action == "ready" then
+			sendToSettings("loadPrefs", M.prefs)
+		elseif body.action == "save" then
+			local prefs, err = core.sanitizePrefs(body.prefs)
+			if not prefs then
+				sendToSettings("showError", { message = err })
+				return
+			end
+			savePrefs(prefs)
+			M.prefs = prefs
+			closeSettings()
+			hs.alert.show("Standing Desk settings saved")
+		elseif body.action == "cancel" then
+			closeSettings()
+		end
+	end)
+
+	local screen = hs.screen.mainScreen():frame()
+	local rect = {
+		x = screen.x + (screen.w - SETTINGS_WIDTH) / 2,
+		y = screen.y + (screen.h - SETTINGS_HEIGHT) / 3,
+		w = SETTINGS_WIDTH,
+		h = SETTINGS_HEIGHT,
+	}
+	M.settingsWindow = hs.webview.new(rect, {}, controller)
+		:windowTitle("Standing Desk Settings")
+		:windowStyle({ "titled", "closable" })
+		:level(hs.drawing.windowLevels.floating)
+		:allowTextEntry(true)
+		:deleteOnClose(true)
+		:windowCallback(function(action)
+			if action == "closing" then
+				M.settingsWindow = nil
+			end
+		end)
+		:html(io.open(hs.configdir .. "/standing_desk_settings.html"):read("*a"))
+		:show()
+		:bringToFront(true)
+end
+
 local PERIODS = {
 	{ key = "day", label = "Today" },
 	{ key = "week", label = "This Week" },
@@ -242,17 +334,16 @@ local function buildMenu()
 	for _, p in ipairs(PERIODS) do
 		menu[#menu + 1] = { title = "Stats: " .. p.label, menu = statsMenu(p.key, now) }
 	end
+	menu[#menu + 1] = { title = "-" }
+	menu[#menu + 1] = { title = "Settings…", fn = M.openSettings }
 	return menu
 end
 
 -- Exposed so the menu can be built and inspected from the `hs` CLI.
 M.buildMenu = buildMenu
 
-function M.start(prefs)
-	for k, v in pairs(prefs or {}) do
-		M.prefs[k] = v
-	end
-
+function M.start()
+	M.prefs = loadPrefs()
 	M.data = load()
 	M.menubar = hs.menubar.new(true, "standingDesk")
 	M.menubar:setMenu(buildMenu)
