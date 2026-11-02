@@ -27,6 +27,17 @@ starship init fish | source
 
 # Atuin shell history
 if type -q atuin
+    # Atuin's output capture re-execs an interactive shell under its pty-proxy,
+    # which drops a `fish -c COMMAND` (rex-opener's picker runs `fish -lic`).
+    # atuin skips the proxy when ATUIN_PTY_PROXY_FAILED is set, as its zsh and
+    # bash init already do for -c shells (atuinsh/atuin#4412).
+    for arg in (string split ' ' -- (ps -o args= -p $fish_pid))[2..]
+        string match -qr -- '^-' $arg; or break
+        if string match -qr -- '^(-[a-zA-Z]*c[a-zA-Z]*|--command(=.*)?)$' $arg
+            set -g ATUIN_PTY_PROXY_FAILED 1
+            break
+        end
+    end
     atuin init fish | source
 end
 
